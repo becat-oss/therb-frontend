@@ -16,4 +16,5 @@ yarn dev
 ```
 http://localhost:8000/timeseries 
 ```
-![image](https://user-images.githubusercontent.com/90674244/157576047-9f76472a-e7aa-4dfd-b053-b68766255f8a.png)
+![image](https://user-images.githubusercontent.com/10389953/158009531-898334c6-9afb-4d1f-a458-e7533511d4af.png)
+
