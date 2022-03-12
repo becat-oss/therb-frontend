@@ -1,0 +1,887 @@
+{
+    "load": {
+      "office_closed": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.15,
+        "oa_person": 0.0025,
+        "oa_area": 0.0003,
+        "smallpower": 15,
+        "lighting": 12,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "office_open": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.1,
+        "oa_person": 0.0025,
+        "oa_area": 0.0003,
+        "smallpower": 10,
+        "lighting": 10,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "lift_lobby": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.3,
+        "oa_person": 0.0038,
+        "oa_area": 0.0003,
+        "smallpower": 0,
+        "lighting": 8,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "main_lobby": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.1,
+        "oa_person": 0.0025,
+        "oa_area": 0.0003,
+        "smallpower": 0,
+        "lighting": 9.675,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "corridor": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0,
+        "oa_person": 0,
+        "oa_area": 0.0003,
+        "smallpower": 0,
+        "lighting": 7.1,
+        "hvac": "None::None",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "electrical_mechanical_room": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0,
+        "oa_person": 0,
+        "oa_area": 0,
+        "smallpower": 0,
+        "lighting": 10.2,
+        "hvac": "None::None",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "restroom": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0,
+        "oa_person": 0,
+        "oa_area": 0,
+        "smallpower": 0,
+        "lighting": 10.5,
+        "hvac": "None::None",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "stairway": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0,
+        "oa_person": 0,
+        "oa_area": 0,
+        "smallpower": 0,
+        "lighting": 7.4,
+        "hvac": "None::None",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "storage": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0,
+        "oa_person": 0,
+        "oa_area": 0,
+        "smallpower": 0,
+        "lighting": 6.8,
+        "hvac": "None::None",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "parking_garage": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0,
+        "oa_person": 0,
+        "oa_area": 0,
+        "smallpower": 0,
+        "lighting": 2,
+        "hvac": "None::None",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "sales_area": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.15,
+        "oa_person": 0.0038,
+        "oa_area": 0.0006,
+        "smallpower": 2.7,
+        "lighting": 18.1,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "mall_concourse": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.4,
+        "oa_person": 0.0038,
+        "oa_area": 0.0003,
+        "smallpower": 2.7,
+        "lighting": 11.8,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "restaurant_dining_room": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.7,
+        "oa_person": 0.0038,
+        "oa_area": 0.0009,
+        "smallpower": 1.1,
+        "lighting": 9.6,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "lift": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0,
+        "oa_person": 0,
+        "oa_area": 0,
+        "smallpower": 0,
+        "lighting": 0,
+        "hvac": "None::None",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "classroom": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.65,
+        "oa_person": 0.0038,
+        "oa_area": 0.0003,
+        "smallpower": 8.1,
+        "lighting": 13.3,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "conference_meeting_multipurpose": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.5,
+        "oa_person": 0.0025,
+        "oa_area": 0.0003,
+        "smallpower": 8.1,
+        "lighting": 13.2,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "kitchen": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.2,
+        "oa_person": 0.0038,
+        "oa_area": 0.0006,
+        "smallpower": 0,
+        "lighting": 10.7,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "dormitory": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.2,
+        "oa_person": 0.0025,
+        "oa_area": 0.0003,
+        "smallpower": 0,
+        "lighting": 4.1,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "bar_lounge_cafeteria": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 1,
+        "oa_person": 0.0038,
+        "oa_area": 0.0009,
+        "smallpower": 0,
+        "lighting": 14.1,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "bedroom": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.2,
+        "oa_person": 0.0025,
+        "oa_area": 0.0003,
+        "smallpower": 0,
+        "lighting": 4.1,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      },
+      "living_room": {
+        "cooling_setpt": 26,
+        "heating_setpt": 22,
+        "ppl_density": 0.2,
+        "oa_person": 0.0025,
+        "oa_area": 0.0003,
+        "smallpower": 0,
+        "lighting": 8,
+        "hvac": "VRF::VRF",
+        "ef_ach": 0,
+        "ef_deltapressure": 0
+      }
+    },
+    "schedule": {
+      "office": {
+        "occupancy": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          }
+        },
+        "hvac": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          }
+        },
+        "lighting": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          }
+        },
+        "equipment": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          }
+        }
+      },
+      "retail": {
+        "occupancy": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          }
+        },
+        "hvac": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          }
+        },
+        "lighting": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          }
+        },
+        "equipment": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.3, 0.3, 0.3, 0.3, 0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0.1, 0.2, 0.95, 0.95, 0.95, 0.95, 0.5, 0.95, 0.95, 0.95, 0.95, 0.3, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05]
+          }
+        }
+      },
+      "residential": {
+        "occupancy": {
+          "weekday": {
+            "schedule": [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.7, 0.4, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.5, 0.5, 0.5, 0.7, 0.7, 0.8, 0.9, 0.9]
+          },
+          "saturday": {
+            "schedule": [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.7, 0.5, 0.5, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.3, 0.5, 0.6, 0.6, 0.6, 0.7, 0.7, 0.7]
+          },
+          "sunday": {
+            "schedule": [0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.5, 0.5, 0.5, 0.3, 0.3, 0.2, 0.2, 0.2, 0.3, 0.4, 0.4, 0.6, 0.6, 0.8, 0.8, 0.8]
+          },
+          "coolingday": {
+            "schedule": [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.7, 0.4, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.5, 0.5, 0.5, 0.7, 0.7, 0.8, 0.9, 0.9]
+          },
+          "heatingday": {
+            "schedule": [0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.7, 0.4, 0.4, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.5, 0.5, 0.5, 0.7, 0.7, 0.8, 0.9, 0.9]
+          }
+        },
+        "hvac": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+          }
+        },
+        "lighting": {
+          "weekday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.5, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.6, 0.6, 0.5, 0.2, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.3, 0.6, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.5, 0.3, 0.3, 0.1, 0.05, 0.05]
+          },
+          "sunday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.6, 0.4, 0.2, 0.05, 0.05, 0.05, 0.05, 0.05]
+          },
+          "coolingday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.5, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.6, 0.6, 0.5, 0.2, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.5, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.6, 0.6, 0.5, 0.2, 0.05, 0.05]
+          }
+        },
+        "equipment": {
+          "weekday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.5, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.6, 0.6, 0.5, 0.2, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.3, 0.6, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.5, 0.3, 0.3, 0.1, 0.05, 0.05]
+          },
+          "sunday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.1, 0.1, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.6, 0.4, 0.2, 0.05, 0.05, 0.05, 0.05, 0.05]
+          },
+          "coolingday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.5, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.6, 0.6, 0.5, 0.2, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.2, 0.5, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9, 0.6, 0.6, 0.5, 0.2, 0.05, 0.05]
+          }
+        }
+      },
+      "school": {
+        "occupancy": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0.05, 0.75, 0.9, 0.9, 0.8, 0.8, 0.8, 0.8, 0.45, 0.15, 0.05, 0.15, 0.2, 0.2, 0.1, 0, 0]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0.1, 0.1, 0.1, 0.1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0.05, 0.75, 0.9, 0.9, 0.8, 0.8, 0.8, 0.8, 0.45, 0.15, 0.05, 0.15, 0.2, 0.2, 0.1, 0, 0]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0.05, 0.75, 0.9, 0.9, 0.8, 0.8, 0.8, 0.8, 0.45, 0.15, 0.05, 0.15, 0.2, 0.2, 0.1, 0, 0]
+          }
+        },
+        "hvac": {
+          "weekday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          },
+          "saturday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          },
+          "sunday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+          },
+          "coolingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          },
+          "heatingday": {
+            "schedule": [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+          }
+        },
+        "lighting": {
+          "weekday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.85, 0.95, 0.95, 0.95, 0.8, 0.8, 0.8, 0.7, 0.5, 0.5, 0.35, 0.35, 0.35, 0.3, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.15, 0.15, 0.15, 0.15, 0.15, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+          },
+          "sunday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+          },
+          "coolingday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.85, 0.95, 0.95, 0.95, 0.8, 0.8, 0.8, 0.7, 0.5, 0.5, 0.35, 0.35, 0.35, 0.3, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.85, 0.95, 0.95, 0.95, 0.8, 0.8, 0.8, 0.7, 0.5, 0.5, 0.35, 0.35, 0.35, 0.3, 0.05, 0.05]
+          }
+        },
+        "equipment": {
+          "weekday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.85, 0.95, 0.95, 0.95, 0.8, 0.8, 0.8, 0.7, 0.5, 0.5, 0.35, 0.35, 0.35, 0.3, 0.05, 0.05]
+          },
+          "saturday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.15, 0.15, 0.15, 0.15, 0.15, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+          },
+          "sunday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05]
+          },
+          "coolingday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.85, 0.95, 0.95, 0.95, 0.8, 0.8, 0.8, 0.7, 0.5, 0.5, 0.35, 0.35, 0.35, 0.3, 0.05, 0.05]
+          },
+          "heatingday": {
+            "schedule": [0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.3, 0.85, 0.95, 0.95, 0.95, 0.8, 0.8, 0.8, 0.7, 0.5, 0.5, 0.35, 0.35, 0.35, 0.3, 0.05, 0.05]
+          }
+        }
+      }
+    },
+    "envelope": {
+      "concrete": {
+        "wall": [
+          {
+            "Name": "concrete150mm",
+            "Roughness": "Rough",
+            "Thickness": 0.2,
+            "Conductivity": 1.637,
+            "Density": 2000,
+            "Specific_Heat": 1000
+          },
+          {
+            "Name": "polystyreneFoam50mm",
+            "Roughness": "Rough",
+            "Thickness": 0.05,
+            "Conductivity": 0.037,
+            "Density": 25,
+            "Specific_Heat": 1400
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "internal_wall": [
+          {
+            "Name": "plywood12mm",
+            "Roughness": "Rough",
+            "Thickness": 0.012,
+            "Conductivity": 0.129,
+            "Density": 500,
+            "Specific_Heat": 2226
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "roof": [
+          {
+            "Name": "concrete200mm",
+            "Roughness": "Rough",
+            "Thickness": 0.2,
+            "Conductivity": 1.637,
+            "Density": 2000,
+            "Specific_Heat": 1000
+          },
+          {
+            "Name": "polystyreneFoam50mm",
+            "Roughness": "Rough",
+            "Thickness": 0.05,
+            "Conductivity": 0.037,
+            "Density": 25,
+            "Specific_Heat": 1400
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "floor": [
+          {
+            "Name": "concrete150mm",
+            "Roughness": "Rough",
+            "Thickness": 0.15,
+            "Conductivity": 1.637,
+            "Density": 2000,
+            "Specific_Heat": 1000
+          },
+          {
+            "Name": "polystyreneFoam50mm",
+            "Roughness": "Rough",
+            "Thickness": 0.05,
+            "Conductivity": 0.037,
+            "Density": 25,
+            "Specific_Heat": 1400
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "ceiling": [
+          {
+            "Name": "plywood12mm",
+            "Roughness": "Rough",
+            "Thickness": 0.012,
+            "Conductivity": 0.129,
+            "Density": 500,
+            "Specific_Heat": 2226
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "window": {
+          "uvalue": 1.27,
+          "shgc": 0.59,
+          "vt": 0.55
+        }
+      },
+      "wood": {
+        "wall": [
+          {
+            "Name": "plywood12mm",
+            "Roughness": "Rough",
+            "Thickness": 0.012,
+            "Conductivity": 0.129,
+            "Density": 500,
+            "Specific_Heat": 2226
+          },
+          {
+            "Name": "glassWool100mm",
+            "Roughness": "Rough",
+            "Thickness": 0.1,
+            "Conductivity": 0.044,
+            "Density": 16,
+            "Specific_Heat": 837.5
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "internal_wall": [
+          {
+            "Name": "plywood12mm",
+            "Roughness": "Rough",
+            "Thickness": 0.012,
+            "Conductivity": 0.129,
+            "Density": 500,
+            "Specific_Heat": 2226
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "roof": [
+          {
+            "Name": "plywood12mm",
+            "Roughness": "Rough",
+            "Thickness": 0.012,
+            "Conductivity": 0.129,
+            "Density": 500,
+            "Specific_Heat": 2226
+          },
+          {
+            "Name": "polystyreneFoam50mm",
+            "Roughness": "Rough",
+            "Thickness": 0.05,
+            "Conductivity": 0.037,
+            "Density": 25,
+            "Specific_Heat": 1400
+          },
+          {
+            "Name": "plywood24mm",
+            "Roughness": "Rough",
+            "Thickness": 0.024,
+            "Conductivity": 0.129,
+            "Density": 500,
+            "Specific_Heat": 2226
+          }
+        ],
+        "floor": [
+          {
+            "Name": "plywood12mm",
+            "Roughness": "Rough",
+            "Thickness": 0.012,
+            "Conductivity": 0.129,
+            "Density": 500,
+            "Specific_Heat": 2226
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "ceiling": [
+          {
+            "Name": "plywood12mm",
+            "Roughness": "Rough",
+            "Thickness": 0.012,
+            "Conductivity": 0.129,
+            "Density": 500,
+            "Specific_Heat": 2226
+          },
+          {
+            "Name": "gypsumBoard10mm",
+            "Roughness": "Rough",
+            "Thickness": 0.01,
+            "Conductivity": 0.213,
+            "Density": 1000,
+            "Specific_Heat": 854
+          }
+        ],
+        "window": {
+          "uvalue": 1.27,
+          "shgc": 0.59,
+          "vt": 0.55
+        }
+      }
+    },
+    "others": {
+      "escalator": 0,
+      "elevator": 0,
+      "exterior_lighting": 0
+    },
+    "airside": {
+      "FCU::PAU": {
+        "terminal": {
+          "Zone_Cooling_Design_Supply_Air_Temperature_Input_Method": "TemperatureDifference",
+          "Zone_Cooling_Design_Supply_Air_Temperature_Difference": 11,
+          "Zone_Cooling_Design_Supply_Air_Temperature": 14,
+          "Zone_Heating_Design_Supply_Air_Temperature_Input_Method": "TemperatureDifference",
+          "Zone_Heating_Design_Supply_Air_Temperature_Difference": 11,
+          "Zone_Heating_Design_Supply_Air_Temperature": 14,
+          "Fan_Motor_Efficiency": 1,
+          "Fan_Total_Efficiency": 1,
+          "Fan_Delta_Pressure": 740
+        },
+        "airloop": {
+          "Supply_Fan_Motor_Efficiency": 1,
+          "Supply_Fan_Total_Efficiency": 1,
+          "Supply_Fan_Delta_Pressure": 2100,
+          "Heat_Recovery_Type": "None",
+          "Sensible_Heat_Recovery_Effectiveness": "None",
+          "Latent_Heat_Recovery_Effectiveness": "None",
+          "Night_Cycle_Control": "StayOff"
+        }
+      },
+      "VRF::VRF": {
+        "terminal": {
+          "Zone_Cooling_Design_Supply_Air_Temperature_Input_Method": "TemperatureDifference",
+          "Zone_Cooling_Design_Supply_Air_Temperature_Difference": 11,
+          "Zone_Cooling_Design_Supply_Air_Temperature": 14,
+          "Zone_Heating_Design_Supply_Air_Temperature_Input_Method": "TemperatureDifference",
+          "Zone_Heating_Design_Supply_Air_Temperature_Difference": 11,
+          "Zone_Heating_Design_Supply_Air_Temperature": 14,
+          "Fan_Motor_Efficiency": 1,
+          "Fan_Total_Efficiency": 1,
+          "Fan_Delta_Pressure": 740
+        },
+        "airloop": {
+          "Supply_Fan_Motor_Efficiency": 1,
+          "Supply_Fan_Total_Efficiency": 1,
+          "Supply_Fan_Delta_Pressure": 2100,
+          "Cooling_COP": 3,
+          "Heating_COP": 3
+        }
+      }
+    },
+    "plant": {
+      "chilledwaterloop": {
+        "config": "ConstantPrimaryVariableSecondary",
+        "supplyTemp": 7,
+        "returnTemp": 14,
+        "primarypump": {
+          "pumphead": 116.3
+        },
+        "secondarypump": {
+          "pumphead": 232.6
+        },
+        "chillers": [
+          {
+            "chiller_type": "ElectricScrewChiller",
+            "condenser_type": "WaterCooled",
+            "cop": 4.538
+          },
+          {
+            "chiller_type": "ElectricScrewChiller",
+            "condenser_type": "WaterCooled",
+            "cop": 4.538
+          },
+          {
+            "chiller_type": "ElectricScrewChiller",
+            "condenser_type": "WaterCooled",
+            "cop": 4.538
+          }
+        ]
+      },
+      "condenserloop": {
+        "pump": {
+          "pumphead": 310
+        },
+        "towers": [
+          {
+            "tower_type": "SingleSpeed"
+          },
+          {
+            "tower_type": "SingleSpeed"
+          }
+        ]
+      },
+      "hotwaterloop": {
+        "config": "VariableFlow",
+        "supplyTemp": 82,
+        "returnTemp": 71,
+        "pump": {
+          "pumphead": 310
+        },
+        "boilers": [
+          {
+            "boiler_type": "HotWaterBoiler",
+            "fuel_type": "NaturalGas",
+            "efficiency": 0.8
+          },
+          {
+            "boiler_type": "HotWaterBoiler",
+            "fuel_type": "Diesel",
+            "efficiency": 0.7
+          }
+        ]
+      }
+    }
+  }
+  
