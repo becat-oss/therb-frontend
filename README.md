@@ -12,9 +12,16 @@ THERB-webには以下のような機能が実装される予定です。
 yarn install
 yarn dev
 ```
-3. ローカルサーバーが立ち上がり、以下のurlを叩くと時系列データを表示できる(therb-backendも立ち上げておく必要あり）
+3. ローカルサーバーが立ち上がり、以下のページを表示することができる(therb-backendも立ち上げておく必要あり）
+
+プロジェクトページの表示
 ```
-http://localhost:8000/timeseries 
+http://localhost:8000/projects 
+```
+
+時系列データの表示
+```
+http://localhost:8000/{projectId}/timeseries 
 ```
 ![image](https://user-images.githubusercontent.com/10389953/158009531-898334c6-9afb-4d1f-a458-e7533511d4af.png)
 
