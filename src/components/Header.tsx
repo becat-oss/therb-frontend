@@ -1,6 +1,8 @@
 import { AppBar,Toolbar, makeStyles, createStyles, Typography, Theme, Select, MenuItem,  FormControl } from "@material-ui/core"
 import { useAppContext } from 'src/AppContext';
 import { useActions } from "building-editor-react";
+import Link from 'next/link';
+import Button from "@mui/material/Button";
 
 const useStayles=makeStyles((theme: Theme)=>
     createStyles({
@@ -23,11 +25,13 @@ export default function Header():React.ReactElement{
             <AppBar position="static">
                 <Toolbar>
                     <Typography variant="h5" style={{ marginRight: 50 }}>
-                        THERB-Interface
+                        THERB 2.0
                     </Typography>
-                    <Typography style={{ marginRight: 16 }}>
-                        Results
-                    </Typography>
+                    <Link href={'/projects'}>
+                        <Button style={{ marginRight: 16 }}>
+                            Projects
+                        </Button>
+                    </Link>
                     <Typography style={{ marginRight: 16 }}>
                         Settings
                     </Typography>

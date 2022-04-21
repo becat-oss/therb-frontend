@@ -1,7 +1,7 @@
 import exp from "constants";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { getProjectData } from "src/api/KeyRequests";
-import { ProjectData } from "src/types/AppTypes";
+import { ProjectData } from "src/AppTypes";
 
 interface ProjectListState{
   projectData: ProjectData[];
@@ -26,6 +26,7 @@ export function ProjectListProvider({children}:ProjectListProviderProps):React.R
   useEffect(()=>{
     async function getProjects(){
       const response = await req;
+      console.log('response["data"]',response["data"]);
 
       setProjectData(response["data"]);
     }
