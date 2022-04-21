@@ -4,6 +4,9 @@ import { GridCellParams, GridColDef, GridRowParams, GridRowsProp } from "@materi
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/router";
 import Button from "@material-ui/core/Button";
+import DownloadButton from "./downloadButton";
+import DetailButton from "./DetailButton";
+
 
 export default function ProjectList(){
   const { projectData } = useProjectListContext();
@@ -12,17 +15,21 @@ export default function ProjectList(){
   const columns: GridColDef[] = [
     {field:'id',headerName:"id",flex:1},
     {field:'name',headerName:"プロジェクト名",flex:2},
-    {field:'download',headerName:"データダウンロード",flex:2}
-    // {
-    //   field:'download',headerName:"データダウンロード",
-    //   flex:2,
-    //   //renderCell:(params:GridCellParams)=><Button variant="contained" color="primary">ダウンロード</Button>
-    // }
+    {
+      field:'detail',headerName:"詳細",
+      flex:2,
+      renderCell:(params:GridCellParams)=><DetailButton params={params.row}/>
+    },
+    {
+      field:'download',headerName:"データダウンロード",
+      flex:2,
+      renderCell:(params:GridCellParams)=><DownloadButton params={params.row}/>
+    }
 ]
 
-  const handleRowClick = useCallback((params:GridRowParams)=>{
-    replace(`/${params.id}/timeseries`);
-  },[])
+  // const handleRowClick = useCallback((params:GridRowParams)=>{
+  //   replace(`/${params.id}/timeseries`);
+  // },[])
 
   const rows:GridRowsProp =projectData;
   
@@ -31,7 +38,7 @@ export default function ProjectList(){
       <DataGrid 
         rows={rows}
         columns = {columns as unknown as GridColumns}
-        onRowClick={handleRowClick}
+        // onRowClick={handleRowClick}
       />
     </div>
   )

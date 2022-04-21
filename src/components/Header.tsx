@@ -14,11 +14,6 @@ const useStayles=makeStyles((theme: Theme)=>
 )
 export default function Header():React.ReactElement{
     const classes = useStayles();
-    const {mode, setMode } = useAppContext();
-
-    const handleChange = (event: React.ChangeEvent<{value:unknown}>)=>{
-        setMode(event.target.value as string);
-    }
     
     return(
         <div className={classes.root}>

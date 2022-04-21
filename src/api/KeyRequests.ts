@@ -21,17 +21,24 @@ type KeyRequest<K extends keyof KeyRequests> = [(args: ExtractGeneric<KeyRequest
 //   const { url: requestURL, ...requestData} = useKeyRequestData<K>(key);
 // }
 
+//FIXME: 一つの関数にまとめることはできないか？
 export async function getTimeseriesData(projectId:string|string[]){
   //TODO:とりあえず固定
   const url = `http://localhost:5000/results/${projectId}`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
-  console.log('data',data);
   return data;
 }
 
 export async function getProjectData(){
   const url = "http://localhost:5000/projects";
+  const response = await fetch(url, { mode: "cors" });
+  const data = await response.json();
+  return data;
+}
+
+export async function getDownload(projectName:string){
+  const url = `http://localhost:5000/download/${projectName}`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
   return data;
