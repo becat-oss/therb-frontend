@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React, {useState, useContext,useEffect, useMemo} from 'react';
 import { getTimeseriesData } from 'src/api/KeyRequests';
-import { TimeseriesData } from 'src/types/AppTypes';
+import { TimeseriesData } from 'src/AppTypes';
 
 interface TimeseriesState{
   timeseriesData: TimeseriesData[];
