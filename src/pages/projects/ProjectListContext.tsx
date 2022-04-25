@@ -30,7 +30,7 @@ export function ProjectListProvider({children}:ProjectListProviderProps):React.R
       setProjectData(response["data"]);
     }
     getProjects();
-  },[projectData]);
+  },[]);
 
   const projectListState = useMemo((): ProjectListState=>{
     return{
