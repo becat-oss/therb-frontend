@@ -23,13 +23,13 @@ export default function Header():React.ReactElement{
                         THERB 2.0
                     </Typography>
                     <Link href={'/projects'}>
-                        <Button style={{ marginRight: 16 }}>
+                        <Typography style={{ marginRight: 16 }}>
                             Projects
-                        </Button>
+                        </Typography>
                     </Link>
-                    <Typography style={{ marginRight: 16 }}>
+                    {/* <Typography style={{ marginRight: 16 }}>
                         Settings
-                    </Typography>
+                    </Typography> */}
                 </Toolbar>
             </AppBar>
         </div>
