@@ -6,11 +6,11 @@ import { useRouter } from "next/router";
 import Button from "@material-ui/core/Button";
 import DetailButton from "./DetailButton";
 import DownloadButton from "./DownloadButton";
+import DeleteButton from "./DeleteButton";
 
 
 export default function ProjectList(){
   const { projectData } = useProjectListContext();
-  const { replace } = useRouter();
 
   const columns: GridColDef[] = [
     {field:'id',headerName:"id",flex:1},
@@ -24,8 +24,13 @@ export default function ProjectList(){
       field:'download',headerName:"データダウンロード",
       flex:2,
       renderCell:(params:GridCellParams)=><DownloadButton params={params.row}/>
+    },
+    {
+      field:'delete',headerName:"データ削除",
+      flex:2,
+      renderCell:(params:GridCellParams)=><DeleteButton params={params.row}/>
     }
-]
+  ]
 
   // const handleRowClick = useCallback((params:GridRowParams)=>{
   //   replace(`/${params.id}/timeseries`);

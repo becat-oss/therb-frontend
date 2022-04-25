@@ -26,12 +26,11 @@ export function ProjectListProvider({children}:ProjectListProviderProps):React.R
   useEffect(()=>{
     async function getProjects(){
       const response = await req;
-      console.log('response["data"]',response["data"]);
 
       setProjectData(response["data"]);
     }
     getProjects();
-  },[]);
+  },[projectData]);
 
   const projectListState = useMemo((): ProjectListState=>{
     return{

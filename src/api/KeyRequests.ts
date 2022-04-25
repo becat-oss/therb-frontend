@@ -37,6 +37,13 @@ export async function getProjectData(){
   return data;
 }
 
+export async function deleteProjectData(projectId:string){
+  const url = `http://localhost:5000/projects/${projectId}`;
+  const response = await fetch(url, { mode: "cors",method:"DELETE" });
+  const data = await response.json();
+  return data;
+}
+
 export async function getDownload(projectName:string){
   const url = `http://localhost:5000/download/${projectName}`;
   const response = await fetch(url, { mode: "cors" });
