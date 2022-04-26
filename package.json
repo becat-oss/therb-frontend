@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next -p 8000",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start"
   },
@@ -25,6 +25,8 @@
     "building-editor": "0.0.5",
     "building-editor-react": "^0.0.8",
     "chartjs-plugin-zoom": "^1.1.1",
+    "leaflet": "^1.8.0",
+    "leaflet-draw": "^1.0.4",
     "lodash": "^4.17.21",
     "material-ui": "^0.20.2",
     "next": "^10.2.3",
@@ -33,10 +35,13 @@
     "react-datasheet-grid": "^2.0.3",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.10.0",
+    "react-leaflet": "^4.0.0",
+    "react-leaflet-draw": "^0.19.8",
     "tailwindcss": "^2.2.4",
     "three": "0.128.0"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.7.9",
     "@types/node": "^15.12.5",
     "@types/react": "^17.0.11",
     "@types/react-dom": "^17.0.7",
