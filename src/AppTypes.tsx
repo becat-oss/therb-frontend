@@ -26,4 +26,16 @@ export interface TimeSeriesData{
 
 export const timeseriesKeys = ['roomT','clodS','rhexS','ahexS','fs','clodL','rhexL','ahexL','fl','mrt'];
 export type TimeSeriesKey = typeof timeseriesKeys[number];
+
+// export interface SiteData{
+//   outline: coordinate[]
+// }
+
+export type SiteOutline = Coordinate[]
+
+export type Coordinate ={
+  lat: number,
+  lng: number
+}
+ 
 //type TimeSeriesData = number[];
