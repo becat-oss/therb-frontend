@@ -1,31 +1,38 @@
 import { EditorConfig } from "building-editor";
-import { EventConfig } from "building-editor-react";
 import { useMemo } from "react";
 
 interface AppConfig{
-    editorConfig: EditorConfig;
-    eventConfig: EventConfig;
+  baseEditorConfig: EditorConfig;
+  editorConfig: EditorConfig;
 }
 
 export function useAppConfig(): AppConfig{
-    const editorConfig:EditorConfig = useMemo(() =>{
-        return{
-            'control/viewCubeControls/visible': true,
-            'control/transformControls/enable': true,
-            'select/enabled':true,
-            'redo/enabled': true,
-            'undo/enabled': true,
-        }
-    },[]);
-    const eventConfig:EventConfig = useMemo(()=>{
-        return{
-            'contextmenu/enabled': true,
-            'delete/enabled': true,
-        }
-    },[]);
 
+  const baseEditorConfig: EditorConfig = useMemo(() => {
     return {
-        editorConfig,
-        eventConfig
+      'control/viewCubeControls/visible': true,
+      'control/viewCubeControls/northDirection': 0,
+      'control/orbitControls/enable': true,
+      'control/transformControls/enable': false,
+      'select/enabled': false,
+      'redo/enabled': false,
+      'undo/enabled': false,
+      'contextmenu/enabled': false,
+      'delete/enabled': false,
+    };
+  }, []);
+
+  const editorConfig:EditorConfig = useMemo(() =>{
+    return{
+      ...baseEditorConfig,
+      'select/enabled': true,
+      'redo/enabled': true,
+      'undo/enabled': true,
     }
+  },[]);
+
+  return {
+    baseEditorConfig,
+    editorConfig,
+  }
 }

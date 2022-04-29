@@ -4,14 +4,12 @@ import { EditorContextProps } from "building-editor-react/dist/EditorContext";
 
 // from EditorTypes.tsx
 export const editorKeys = {
-    userObject: 'userObject',
-    zoneGeometry: 'zoneGeometry',
+    inputGeometry: 'inputGeometry',
     selectHelper: 'selectHelper'
 } as const;
 
 interface EditorScene{
-    [editorKeys.userObject]: THREE.Group;
-    [editorKeys.zoneGeometry]: THREE.Group;
+    [editorKeys.inputGeometry]: THREE.Group;
 }
 
 interface EditorSceneHelper{
@@ -26,25 +24,20 @@ export interface EditorState {
 }
 
 // from initialEditorObjects.tsx
-const userObject=new THREE.Group();
-userObject.name = editorKeys.userObject;
-
-const zoneGeometry = new THREE.Group();
-zoneGeometry.name = editorKeys.zoneGeometry;
+const inputGeometry = new THREE.Group();
+inputGeometry.name = editorKeys.inputGeometry;
 
 const selectHelper=new THREE.Group();
 selectHelper.name=editorKeys.selectHelper;
 
 export const initialEditorObjects: EditorObjects = {
-    userObject,
-    zoneGeometry,
+    inputGeometry,
     selectHelper
 };
 
 export const initialState: EditorState={
     editorObjects:{
-        [editorKeys.userObject]:initialEditorObjects.userObject,
-        [editorKeys.zoneGeometry]:initialEditorObjects.zoneGeometry,
+        [editorKeys.inputGeometry]:initialEditorObjects.inputGeometry,
         [editorKeys.selectHelper]:initialEditorObjects.selectHelper
     },
     setEditorObjects: ()=>{}

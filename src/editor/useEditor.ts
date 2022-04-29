@@ -4,8 +4,9 @@ import { useEditorContext, editorKeys, EditorObjects } from "src/EditorContext";
 import * as THREE from 'three';
 import { useWebWorker } from "src/utils/useWebWorker";
 import { useAppContext } from "src/AppContext";
-import { convertCoordinatesToMesh, Zone } from "./zone";
-import { normalVectorOfWall, wallCenterPoint } from "src/utils/geometry";
+import { getSurfacesGeometry } from "./inputGeometry";
+
+export const wireframeSuffix = '_wireframe';
 
 interface InteractiveObject {
     object: THREE.Object3D | null;
@@ -14,9 +15,8 @@ interface InteractiveObject {
 interface BuildingEditorBridge {
     editorState: EditorState;
     scene: THREE.Scene;
-    loadModelFromLocal:() => void;
-    setEstimateLevels: () => void;
     lookAt:(object:THREE.Object3D)=>void;
+    addGeometry:()=>void;
     addObject:<K extends keyof EditorObjects>(key:K, object: THREE.Object3D) => void;
     removeObject: (object:THREE.Object3D)=> void;
     clearObject: <K extends keyof EditorObjects>(key:K) => void;
@@ -32,6 +32,7 @@ export function useEditor(): BuildingEditorBridge{
     const editorState=useEditorState();
     const{ scene,raycaster } = editorState;
     const actions = useActions();
+    const { geometry } = useAppContext();
     const { loadFileFromLocal, focus, removeObject:beRemoveObject, addObject:beAddObject, render }=actions;
     const { editorObjects, setEditorObjects } = useEditorContext();
 
@@ -66,6 +67,18 @@ export function useEditor(): BuildingEditorBridge{
         });
     },[setObjectVisibility]);
 
+    const addGeometry = useCallback(() => {
+      clearObject(editorKeys.inputGeometry);
+      
+      if (geometry && geometry['BuildingSurface:Detailed']) {
+        const surfaceGeometry = getSurfacesGeometry(geometry['BuildingSurface:Detailed']);
+        Object.values(surfaceGeometry).forEach(object => {
+          addObject(editorKeys.inputGeometry, object);
+        });
+      }
+  
+    }, [addObject, clearObject, geometry]);
+
     const lookAt = useCallback((obj:THREE.Object3D):void => {
         focus(obj);
     },[focus]);
@@ -96,7 +109,6 @@ export function useEditor(): BuildingEditorBridge{
     },[])
 
     const onLoadModel = useCallback((obj: THREE.Object3D | undefined, file: File): void=>{
-        console.log('obj', obj);
         const validatedObj = validateModel(obj);
         validatedObj.traverse(child => {
             if (child instanceof THREE.Mesh){
@@ -129,21 +141,9 @@ export function useEditor(): BuildingEditorBridge{
         });
         lookAt(validatedObj);
     },[]);
-    //const onLoadModelFromLocal = useCallback(obj: THREE.Object3D | underfined, file: File) =>{       
-    //}
-    const loadModelFromLocal = useCallback((): void =>{
-        beAddObject(editorObjects.userObject);
-        loadFileFromLocal(editorObjects.userObject,onLoadModel);
-        console.log('editorObjects.userObject', editorObjects.userObject);
-    },[]);
 
     const getCoplanarsWorker = useMemo(()=> new Worker(new URL('./getCoplanars.worker.js',import.meta.url)),[]);
     const { response: resGetCoplanar, exec: execGetCoplanar } = useWebWorker<string[]>(getCoplanarsWorker);
-    const setEstimateLevels = useCallback(async ()=>{
-        editorObjects.userObject.updateMatrixWorld();
-        await execGetCoplanar(editorObjects.userObject.toJSON());
-        
-    },[editorObjects.userObject, execGetCoplanar]);
 
     useEffect(()=>{
         if(resGetCoplanar){
@@ -155,11 +155,10 @@ export function useEditor(): BuildingEditorBridge{
         editorState,
         scene,
         lookAt,
+        addGeometry,
         addObject,
         removeObject,
         clearObject,
-        loadModelFromLocal,
-        setEstimateLevels,
         setObjectVisibility,
         setObjectVisibilities
     }

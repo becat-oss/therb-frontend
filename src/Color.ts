@@ -16,6 +16,38 @@ export interface ColorObj {
     [key:string]: string;
 }
 
+export interface Color {
+  'scene/background/light': string | number | THREE.Color;
+  'scene/background/dark': string | number | THREE.Color;
+  'object': string;
+  'canvas/object/light': string;
+  'canvas/object/dark': string;
+  'canvas/warning': string;
+  'gridHelper': number | THREE.Color;
+  'planeHelper': number;
+  'coplanarHelper': number;
+  'light': number;
+  'wireframe': number;
+  'select': string | number | THREE.Color;
+  'results/geometry/default': number;
+}
+
+export const color: Color = {
+  'scene/background/light': '#fff',
+  'scene/background/dark': '#222229',
+  'object': '#D1D5DB',
+  'canvas/object/light': '#222222',
+  'canvas/object/dark': '#f9f9f9',
+  'canvas/warning': HSLToHex(hslH * 0.02, hslS, hslL),
+  'gridHelper': 0x666666,
+  'planeHelper': 0x999999,
+  'coplanarHelper': 0x00bbff,
+  'light': 0xffffff,
+  'wireframe': 0x666666,
+  'select': 0x00bbff,
+  'results/geometry/default': 0xD1D5DB,
+};
+
 export const energyBreakdownColor: ColorObj = {
     'Cooling/General': HSLToHex(hslH * 0.7, hslS, hslL),
     'Heating/General': HSLToHex(hslH * 0.02, hslS, hslL),

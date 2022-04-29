@@ -1,4 +1,4 @@
-import { Editor, ViewCube, useEvents,useActions, useEditorState } from 'building-editor-react';
+import { Editor, ViewCube, useActions, useEditorState } from 'building-editor-react';
 import MyMenu from './Menu';
 import * as THREE from 'three';
 import { useEffect } from 'react';
@@ -11,7 +11,6 @@ const material = new THREE.MeshBasicMaterial();
 const box = new THREE.Mesh(geometry, material);
 
 export default function MyEditor() {
-  useEvents();
   const{ selected }=useEditorState();
   const { editorConfig } = useAppConfig();
 
