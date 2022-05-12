@@ -5,17 +5,25 @@ import Layout from 'src/components/Layout';
 import Button from '@material-ui/core/Button';
 import { useAppConfig } from 'src/AppConfig';
 import { useEditor } from 'src/editor/useEditor';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 
 const IndexView = dynamic(() => import('../views/IndexView'), { ssr: false });
 
 export default function Index() {
 
+  const router = useRouter();
+
+  useEffect(()=>{
+    router.replace('/projects');
+  },[]);
   return (
     <>
-      <Layout>
+      <div>redirecting</div>
+      {/* <Layout>
         <IndexView />
-      </Layout>
+      </Layout> */}
     </>
     );
 }
