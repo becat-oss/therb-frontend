@@ -15,6 +15,22 @@ export interface ProjectData{
     name: string;
 }
 
+export interface TimeseriesPayload{
+    result?:TimeseriesPayloadObject[];
+}
+
+export interface TimeseriesPayloadObject{
+    id: string;
+    hour: string;
+    roomT: string;
+    clodS: string;
+    rhexS: string;
+    ahexS: string;
+    fs:string;
+    mrt: string;
+}
+
+
 export interface TimeSeriesDataObject{
     roomId?: number;
     results?:TimeSeriesData;
@@ -25,5 +41,5 @@ export interface TimeSeriesData{
 }
 
 export const timeseriesKeys = ['roomT','clodS','rhexS','ahexS','fs','clodL','rhexL','ahexL','fl','mrt'];
-export type TimeSeriesKey = typeof timeseriesKeys[number];
+export type TimeseriesKey = typeof timeseriesKeys[number];
 //type TimeSeriesData = number[];

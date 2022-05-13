@@ -7,10 +7,20 @@ import Button from "@material-ui/core/Button";
 import DetailButton from "./DetailButton";
 import DownloadButton from "./DownloadButton";
 import DeleteButton from "./DeleteButton";
+import { useQuery } from "@apollo/client";
+import { GET_PROJECTS } from "src/queries/posts.query";
 
 
 export default function ProjectList(){
   const { projectData } = useProjectListContext();
+
+  //TODO: allProjectsのエンドポイントがうまくいってない
+  // const { loading,error,data } = useQuery(GET_PROJECTS);
+
+  // if (loading) return <p>Loading...</p>;
+  // if (error) return <p>Error {JSON.stringify(error)}(</p>;
+
+  // console.log('data from apollo',data);
 
   const columns: GridColDef[] = [
     {field:'id',headerName:"id",flex:1},

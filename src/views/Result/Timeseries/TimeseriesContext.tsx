@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useMemo, useContext } from "react";
 import { getTimeseriesData } from "src/api/KeyRequests";
-import { TimeSeriesDataObject, TimeSeriesKey } from "src/AppTypes";
+import { TimeSeriesDataObject, TimeseriesKey } from "src/AppTypes";
 
 interface TimeseriesState{
   timeseriesData: TimeSeriesDataObject;
   setTimeseriesData: (timeseriesData: TimeSeriesDataObject) => void;
-  timeseriesKey: TimeSeriesKey;
-  setTimeseriesKey: (timeseriesKeys: TimeSeriesKey) => void;
+  timeseriesKey: TimeseriesKey;
+  setTimeseriesKey: (timeseriesKeys: TimeseriesKey) => void;
   chartStartDate: Date | null;
   setChartStartDate: (chartStartDate: Date | null) => void;
   chartEndDate: Date | null;
