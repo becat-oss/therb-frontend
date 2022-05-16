@@ -10,7 +10,7 @@ export default function DateSelector(){
   const { chartStartDate,setChartStartDate,chartEndDate,setChartEndDate } = useTimeseriesContext();
 
   return (
-    <Paper>
+    <Paper sx={{p:1,m:0}} elevation={1}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Stack direction="row" spacing={3}>
           <DatePicker
