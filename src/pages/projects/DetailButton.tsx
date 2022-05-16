@@ -10,7 +10,7 @@ export default function DetailButton({params}:Props):React.ReactElement{
   const { replace } = useRouter();
   
   const handleClick = () =>{
-    replace(`/${params.id}/timeseries`);
+    replace(`/timeseries/${params.id}`);
   }
 
   return(

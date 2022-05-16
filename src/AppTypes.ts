@@ -121,16 +121,33 @@ export interface ProjectData{
     name: string;
 }
 
+export interface TimeseriesPayload{
+  result?:TimeseriesPayloadObject[];
+}
+
+export interface TimeseriesPayloadObject{
+  id: string;
+  hour: string;
+  roomT: string;
+  clodS: string;
+  rhexS: string;
+  ahexS: string;
+  fs:string;
+  mrt: string;
+}
+
+
 export interface TimeSeriesDataObject{
-    roomId?: number;
-    results?:TimeSeriesData;
+  roomId?: number;
+  results?:TimeSeriesData;
 }
 
 export interface TimeSeriesData{
-    [key:string]:number[];
+  [key:string]:number[];
 }
 
 export const timeseriesKeys = ['roomT','clodS','rhexS','ahexS','fs','clodL','rhexL','ahexL','fl','mrt'];
+
 export type TimeSeriesKey = typeof timeseriesKeys[number];
 
 // export interface SiteData{
@@ -140,8 +157,6 @@ export type TimeSeriesKey = typeof timeseriesKeys[number];
 export type SiteOutline = Coordinate[]
 
 export type Coordinate ={
-  lat: number,
-  lng: number
+lat: number,
+lng: number
 }
- 
-//type TimeSeriesData = number[];

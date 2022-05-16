@@ -7,7 +7,6 @@ export default function Timeseries():React.ReactElement{
     <Layout>
       <Section sx={{flexDirection: 'column',p:0}}>
         <Stack direction={{xs:'column',sm:'row'}} sx={{m:2,flexWrap:'wrap'}}>
-          <KeySelector />
         </Stack>
       </Section>
     </Layout>
