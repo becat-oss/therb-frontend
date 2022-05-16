@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import { useEditor } from 'src/editor/useEditor';
 import SideForm from './SideForm';
 import { GeometryProvider } from './GeometryContext';
+import EditParamDialog from './EditParamDialog';
 
 export default function Geometry(): React.ReactElement{
   const { editorConfig } = useAppConfig();
@@ -17,10 +18,7 @@ export default function Geometry(): React.ReactElement{
     if(geometry){
       addGeometry()
     }
-    console.log('scene',scene)
   },[geometry]);
-
-  console.log('editorConfig',editorConfig);
 
   return(
     <AppProvider>
@@ -31,6 +29,7 @@ export default function Geometry(): React.ReactElement{
             <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
               <Editor config={editorConfig}/>
             </div>
+            <EditParamDialog />
           </GeometryProvider>
         </EditorProvider>  
       </Provider>

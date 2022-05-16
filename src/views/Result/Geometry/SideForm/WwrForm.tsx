@@ -9,16 +9,16 @@ interface FormProps{
   name:string;
   disabled: boolean;
 }
+
 function Form({name,disabled=false}:FormProps): React.ReactElement {
   const { wwr,setWwr } = useGeometryContext();
-  console.log('wwr in form',wwr);
   return (
     <FormControl style={{display:disabled ? 'none':undefined}}>
       <TextField
         key={name}
         id={name}
         variant="standard"
-        defaultValue={wwr}
+        value={wwr}
         onChange = {(e: React.ChangeEvent<HTMLInputElement>) => {
           setWwr(Number(e.target.value));
         }}
@@ -40,7 +40,8 @@ function FormPerWall({name,disabled=true}:FormProps): React.ReactElement {
         key={name}
         id={name}
         variant="standard"
-        defaultValue={wwrs[name]}
+        //defaultValue={wwrs[name]}
+        value={wwrs[name]}
         onChange = {(e: React.ChangeEvent<HTMLInputElement>) => {
           setWwrs({...wwrs,[name]:Number(e.target.value)});
         }}
