@@ -5,7 +5,8 @@ import { EditorContextProps } from "building-editor-react/dist/EditorContext";
 // from EditorTypes.tsx
 export const editorKeys = {
     inputGeometry: 'inputGeometry',
-    selectHelper: 'selectHelper'
+    selectHelper: 'selectHelper',
+    copalanrHelper: 'copalanrHelper',
 } as const;
 
 interface EditorScene{

@@ -15,6 +15,7 @@ interface InteractiveObject {
 interface BuildingEditorBridge {
     editorState: EditorState;
     scene: THREE.Scene;
+    sceneHelpers: THREE.Scene;
     lookAt:(object:THREE.Object3D)=>void;
     addGeometry:()=>void;
     addObject:<K extends keyof EditorObjects>(key:K, object: THREE.Object3D) => void;
@@ -30,7 +31,7 @@ type ObjectVisibilities = {
 
 export function useEditor(): BuildingEditorBridge{
     const editorState=useEditorState();
-    const{ scene,raycaster } = editorState;
+    const{ scene,raycaster,sceneHelpers } = editorState;
     const actions = useActions();
     const { geometry } = useAppContext();
     const { loadFileFromLocal, focus, removeObject:beRemoveObject, addObject:beAddObject, render }=actions;
@@ -154,6 +155,7 @@ export function useEditor(): BuildingEditorBridge{
     return{
         editorState,
         scene,
+        sceneHelpers,
         lookAt,
         addGeometry,
         addObject,

@@ -150,13 +150,12 @@ export const timeseriesKeys = ['roomT','clodS','rhexS','ahexS','fs','clodL','rhe
 
 export type TimeSeriesKey = typeof timeseriesKeys[number];
 
-// export interface SiteData{
-//   outline: coordinate[]
-// }
-
 export type SiteOutline = Coordinate[]
 
 export type Coordinate ={
 lat: number,
 lng: number
 }
+
+export type AnalysisPoint = [number, number];
+export type AnalysisLine = [AnalysisPoint, AnalysisPoint];

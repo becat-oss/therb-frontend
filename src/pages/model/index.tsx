@@ -1,9 +1,11 @@
-import React from "react";
+import dynamic from "next/dynamic";
+import Layout from "src/components/Layout";
 
-export default function EditPlan():React.ReactElement{
+const EditPlans = dynamic(() => import("../../views/EditPlans"), { ssr: false });
+export default function ModelIndex(){
   return(
-    <EditPlansProvider>
-      
-    </EditPlansProvider>
+    <Layout>
+      <EditPlans />
+    </Layout>
   )
 }
