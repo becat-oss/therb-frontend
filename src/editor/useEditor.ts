@@ -3,8 +3,6 @@ import { useActions, useEditorState, EditorState } from "building-editor-react";
 import { useEditorContext, editorKeys, EditorObjects } from "src/EditorContext";
 import * as THREE from 'three';
 import { useWebWorker } from "src/utils/useWebWorker";
-import { convertToGeometry } from "./parseGeometry";
-import { AnalysisZone } from "src/AppTypes";
 import { useAppContext } from "src/AppContext";
 import { convertCoordinatesToMesh, Zone } from "./zone";
 import { normalVectorOfWall, wallCenterPoint } from "src/utils/geometry";
@@ -19,14 +17,11 @@ interface BuildingEditorBridge {
     loadModelFromLocal:() => void;
     setEstimateLevels: () => void;
     lookAt:(object:THREE.Object3D)=>void;
-    addZoneGeometry: () => void;
-    setExteriorWalls:() => void;
     addObject:<K extends keyof EditorObjects>(key:K, object: THREE.Object3D) => void;
     removeObject: (object:THREE.Object3D)=> void;
     clearObject: <K extends keyof EditorObjects>(key:K) => void;
     setObjectVisibility: <K extends keyof EditorObjects>(key: K,visible: boolean) =>void;
     setObjectVisibilities: (visibilities: Partial<ObjectVisibilities>)=>void
-    zones: AnalysisZone[];
 }
 
 type ObjectVisibilities = {
@@ -39,16 +34,6 @@ export function useEditor(): BuildingEditorBridge{
     const actions = useActions();
     const { loadFileFromLocal, focus, removeObject:beRemoveObject, addObject:beAddObject, render }=actions;
     const { editorObjects, setEditorObjects } = useEditorContext();
-    const {zoneData, setZoneData }=useAppContext();
-
-    const zones:AnalysisZone[] = [{
-        name:'test',
-        coordinates:[[0,0],[5,0],[5,5],[0,5]],
-        program: 'office',
-        exteriorWalls:[0,1,2,3],
-        space_type: 'office',
-        wwr:[40,40,40,40]
-    }]
 
     const addObject = useCallback(<K extends keyof EditorObjects>(key:K, object: THREE.Object3D)=>{
         const parent = editorObjects[key];
@@ -81,59 +66,6 @@ export function useEditor(): BuildingEditorBridge{
         });
     },[setObjectVisibility]);
 
-    const addZoneGeometry = useCallback(()=>{
-        clearObject(editorKeys.zoneGeometry);
-        console.log('editorKeys.zoneGeometry',editorKeys.zoneGeometry);
-        zoneData.geometries.forEach((g)=>{
-            g.zones && g.zones.forEach((zone)=>{
-                const mesh = convertCoordinatesToMesh(zone.coordinates, zone.name, g.level, g.height);
-
-                if (Array.isArray(mesh.material)){
-                    mesh.material.forEach(m=>{
-                        m.transparent = true;
-                        m.opacity = 0.5;
-                    });
-                } else {
-                    mesh.material.transparent = true;
-                    mesh.material.opacity = 0.5;
-                }
-                console.log('mesh to add zoneGeometry',mesh);
-                addObject(editorKeys.zoneGeometry, mesh);
-                const geo = new THREE.EdgesGeometry(mesh.geometry);
-                const mat = new THREE.LineBasicMaterial({linewidth: 1});
-                const wireframe = new THREE.LineSegments(geo,mat);
-                wireframe.name = zone.name + "_wireframe";
-                addObject(editorKeys.zoneGeometry,wireframe);
-            })
-        });
-    },[addObject, editorObjects.zoneGeometry,zoneData.geometries]);
-
-    const setExteriorWalls = useCallback(()=>{
-        const zoneGeometry = editorObjects[editorKeys.zoneGeometry];
-        zoneData.geometries.forEach((g,gi)=>{
-            g.zones && g.zones.forEach((zone, zonei)=>{
-                zone.exteriorWalls=[];
-                const z = new Zone(zone);
-                const rotation = z.getCoordinateRotation();
-
-                zone.coordinates.forEach((_,i)=>{
-                    const [c, nextC]=z.getCoordinate(i);
-                    const direction = normalVectorOfWall(c, nextC, rotation);
-                    const origin = wallCenterPoint(c,nextC, g.level, g.height).add(direction.multiplyScalar(0.1));
-                    raycaster.set(origin, direction);
-
-                    const intersectObject = raycaster.intersectObject(zoneGeometry, true).filter(i=>i.distance>0.1 && i.object instanceof THREE.Mesh);
-
-                    if (intersectObject.length === 0){
-                        zone.exteriorWalls.push(i);
-                    }
-                });
-                zoneData.geometries[gi].zones[zonei] = zone;
-            });
-        });
-        //console.log('zoneData',zoneData.geometries);
-        setZoneData(zoneData);
-    },[])
     const lookAt = useCallback((obj:THREE.Object3D):void => {
         focus(obj);
     },[focus]);
@@ -220,15 +152,12 @@ export function useEditor(): BuildingEditorBridge{
     },[resGetCoplanar]);
     
     return{
-        zones,
         editorState,
         scene,
         lookAt,
         addObject,
         removeObject,
         clearObject,
-        addZoneGeometry,
-        setExteriorWalls,
         loadModelFromLocal,
         setEstimateLevels,
         setObjectVisibility,

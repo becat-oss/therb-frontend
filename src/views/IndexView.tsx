@@ -12,11 +12,11 @@ export default function Index() {
     <Provider>   
       <EditorProvider>
         <Editor />
-        <Button variant="contained" style={{ position: 'absolute', zIndex: 1, left: 50, top: 50 }} 
+        {/* <Button variant="contained" style={{ position: 'absolute', zIndex: 1, left: 50, top: 50 }} 
           onClick={async(): Promise<void>=>{
           loadModelFromLocal();
         }}>Import Model
-        </Button>
+        </Button> */}
       </EditorProvider>
     </Provider>
   );
