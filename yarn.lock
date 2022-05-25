@@ -1847,6 +1847,11 @@ ieee754@^1.1.4:
   resolved "https://registry.npmjs.org/ieee754/-/ieee754-1.2.1.tgz"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
 
+immutability-helper@^3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/immutability-helper/-/immutability-helper-3.1.1.tgz#2b86b2286ed3b1241c9e23b7b21e0444f52f77b7"
+  integrity sha512-Q0QaXjPjwIju/28TsugCHNEASwoCcJSyJV3uO1sOIQGI0jKgm9f41Lvz0DZj3n46cNCyAZTsEYoY4C2bVRUzyQ==
+
 import-cwd@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmjs.org/import-cwd/-/import-cwd-3.0.0.tgz"
@@ -2266,6 +2271,11 @@ make-dir@^3.0.2:
   integrity sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==
   dependencies:
     semver "^6.0.0"
+
+material-ui-color@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/material-ui-color/-/material-ui-color-1.2.0.tgz#3dde809e9f5f4a29499add83640aeadaaec36f6c"
+  integrity sha512-bD2Rww+hakJxD2/19uxc280Vh292DnRStLke2LDFavVtGd5fzOz09zIrHO3ZHlMkJFsvwx6IwiB4/932ftv0sQ==
 
 material-ui@^0.20.2:
   version "0.20.2"

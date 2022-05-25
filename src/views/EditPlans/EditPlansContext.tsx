@@ -19,7 +19,8 @@ const initialState:EditPlansState = {
   setNorthAxis: (northAxis:number) => { return;},
   editFunction: 'Select',
   setEditFunction: (editFunction:string) => { return;},
-  layers: [],
+  layers: [new Layer("default",true,1)],
+  //layers: [],
   setLayers: (layers:Layer[]) => { return;},
 }
 

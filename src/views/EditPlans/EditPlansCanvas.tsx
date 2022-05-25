@@ -63,7 +63,7 @@ const sketch = (p:p5)=>{
     // if (doc.geometryObjects.length !== docLength){
     //   doc.geometryObjects
     // }
-    //console
+    //console.log('doc',doc);
 
     doc.draw(p);
   }
@@ -72,7 +72,7 @@ const sketch = (p:p5)=>{
 export default function EditPlansCanvas(): React.ReactElement{
   const theme = useTheme();
   const { canvasWidth,canvasHeight,ref } =useP5Context();
-  const { northAxis,editFunction } =useEditPlansContext();
+  const { northAxis,editFunction,layers } =useEditPlansContext();
 
   useEffect(()=>{
     const info = new CanvasInfo(0,canvasHeight,canvasWidth);
@@ -93,9 +93,8 @@ export default function EditPlansCanvas(): React.ReactElement{
     const scaleObject = new ScaleObject(info.drawCenter);
     const canvasObject = new CanvasObject(new GridObject(20,5,5),new AxisObject(),scaleObject,orientation);
 
-    const layers:Layer[] = [new Layer('test',true,1)]
+    //const layers:Layer[] = [new Layer('default',true,1)]
 
-    
     doc = new CanvasDocument(info,canvasObject,geometries,layers);
   },[])
 
