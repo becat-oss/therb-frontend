@@ -1,5 +1,6 @@
 import { condition } from 'src/parameters';
 
+//TODO: typesフォルダにmigrateすべき
 export interface AppState {
     mode: string;
     setMode: (newMode: string) => void;

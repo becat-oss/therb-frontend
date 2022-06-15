@@ -27,6 +27,11 @@ export default function Header():React.ReactElement{
                             Projects
                         </Typography>
                     </Link>
+                    <Link href={'/materials'}>
+                        <Typography style={{ marginRight: 16 }}>
+                            Materials
+                        </Typography>
+                    </Link>
                     {/* <Typography style={{ marginRight: 16 }}>
                         Settings
                     </Typography> */}
