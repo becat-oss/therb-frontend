@@ -1,10 +1,12 @@
 import React from "react"
-import Layout from "src/components/Layout"
-import InputMaterialForm from "./inputMaterialForm"
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
+import Layout from "src/components/Layout"
+import InputMaterialForm from "./inputMaterialForm"
+import {EditParamDialogProvider} from "./EditParamDialogContext"
+import ConstructionForm from "./ConstructionForm"
 
-export default function Material(): React.ReactElement{
+function EnvelopeContent(): React.ReactElement{
     const baseSidebarWidth =100;
     return(
         <Container sx={{ marginLeft: `${baseSidebarWidth}px`, mr: 1, pt: 2, width: `calc(100% - ${baseSidebarWidth}px)` }}>
@@ -18,10 +20,19 @@ export default function Material(): React.ReactElement{
                 <Grid item xs={12} sm={6}>
                     <ConstructionForm title="内壁" construction="floor" />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                     <WindowForm title={t('window')} />
-                </Grid>
+                </Grid> */}
             </Grid>
         </Container>
+    )
+}
+
+export default function Material():React.ReactElement{
+
+    return (
+        <EditParamDialogProvider>
+            <EnvelopeContent />
+        </EditParamDialogProvider>
     )
 }
