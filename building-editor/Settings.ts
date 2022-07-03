@@ -35,8 +35,8 @@ export class Settings {
     this.initialObjects = defaultSettings.initialObjects;
     this.initialHelpers = defaultSettings.initialHelpers;
 
-    if (settings) {
-      Object.assign(this, settings);
-    }
+    // if (settings) {
+    //   Object.assign(this, settings);
+    // }
   }
 }

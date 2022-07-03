@@ -15,7 +15,7 @@ export class Event {
   constructor(editor: Editor) {
     const setSceneSize = (width?: number, height?: number) => {
       if (!width || !height) {
-        const size = getViewSize();
+        const size = getViewSize(editor.renderer.domElement);
         width = size.width;
         height = size.height;
       }

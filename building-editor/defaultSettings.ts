@@ -8,6 +8,8 @@ renderer.autoClear = false;
 renderer.shadowMap.autoUpdate = false;
 renderer.outputEncoding = THREE.sRGBEncoding;
 
+console.log("renderer started");
+
 // camera
 const camera = new THREE.PerspectiveCamera(60, 1, 0.01, 10000);
 camera.name = 'camera';

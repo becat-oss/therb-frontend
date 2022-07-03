@@ -16,7 +16,8 @@ export default function Index() {
   const router = useRouter();
 
   useEffect(()=>{
-    router.replace('/projects');
+    router.replace('/result');
+    // router.replace('/projects');
   },[]);
   return (
     <>
