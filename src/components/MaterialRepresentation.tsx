@@ -39,8 +39,8 @@ export default function MaterialRepresentation({
   return (
     <svg viewBox={viewBox} xmlns="http://www.w3.org/2000/svg">
       <g>
-        {polygonStrs.map((polygonStr) => (
-          <polygon points={polygonStr} fill="none" stroke="black" />
+        {polygonStrs.map((polygonStr, i) => (
+          <polygon key={i} points={polygonStr} fill="none" stroke="black" />
         ))}
       </g>
       Sorry, your browser does not support inline SVG.
