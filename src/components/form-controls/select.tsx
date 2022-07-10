@@ -10,12 +10,13 @@ interface SelectProps {
   [key: string]:any;
 }
 
-export default function Select({ label, list, ...others }: SelectProps) {
+export default function Select({ label, list,onChange, ...others }: SelectProps) {
   const [item, setItem] = useState(list[0] ?? "");
   const id = `${label}_select`;
 
   const handleChange = (event: SelectChangeEvent) => {
     setItem(event.target.value as string);
+    onChange && onChange(event);
   };
 
   return (

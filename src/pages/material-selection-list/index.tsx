@@ -10,13 +10,13 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
-import { getMaterials } from "src/services/MaterialSelectionService";
+import { getMaterial, getMaterials } from "src/services/MaterialSelectionService";
 import { useRouter } from "next/router";
 
 const StyledPaperGeneral = styled(Paper)({
   height: 200,
   elevation: 2,
-  overflow:"hidden"
+  overflow: "hidden",
 });
 
 const StyledPaperAdd = styled(StyledPaperGeneral)({
@@ -48,9 +48,13 @@ export default function MaterialSelectionList(): React.ReactElement {
     setAnchorEl(null);
   };
 
-  const addMaterial = (e:any) => {
+  const addMaterial = (e: any) => {
     e.preventDefault();
-    router.push('../material-addition');
+    router.push("../material-addition/new");
+  };
+
+  const viewMaterial = (id: string) => {
+    router.push(`../material-addition/${id}`);    
   };
 
   return (
@@ -58,24 +62,31 @@ export default function MaterialSelectionList(): React.ReactElement {
       <Grid item xs={3} sm={3} md={3}>
         <StyledPaperAdd onClick={addMaterial}>
           <StyledTypography>Add New</StyledTypography>
-          <Box sx={{
-            width: 50,
-            height: 50,
-            borderStyle:"solid",
-            borderRadius:"50%",
-            borderWidth:"1.5px",
-            borderColor:"#707070",
-            display:"flex",
-            justifyContent:"center",
-            alignItems:"center"
-          }}>
-            <AddIcon sx={{color:"#707070", fontSize: 30 }}></AddIcon>
+          <Box
+            sx={{
+              width: 50,
+              height: 50,
+              borderStyle: "solid",
+              borderRadius: "50%",
+              borderWidth: "1.5px",
+              borderColor: "#707070",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <AddIcon sx={{ color: "#707070", fontSize: 30 }}></AddIcon>
           </Box>
         </StyledPaperAdd>
       </Grid>
       {materials.map((m, i) => (
-        <Grid item xs={3} sm={3} md={3}>
-          <StyledPaperGeneral>
+        <Grid key={m.uniqueId} item xs={3} sm={3} md={3}>
+          <StyledPaperGeneral
+            onClick={(e) => {
+              e.preventDefault();
+              viewMaterial(m.uniqueId);
+            }}
+          >
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Box></Box>
               <Box>
