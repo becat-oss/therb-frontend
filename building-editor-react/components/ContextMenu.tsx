@@ -9,7 +9,7 @@ function useOutsideClick(ref: React.MutableRefObject<HTMLDivElement | null>, act
       const current = ref.current;
       const target = event.target as Node;
       if (current && target && !current.contains(target) && action) {
-        action();
+        //action();
       }
     }
 

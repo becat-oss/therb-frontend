@@ -5,6 +5,7 @@ import { useEditor } from '../hooks/useEditor';
 const Viewport: React.VFC<React.HTMLAttributes<HTMLDivElement>> = (props) => {
   const { editor } = useEditor();
   useInit();
+  console.log("viewport",editor);
 
   return (
     <div id="building-editor-viewport" style={{ width: '100%', height: '100%' }} {...props}>

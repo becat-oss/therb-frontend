@@ -4,8 +4,8 @@ interface ViewSize {
   aspect: number;
 }
 
-export function getViewportSize(): ViewSize | null {
-  const viewportElement = document.getElementById('building-editor-viewport');
+export function getViewportSize(viewportElement: HTMLElement): ViewSize | null {
+  // const viewportElement = document.getElementById('building-editor-viewport');
   if (!viewportElement) return null;
   const viewport = viewportElement.getBoundingClientRect();
 
@@ -15,8 +15,8 @@ export function getViewportSize(): ViewSize | null {
   return { width, height, aspect: height / width };
 }
 
-export function getViewSize(): ViewSize {
-  const viewportSize = getViewportSize();
+export function getViewSize(dom: HTMLElement): ViewSize {
+  const viewportSize = getViewportSize(dom);
   const width = viewportSize ? viewportSize.width : window.innerWidth;
   const height = viewportSize ? viewportSize.height : window.innerHeight;
 

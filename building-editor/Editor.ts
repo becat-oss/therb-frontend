@@ -67,6 +67,7 @@ export class Editor {
   event: Event;
 
   constructor(config?: EditorConfig, settings?: EditorSettings) {
+    console.log("config", config)
     this.config = new Config(config);
     this.settings = new Settings(settings);
     this.editorControls = new EditorControls();
@@ -123,6 +124,7 @@ export class Editor {
     this.INITIAL_HELPERS = this.settings.initialHelpers;
     this.INITIAL_OBJECTS.forEach((object) => this.addObject(object));
     this.INITIAL_HELPERS.forEach((object) => this.addObjectAsHelper(object));
+    console.log("dom", this.renderer.domElement)
   }
 
   setConfig(config: EditorConfig): void {
@@ -248,6 +250,7 @@ export class Editor {
   }
 
   render(): void {
+    console.log("render called");
     this.scene.updateMatrixWorld();
     this.renderer.render(this.scene, this.camera);
     this.sceneHelpers.updateMatrixWorld();

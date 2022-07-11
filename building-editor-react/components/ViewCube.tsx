@@ -9,7 +9,7 @@ const ViewCube: React.VFC<Props> = (props) => {
 
   useEffect(() => {
     if (ref.current && !ref.current.firstChild) {
-      ref.current.appendChild(editor.viewCubeControls.element);
+      // ref.current.appendChild(editor.viewCubeControls.element);
     }
   }, [editor.viewCubeControls.element]);
 
