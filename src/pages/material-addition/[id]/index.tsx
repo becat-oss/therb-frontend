@@ -20,13 +20,21 @@ import Select from "src/components/form-controls/select";
 import { Button, SelectChangeEvent } from "@mui/material";
 
 export interface IMaterialDetail {
+  id: string;
+  name: string;
+  conductivity: number;
+  density: number;
+  specificHeat: number;
+} 
+
+export interface IConstructionDetail {
   uniqueId: string;
   name?: string;
   category?: string;
   tags?: string[];
   description?: string;
   layerStructure?: {
-    type: string;
+    material: IMaterialDetail;
     thickness: string;
   }[];
   uValue?: number;
@@ -41,7 +49,7 @@ export default function MaterialAddition(): React.ReactElement {
   const router = useRouter();
   const { id } = router.query;
 
-  let detail: IMaterialDetail;
+  let detail: IConstructionDetail;
   if (id == "new") {
     detail = { uniqueId: generateUniqueId(5) };
   } else {
@@ -53,7 +61,7 @@ export default function MaterialAddition(): React.ReactElement {
   const [tags, setTags] = useState(detail.tags || []);
   const [layerMaterialTypes, setlayerMaterialTypes] = useState(
     detail.layerStructure
-      ? detail.layerStructure.map((l) => l.type)
+      ? detail.layerStructure.map((l) => l.material)
       : [materialTypes[0], materialTypes[0], materialTypes[0]]
   );
   const [layerMaterialThickness, setlayerMaterialThickness] = useState(
@@ -70,14 +78,14 @@ export default function MaterialAddition(): React.ReactElement {
 
   const onSubmit = (e: FormDataEvent) => {
     e.preventDefault();
-    const materialDetail: IMaterialDetail = {
+    const materialDetail: IConstructionDetail = {
       uniqueId: detail.uniqueId,
       name,
       category,
       tags,
       layerStructure: [0, 1, 2].map((i) => {
         return {
-          type: layerMaterialTypes[i],
+          material: layerMaterialTypes[i],
           thickness: layerMaterialThickness[i],
         };
       }),
@@ -230,11 +238,11 @@ export default function MaterialAddition(): React.ReactElement {
                         <Stack spacing={2}>
                           <Select
                             label="Type"
-                            list={materialTypes}
+                            list={materialTypes.map((m) => m.name)}
                             defaultValue={layerMaterialTypes[0]}
                             onChange={(e: SelectChangeEvent) =>
                               setlayerMaterialTypes([
-                                e.target.value,
+                                materialTypes.filter((m) => m.name === e.target.value)[0],
                                 layerMaterialTypes[1],
                                 layerMaterialTypes[2],
                               ])
@@ -242,25 +250,25 @@ export default function MaterialAddition(): React.ReactElement {
                           ></Select>
                           <Select
                             label="Type"
-                            list={materialTypes}
+                            list={materialTypes.map((m) => m.name)}
                             defaultValue={layerMaterialTypes[1]}
                             onChange={(e: SelectChangeEvent) =>
                               setlayerMaterialTypes([
                                 layerMaterialTypes[0],
-                                e.target.value,
+                                materialTypes.filter((m) => m.name === e.target.value)[0],
                                 layerMaterialTypes[2],
                               ])
                             }
                           ></Select>
                           <Select
                             label="Type"
-                            list={materialTypes}
+                            list={materialTypes.map((m) => m.name)}
                             defaultValue={layerMaterialTypes[2]}
                             onChange={(e: SelectChangeEvent) =>
                               setlayerMaterialTypes([
                                 layerMaterialTypes[0],
                                 layerMaterialTypes[1],
-                                e.target.value,
+                                materialTypes.filter((m) => m.name === e.target.value)[0],
                               ])
                             }
                           ></Select>

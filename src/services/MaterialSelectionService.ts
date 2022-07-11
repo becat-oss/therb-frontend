@@ -1,22 +1,49 @@
-import { IMaterialDetail } from "src/pages/material-addition/[id]";
+import { IConstructionDetail, IMaterialDetail } from "src/pages/material-addition/[id]";
 
 export function getMaterialTags(): string[] {
-  return ["tag1", "tag2", "tag3", "tag4", "tag5"];
+  //TODO: prepare API for tags
+  return ["木造", "コンクリート造", "鉄骨造", "低コスト"];
 }
 
 export function getCategories(): string[] {
-  return ["category1", "category2", "category3", "category4", "category5"];
+  return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor"];
 }
 
-export function getMaterialTypes(): string[] {
-  return [
-    "MaterialType1",
-    "MaterialType2",
-    "MaterialType3",
-    "MaterialType4",
-    "MaterialType5",
-  ];
-}
+// export function getMaterialTypes(): string[] {
+//   return [
+//     "MaterialType1",
+//     "MaterialType2",
+//     "MaterialType3",
+//     "MaterialType4",
+//     "MaterialType5",
+//   ];
+// }
+
+export function getMaterialTypes(): IMaterialDetail[] {
+    return [
+      {
+        id: '1',
+        name: 'normalConcrete',
+        conductivity: 1.637,
+        density: 2000,
+        specificHeat: 1000,
+      },
+      {
+        id: '2',
+        name: 'polystyreneFoam',
+        conductivity: 0.037,
+        density: 25,
+        specificHeat: 1400,
+      },
+      {
+        id: '3',
+        name: 'plywood',
+        conductivity: 0.129,
+        density: 500,
+        specificHeat: 2226,
+      }
+    ];
+  }
 
 export function getMaterialSizes(): string[] {
   return ["10mm", "20mm", "30mm", "40mm", "50mm"];
@@ -33,9 +60,9 @@ export function generateUniqueId(length: number) {
   return result;
 }
 
-const materialMap = new Map<string, IMaterialDetail>();
+const materialMap = new Map<string, IConstructionDetail>();
 
-export function addToMaterial(material: IMaterialDetail) {
+export function addToMaterial(material: IConstructionDetail) {
   materialMap.set(material.uniqueId, material);
 }
 
