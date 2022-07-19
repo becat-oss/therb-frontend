@@ -17,7 +17,8 @@ import {
 } from "src/services/MaterialSelectionService";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
 import Select from "src/components/form-controls/select";
-import { Button, SelectChangeEvent } from "@mui/material";
+import { Button, IconButton, SelectChangeEvent } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export interface IMaterialDetail {
   id: string;
@@ -25,7 +26,7 @@ export interface IMaterialDetail {
   conductivity: number;
   density: number;
   specificHeat: number;
-} 
+}
 
 export interface IConstructionDetail {
   uniqueId: string;
@@ -41,6 +42,15 @@ export interface IConstructionDetail {
   lcco2?: number;
   cost?: number;
 }
+
+function* layerIDGenerator() {
+  let count = 0;
+  while (true) {
+    yield ++count;
+  }
+  return;
+}
+const layerIdCounter = layerIDGenerator();
 
 export default function MaterialAddition(): React.ReactElement {
   const materialTypes = getMaterialTypes();
@@ -59,15 +69,17 @@ export default function MaterialAddition(): React.ReactElement {
   const [name, setName] = useState(detail.name || "");
   const [category, setCategory] = useState(detail.category || "");
   const [tags, setTags] = useState(detail.tags || []);
-  const [layerMaterialTypes, setlayerMaterialTypes] = useState(
+
+  const [materialLayers, setMaterialLayers] = useState(
     detail.layerStructure
-      ? detail.layerStructure.map((l) => l.material)
-      : [materialTypes[0], materialTypes[0], materialTypes[0]]
-  );
-  const [layerMaterialThickness, setlayerMaterialThickness] = useState(
-    detail.layerStructure
-      ? detail.layerStructure.map((l) => l.thickness)
-      : [materialThickness[0], materialThickness[0], materialThickness[0]]
+      ? detail.layerStructure.map((l) => {
+          return {
+            id: layerIdCounter.next().value as number,
+            type: l.material,
+            thickness: l.thickness,
+          };
+        })
+      : ([] as { id: number; type: IMaterialDetail; thickness: string }[])
   );
   const [description, setDescription] = useState(detail.description || "");
   const [uValue, setUValue] = useState(detail.uValue || 0);
@@ -76,6 +88,37 @@ export default function MaterialAddition(): React.ReactElement {
 
   const categories = getCategories();
 
+  const onAddLayer = () => {
+    const tempMaterialLayers = materialLayers.slice();
+    tempMaterialLayers.push({
+      id: layerIdCounter.next().value as number,
+      type: materialTypes[0],
+      thickness: materialThickness[0],
+    });
+    setMaterialLayers(tempMaterialLayers);
+  };
+
+  const onMaterialLayerDelete = (id: number) => {
+    const tempMaterialLayers = materialLayers.slice();
+    const found = tempMaterialLayers.findIndex((l) => l.id === id);
+    if (found !== -1) {
+      tempMaterialLayers.splice(found, 1);
+      setMaterialLayers(tempMaterialLayers);
+    }
+  };
+  const updateMaterialLayers = (
+    id: number,
+    type: IMaterialDetail,
+    thickness: string
+  ) => {
+    const tempMaterialLayers = materialLayers.slice();
+    const found = tempMaterialLayers.findIndex((l) => l.id === id);
+    if (found !== -1) {
+      tempMaterialLayers.splice(found, 1, { id, type, thickness });
+      setMaterialLayers(tempMaterialLayers);
+    }
+  };
+
   const onSubmit = (e: FormDataEvent) => {
     e.preventDefault();
     const materialDetail: IConstructionDetail = {
@@ -83,10 +126,10 @@ export default function MaterialAddition(): React.ReactElement {
       name,
       category,
       tags,
-      layerStructure: [0, 1, 2].map((i) => {
+      layerStructure: materialLayers.map((l) => {
         return {
-          material: layerMaterialTypes[i],
-          thickness: layerMaterialThickness[i],
+          material: l.type,
+          thickness: l.thickness,
         };
       }),
       description,
@@ -211,8 +254,8 @@ export default function MaterialAddition(): React.ReactElement {
                       }}
                     >
                       <MaterialRepresentation
-                        materialHeights={layerMaterialThickness.map((l) =>
-                          parseFloat(l)
+                        materialHeights={materialLayers.map((l) =>
+                          parseFloat(l.thickness)
                         )}
                         length={250}
                       ></MaterialRepresentation>
@@ -233,88 +276,60 @@ export default function MaterialAddition(): React.ReactElement {
                 <Grid container item xs={6}>
                   <Box width={"100%"}>
                     <Typography>Material</Typography>
-                    <Grid container>
-                      <Grid item xs={8}>
-                        <Stack spacing={2}>
-                          <Select
-                            label="Type"
-                            list={materialTypes.map((m) => m.name)}
-                            defaultValue={layerMaterialTypes[0]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialTypes([
-                                materialTypes.filter((m) => m.name === e.target.value)[0],
-                                layerMaterialTypes[1],
-                                layerMaterialTypes[2],
-                              ])
-                            }
-                          ></Select>
-                          <Select
-                            label="Type"
-                            list={materialTypes.map((m) => m.name)}
-                            defaultValue={layerMaterialTypes[1]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialTypes([
-                                layerMaterialTypes[0],
-                                materialTypes.filter((m) => m.name === e.target.value)[0],
-                                layerMaterialTypes[2],
-                              ])
-                            }
-                          ></Select>
-                          <Select
-                            label="Type"
-                            list={materialTypes.map((m) => m.name)}
-                            defaultValue={layerMaterialTypes[2]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialTypes([
-                                layerMaterialTypes[0],
-                                layerMaterialTypes[1],
-                                materialTypes.filter((m) => m.name === e.target.value)[0],
-                              ])
-                            }
-                          ></Select>
-                        </Stack>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Stack spacing={2}>
-                          <Select
-                            label="Size"
-                            list={materialThickness}
-                            defaultValue={layerMaterialThickness[0]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialThickness([
-                                e.target.value,
-                                layerMaterialThickness[1],
-                                layerMaterialThickness[2],
-                              ])
-                            }
-                          ></Select>
-                          <Select
-                            label="Size"
-                            list={materialThickness}
-                            defaultValue={layerMaterialThickness[1]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialThickness([
-                                layerMaterialThickness[0],
-                                e.target.value,
-                                layerMaterialThickness[2],
-                              ])
-                            }
-                          ></Select>
-                          <Select
-                            label="Size"
-                            list={materialThickness}
-                            defaultValue={layerMaterialThickness[2]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialThickness([
-                                layerMaterialThickness[0],
-                                layerMaterialThickness[1],
-                                e.target.value,
-                              ])
-                            }
-                          ></Select>
-                        </Stack>
-                      </Grid>
-                    </Grid>
+                    <Stack spacing={2}>
+                      {materialLayers.map((l) => (
+                        <Grid key={l.id} container>
+                          <Grid item xs={7}>
+                            <Select
+                              label="Type"
+                              list={materialTypes.map((m) => m.name)}
+                              defaultValue={l.type}
+                              sx={{ display: "flex" }}
+                              onChange={(e: SelectChangeEvent) =>
+                                updateMaterialLayers(
+                                  l.id,
+                                  materialTypes.find(
+                                    (m) => m.name === e.target.value
+                                  ),
+                                  l.thickness
+                                )
+                              }
+                            ></Select>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Select
+                              label="Size"
+                              list={materialThickness}
+                              defaultValue={l.thickness}
+                              sx={{ display: "flex" }}
+                              onChange={(e: SelectChangeEvent) =>
+                                updateMaterialLayers(
+                                  l.id,
+                                  l.type,
+                                  e.target.value
+                                )
+                              }
+                            ></Select>
+                          </Grid>
+                          <Grid item xs={1}>
+                            <IconButton
+                              aria-label="more"
+                              id="long-button"
+                              aria-controls={open ? "long-menu" : undefined}
+                              aria-expanded={open ? "true" : undefined}
+                              aria-haspopup="true"
+                              onClick={() => onMaterialLayerDelete(l.id)}
+                              sx={{ right: 0 }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      ))}
+                    </Stack>
+                    <Button variant="outlined" onClick={onAddLayer}>
+                      Add Layer
+                    </Button>
                   </Box>
                 </Grid>
               </Grid>
