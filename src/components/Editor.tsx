@@ -1,5 +1,5 @@
 import { Editor, ViewCube, useActions, useEditorState } from 'building-editor-react';
-import MyMenu from './Menu';
+//import MyMenu from './Menu';
 import * as THREE from 'three';
 import { useEffect } from 'react';
 import { Button, makeStyles, Theme }from '@material-ui/core';
@@ -16,7 +16,7 @@ export default function MyEditor() {
 
   return (
     <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}>
-      <Editor contextMenu={<MyMenu />} config={editorConfig}/>
+      <Editor config={editorConfig}/>
       
       <ViewCube style={{ position: 'absolute', zIndex: 1, left: 50, bottom: 50 }} />
     </div>

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useMemo } from "react";
 import * as THREE from 'three';
-import { EditorContextProps } from "building-editor-react/dist/EditorContext";
+//import { EditorContextProps } from "building-editor-react/dist/EditorContext";
 
 // from EditorTypes.tsx
 export const editorKeys = {

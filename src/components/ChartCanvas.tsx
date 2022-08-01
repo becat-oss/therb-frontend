@@ -1,9 +1,10 @@
 import { useChart, ChartConfig, useCreateConfig } from "src/utils/useChart"
-import { ChartPoint } from "chart.js";
+//import { ChartPoint } from "chart.js";
 import { useEffect } from "react";
 
 interface Data {
-    data: (number | number[] | null | undefined)[] | ChartPoint[];
+    //data: (number | number[] | null | undefined)[] | ChartPoint[];
+    data: (number | number[] | null | undefined)[] ;
 }
 
 export type ChartCanvasConfig = Omit<ChartConfig, keyof Data> & Data;

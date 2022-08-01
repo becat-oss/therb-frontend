@@ -1,8 +1,8 @@
-import { TimeseriesData } from "src/types/AppTypes";
+import { TimeSeriesData } from "src/AppTypes";
 import { KeyRequests } from "./KeyRequestType";
 
 type TimeseriesGetResponse ={
-  "data":TimeseriesData[];
+  "data":TimeSeriesData[];
 }
 
 type RequestsKeyObject = {

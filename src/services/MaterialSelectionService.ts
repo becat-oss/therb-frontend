@@ -49,7 +49,7 @@ export function getMaterialSizes(): string[] {
   return ["10mm", "20mm", "30mm", "40mm", "50mm"];
 }
 
-export function generateUniqueId(length: number) {
+export function generateUniqueId(length: number):string {
   let result = "";
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
