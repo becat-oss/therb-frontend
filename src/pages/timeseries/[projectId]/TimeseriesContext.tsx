@@ -4,12 +4,12 @@ import _ from 'lodash';
 import { getTimeseriesData } from 'src/api/KeyRequests';
 import { useQuery } from "@apollo/client";
 import { GET_RESULT } from "src/queries/posts.query";
-import { TimeseriesKey,timeseriesKeys, TimeseriesPayload, TimeseriesPayloadObject } from 'src/AppTypes';
+import { TimeSeriesKey,timeseriesKeys, TimeseriesPayload, TimeseriesPayloadObject } from 'src/AppTypes';
 import { convertPayloadToLineChartData } from 'src/utils/timeseries';
 
 interface TimeseriesState{
-  timeseriesKey:TimeseriesKey;
-  setTimeseriesKey: (timeseriesKey:TimeseriesKey) => void;
+  timeseriesKey:TimeSeriesKey;
+  setTimeseriesKey: (timeseriesKey:TimeSeriesKey) => void;
   loading:boolean;
   data:TimeseriesPayload;
   chartStartDate: Date | null;

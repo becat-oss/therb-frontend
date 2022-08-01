@@ -1,9 +1,9 @@
-import { TimeseriesKey, TimeseriesPayload } from "src/AppTypes";
+import { TimeSeriesKey, TimeseriesPayload } from "src/AppTypes";
 
 export type LineChartData = (string | number | Date)[][];
 export type LineChartLabel = (string | { type: 'number' | 'date' | 'datetime' | 'timeofday', label: string })[];
 
-export function convertPayloadToLineChartData(payload: TimeseriesPayload,key:TimeseriesKey,start:Date | null, end:Date|null): { labels: LineChartLabel; chartData: LineChartData } {
+export function convertPayloadToLineChartData(payload: TimeseriesPayload,key:TimeSeriesKey,start:Date | null, end:Date|null): { labels: LineChartLabel; chartData: LineChartData } {
   if (payload.result.length === 0)  return { labels: [], chartData: [] };
 
   //TODO: this label should be updated dynamically

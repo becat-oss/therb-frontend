@@ -4,7 +4,7 @@ import { AppProvider } from 'src/AppContext';
 import Layout from 'src/components/Layout';
 import DateSelector from './DateSelector';
 import KeySelector from './KeySelector';
-import LineChartComponent from './LineChart';
+//import LineChartComponent from './LineChart';
 import { TimeseriesProvider } from './TimeseriesContext';
 
 export default function Timeseries(): React.ReactElement{
@@ -18,7 +18,7 @@ export default function Timeseries(): React.ReactElement{
               <DateSelector />
             </Stack>
           </div>
-          <LineChartComponent/>
+          {/* <LineChartComponent/> */}
         </Layout>
       </TimeseriesProvider>
     </AppProvider>

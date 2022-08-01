@@ -10,10 +10,10 @@ export default function DateSelector(){
   const { chartStartDate,setChartStartDate,chartEndDate,setChartEndDate } = useTimeseriesContext();
 
   return (
-    <Paper sx={{p:1,m:0}} elevation={1}>
+    <Paper elevation={1}>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Stack direction="row" spacing={3}>
-          <DatePicker
+          {/* <DatePicker
             views={['day']}
             label="start"
             inputFormat="yyyy/MM/dd"
@@ -35,7 +35,7 @@ export default function DateSelector(){
               setChartEndDate(newEnd);
             }}
             renderInput={(params) => <TextField {...params} helperText={null}/>}
-          />
+          /> */}
 
         </Stack>
       </LocalizationProvider>
@@ -43,3 +43,5 @@ export default function DateSelector(){
     </Paper>
   )
 }
+
+export {}

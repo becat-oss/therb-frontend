@@ -76,7 +76,7 @@ export default function MaterialAddition(): React.ReactElement {
 
   const categories = getCategories();
 
-  const onSubmit = (e: FormDataEvent) => {
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const materialDetail: IConstructionDetail = {
       uniqueId: detail.uniqueId,

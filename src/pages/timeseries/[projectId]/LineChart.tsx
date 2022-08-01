@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useQuery } from "@apollo/client";
 import { GET_RESULT } from "src/queries/posts.query";
 import { convertPayloadToLineChartData } from 'src/utils/timeseries';
-import LineChart from "src/components/baues-uikit/LineChart";
+//import LineChart from "src/components/baues-uikit/LineChart";
 
 //export type LineChartData = (string | number | Date)[][];
 export type LineChartData = any[][];
@@ -29,13 +29,16 @@ function filterByDate(data: LineChartData, start: Date | null, end: Date | null)
 }
 
 export default function LineChartComponent(): React.ReactElement{
-  const { timeseriesKey,loading,data,chartStartDate,chartEndDate } = useTimeseriesContext();
-
-  if (loading) return <p>'Loading...'</p>;
-  //if (error) return <p>`Error! ${error.message}`</p>;
-
-  const {labels,chartData}=convertPayloadToLineChartData(data,timeseriesKey,chartStartDate,chartEndDate);
-  const filteredData = filterByDate(chartData, chartStartDate, chartEndDate);
-  return <LineChart title="Line Chart" data={filteredData} labels={labels}/>;
-
+  return <p>To be implemented</p>
 }
+// export default function LineChartComponent(): React.ReactElement{
+//   const { timeseriesKey,loading,data,chartStartDate,chartEndDate } = useTimeseriesContext();
+
+//   if (loading) return <p>'Loading...'</p>;
+//   //if (error) return <p>`Error! ${error.message}`</p>;
+
+//   const {labels,chartData}=convertPayloadToLineChartData(data,timeseriesKey,chartStartDate,chartEndDate);
+//   const filteredData = filterByDate(chartData, chartStartDate, chartEndDate);
+//   return <LineChart title="Line Chart" data={filteredData} labels={labels}/>;
+
+// }
