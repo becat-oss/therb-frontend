@@ -1,6 +1,6 @@
 import Layout from "src/components/Layout";
 import ProjectList from "./ProjectList";
-import { ProjectListProvider } from "./ProjectListContext";
+import ProjectListProvider from "./ProjectListContext";
 
 
 export default function ProjectListIndex(){

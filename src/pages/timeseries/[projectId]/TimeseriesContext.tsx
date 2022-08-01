@@ -39,7 +39,7 @@ interface TimeseriesProviderProps{
   children: React.ReactNode;
 }
 
-export function TimeseriesProvider({ children }: TimeseriesProviderProps): React.ReactElement{
+export default function TimeseriesProvider({ children }: TimeseriesProviderProps): React.ReactElement{
   const [timeseriesKey,setTimeseriesKey] = useState(initialState.timeseriesKey);
   const router = useRouter();
   const { projectId }=router.query;

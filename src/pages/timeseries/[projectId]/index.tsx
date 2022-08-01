@@ -5,7 +5,7 @@ import Layout from 'src/components/Layout';
 import DateSelector from './DateSelector';
 import KeySelector from './KeySelector';
 //import LineChartComponent from './LineChart';
-import { TimeseriesProvider } from './TimeseriesContext';
+import TimeseriesProvider from './TimeseriesContext';
 
 export default function Timeseries(): React.ReactElement{
   return(

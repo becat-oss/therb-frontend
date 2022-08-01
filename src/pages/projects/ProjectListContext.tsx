@@ -18,7 +18,7 @@ interface ProjectListProviderProps{
   children: React.ReactNode;
 }
 
-export function ProjectListProvider({children}:ProjectListProviderProps):React.ReactElement{
+export default function ProjectListProvider({children}:ProjectListProviderProps):React.ReactElement{
   const req = getProjectData();
   const [projectData,setProjectData] = useState(initialState.projectData);
   
