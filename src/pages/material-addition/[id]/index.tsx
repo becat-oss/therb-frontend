@@ -1,104 +1,150 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Autocomplete from "@mui/material/Autocomplete";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import {
   getCategories,
   getMaterialSizes,
   getMaterialTags,
-  getMaterialTypes,
-  generateUniqueId,
-  addToMaterial,
-  getMaterial,
 } from "src/services/MaterialSelectionService";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
 import Select from "src/components/form-controls/select";
-import { Button, SelectChangeEvent } from "@mui/material";
+import MuiSelect from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import { Button, IconButton, SelectChangeEvent } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import {
+  getConstructionDetailById_API,
+  getConstructionDetails_API,
+  getMaterials_API,
+  getMaterialTags_API,
+  postMaterialTags_API,
+  saveConstructionDetail,
+} from "src/api/material-construction/requests";
+import {
+  IConstructionDetail,
+  IMaterialDetail,
+  ITag,
+} from "src/models/construction";
+import { IConstructionDetail_post } from "src/api/material-construction/models";
 
-export interface IMaterialDetail {
-  id: string;
-  name: string;
-  conductivity: number;
-  density: number;
-  specificHeat: number;
-} 
-
-export interface IConstructionDetail {
-  uniqueId: string;
-  name?: string;
-  category?: string;
-  tags?: string[];
-  description?: string;
-  layerStructure?: {
-    material: IMaterialDetail;
-    thickness: string;
-  }[];
-  uValue?: number;
-  lcco2?: number;
-  cost?: number;
+interface ITagType extends ITag {
+  inputValue?: string;
 }
 
-export default function MaterialAddition(): React.ReactElement {
-  const materialTypes = getMaterialTypes();
-  const materialThickness = getMaterialSizes();
-
-  const router = useRouter();
-  const { id } = router.query;
-
-  let detail: IConstructionDetail;
-  if (id == "new") {
-    detail = { uniqueId: generateUniqueId(5) };
-  } else {
-    detail = getMaterial(id as string);
+const filter = createFilterOptions<ITagType>();
+function* layerIDGenerator() {
+  let count = 0;
+  while (true) {
+    yield ++count;
   }
+  return;
+}
+const layerIdCounter = layerIDGenerator();
 
-  const [name, setName] = useState(detail.name || "");
-  const [category, setCategory] = useState(detail.category || "");
-  const [tags, setTags] = useState(detail.tags || []);
-  const [layerMaterialTypes, setlayerMaterialTypes] = useState(
-    detail.layerStructure
-      ? detail.layerStructure.map((l) => l.material)
-      : [materialTypes[0], materialTypes[0], materialTypes[0]]
+export default function MaterialAddition({
+  constructionDetail,
+  materialDetails,
+  materialTags,
+}: {
+  constructionDetail: IConstructionDetail;
+  materialDetails: IMaterialDetail[];
+  materialTags: ITagType[];
+}): React.ReactElement {
+  const materialThickness = getMaterialSizes();
+  const router = useRouter();
+
+  const [name, setName] = useState(constructionDetail?.name || "");
+  const [category, setCategory] = useState(constructionDetail?.category || "");
+  const [tags, setTags] = useState<ITagType[]>(constructionDetail?.tags || []);
+
+  const [materialLayers, setMaterialLayers] = useState(
+    constructionDetail?.layerStructure
+      ? constructionDetail.layerStructure.map((l) => {
+          return {
+            id: layerIdCounter.next().value as number,
+            type: l.material,
+            thickness: l.thickness,
+          };
+        })
+      : ([] as { id: number; type: IMaterialDetail; thickness: string }[])
   );
-  const [layerMaterialThickness, setlayerMaterialThickness] = useState(
-    detail.layerStructure
-      ? detail.layerStructure.map((l) => l.thickness)
-      : [materialThickness[0], materialThickness[0], materialThickness[0]]
+  const [description, setDescription] = useState(
+    constructionDetail?.description || ""
   );
-  const [description, setDescription] = useState(detail.description || "");
-  const [uValue, setUValue] = useState(detail.uValue || 0);
-  const [lcco2, setLcco2] = useState(detail.lcco2 || 0);
-  const [cost, setCost] = useState(detail.cost || 0);
+  const [uValue, setUValue] = useState(constructionDetail?.uValue || 0);
+  const [lcco2, setLcco2] = useState(constructionDetail?.lcco2 || 0);
+  const [cost, setCost] = useState(constructionDetail?.cost || 0);
 
   const categories = getCategories();
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onAddLayer = () => {
+    const tempMaterialLayers = materialLayers.slice();
+    tempMaterialLayers.push({
+      id: layerIdCounter.next().value as number,
+      type: materialDetails[0],
+      thickness: materialThickness[0],
+    });
+    setMaterialLayers(tempMaterialLayers);
+  };
+
+  const onMaterialLayerDelete = (id: number) => {
+    const tempMaterialLayers = materialLayers.slice();
+    const found = tempMaterialLayers.findIndex((l) => l.id === id);
+    if (found !== -1) {
+      tempMaterialLayers.splice(found, 1);
+      setMaterialLayers(tempMaterialLayers);
+    }
+  };
+  const updateMaterialLayers = (
+    id: number,
+    type: IMaterialDetail,
+    thickness: string
+  ) => {
+    const tempMaterialLayers = materialLayers.slice();
+    const found = tempMaterialLayers.findIndex((l) => l.id === id);
+    if (found !== -1) {
+      tempMaterialLayers.splice(found, 1, { id, type, thickness });
+      setMaterialLayers(tempMaterialLayers);
+    }
+  };
+
+  const handleCategoryChange = (event: SelectChangeEvent) => {
+    setCategory(event.target.value as string);
+  };
+
+  const onSubmit = (e: any) => {
     e.preventDefault();
-    const materialDetail: IConstructionDetail = {
-      uniqueId: detail.uniqueId,
+
+    // save the tags first
+    // const newTags = tags.filter(t=> t.id === null);
+    // const newTagsString= newTags.map(t=>t.label);
+    // console.log(newTagsString);
+    // const newTagsWithId = await postMaterialTags_API(newTagsString);
+    // const tagsWithId: ITag[] = tags.filter(t=> t.id !== null);
+    // const tagsInConstruction = tagsWithId.concat(newTagsWithId);
+    // construction detail to save to backend
+    const constructionDetailToSave: IConstructionDetail_post = {
       name,
-      category,
-      tags,
-      layerStructure: [0, 1, 2].map((i) => {
-        return {
-          material: layerMaterialTypes[i],
-          thickness: layerMaterialThickness[i],
-        };
-      }),
       description,
-      uValue,
-      lcco2,
-      cost,
+      materialIds: materialLayers.map((l) => l.id),
+      tags: tags.map((t) => {
+        return { id: t.id ? parseInt(t.id, 10) : null, name: t.label };
+      }),
+      category,
+      thickness: materialLayers.map((l) => l.thickness).join(" "),
     };
-    addToMaterial(materialDetail);
+    saveConstructionDetail(constructionDetailToSave);
     router.push("../material-selection-list");
   };
 
-  const materialTags = getMaterialTags();
+  const [open, setOpen] = useState(false);
   return (
     <Box
       sx={{
@@ -119,7 +165,7 @@ export default function MaterialAddition(): React.ReactElement {
               <TextField
                 fullWidth
                 id="material_name"
-                label="Material Name"
+                label={name}
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
@@ -140,22 +186,58 @@ export default function MaterialAddition(): React.ReactElement {
                   list={categories}
                   sx={{ width: "80%" }}
                 ></Select>
+                e.target.value
               </Box> */}
-              <Select
-                label="Category"
-                list={categories}
-                defaultValue={category}
-                onChange={(e: SelectChangeEvent) => setCategory(e.target.value)}
-              ></Select>
+              <FormControl>
+                <InputLabel id={category}>Category</InputLabel>
+                <MuiSelect
+                  labelId={category}
+                  id={category}
+                  value={category}
+                  label="Category"
+                  onChange={handleCategoryChange}
+                >
+                  {categories.map((item, i) => (
+                    <MenuItem key={i} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </MuiSelect>
+              </FormControl>
+
               <Autocomplete
                 multiple
                 limitTags={4}
                 id="tags"
                 options={materialTags}
                 getOptionLabel={(option) => {
-                  return option;
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  return option.label;
                 }}
-                onChange={(e, value) => setTags(value)}
+                renderOption={(props, option) => (
+                  <li {...props}>{option.label}</li>
+                )}
+                onChange={(e, v) => setTags(v as unknown as ITagType[])}
+                filterOptions={(options, params) => {
+                  const filtered = filter(options, params);
+
+                  const { inputValue } = params;
+                  // Suggest the creation of a new value
+                  const isExisting = options.some(
+                    (option) => inputValue === option.label
+                  );
+                  if (inputValue !== "" && !isExisting) {
+                    filtered.push({
+                      inputValue,
+                      label: `Add "${inputValue}"`,
+                      id: null,
+                    });
+                  }
+                  return filtered;
+                }}
+                freeSolo
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -211,8 +293,8 @@ export default function MaterialAddition(): React.ReactElement {
                       }}
                     >
                       <MaterialRepresentation
-                        materialHeights={layerMaterialThickness.map((l) =>
-                          parseFloat(l)
+                        materialHeights={materialLayers.map((l) =>
+                          parseFloat(l.thickness)
                         )}
                         length={250}
                       ></MaterialRepresentation>
@@ -233,88 +315,60 @@ export default function MaterialAddition(): React.ReactElement {
                 <Grid container item xs={6}>
                   <Box width={"100%"}>
                     <Typography>Material</Typography>
-                    <Grid container>
-                      <Grid item xs={8}>
-                        <Stack spacing={2}>
-                          <Select
-                            label="Type"
-                            list={materialTypes.map((m) => m.name)}
-                            defaultValue={layerMaterialTypes[0]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialTypes([
-                                materialTypes.filter((m) => m.name === e.target.value)[0],
-                                layerMaterialTypes[1],
-                                layerMaterialTypes[2],
-                              ])
-                            }
-                          ></Select>
-                          <Select
-                            label="Type"
-                            list={materialTypes.map((m) => m.name)}
-                            defaultValue={layerMaterialTypes[1]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialTypes([
-                                layerMaterialTypes[0],
-                                materialTypes.filter((m) => m.name === e.target.value)[0],
-                                layerMaterialTypes[2],
-                              ])
-                            }
-                          ></Select>
-                          <Select
-                            label="Type"
-                            list={materialTypes.map((m) => m.name)}
-                            defaultValue={layerMaterialTypes[2]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialTypes([
-                                layerMaterialTypes[0],
-                                layerMaterialTypes[1],
-                                materialTypes.filter((m) => m.name === e.target.value)[0],
-                              ])
-                            }
-                          ></Select>
-                        </Stack>
-                      </Grid>
-                      <Grid item xs={4}>
-                        <Stack spacing={2}>
-                          <Select
-                            label="Size"
-                            list={materialThickness}
-                            defaultValue={layerMaterialThickness[0]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialThickness([
-                                e.target.value,
-                                layerMaterialThickness[1],
-                                layerMaterialThickness[2],
-                              ])
-                            }
-                          ></Select>
-                          <Select
-                            label="Size"
-                            list={materialThickness}
-                            defaultValue={layerMaterialThickness[1]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialThickness([
-                                layerMaterialThickness[0],
-                                e.target.value,
-                                layerMaterialThickness[2],
-                              ])
-                            }
-                          ></Select>
-                          <Select
-                            label="Size"
-                            list={materialThickness}
-                            defaultValue={layerMaterialThickness[2]}
-                            onChange={(e: SelectChangeEvent) =>
-                              setlayerMaterialThickness([
-                                layerMaterialThickness[0],
-                                layerMaterialThickness[1],
-                                e.target.value,
-                              ])
-                            }
-                          ></Select>
-                        </Stack>
-                      </Grid>
-                    </Grid>
+                    <Stack spacing={2}>
+                      {materialLayers.map((l) => (
+                        <Grid key={l.id} container>
+                          <Grid item xs={7}>
+                            <Select
+                              label="Type"
+                              list={materialDetails.map((m: any) => m.name)}
+                              defaultValue={l.type}
+                              sx={{ display: "flex" }}
+                              onChange={(e: SelectChangeEvent) =>
+                                updateMaterialLayers(
+                                  l.id,
+                                  materialDetails.find(
+                                    (m: any) => m.name === e.target.value
+                                  ),
+                                  l.thickness
+                                )
+                              }
+                            ></Select>
+                          </Grid>
+                          <Grid item xs={4}>
+                            <Select
+                              label="Size"
+                              list={materialThickness}
+                              defaultValue={l.thickness}
+                              sx={{ display: "flex" }}
+                              onChange={(e: SelectChangeEvent) =>
+                                updateMaterialLayers(
+                                  l.id,
+                                  l.type,
+                                  e.target.value
+                                )
+                              }
+                            ></Select>
+                          </Grid>
+                          <Grid item xs={1}>
+                            <IconButton
+                              aria-label="more"
+                              id="long-button"
+                              aria-controls={open ? "long-menu" : undefined}
+                              aria-expanded={open ? "true" : undefined}
+                              aria-haspopup="true"
+                              onClick={() => onMaterialLayerDelete(l.id)}
+                              sx={{ right: 0 }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      ))}
+                    </Stack>
+                    <Button variant="outlined" onClick={onAddLayer}>
+                      Add Layer
+                    </Button>
                   </Box>
                 </Grid>
               </Grid>
@@ -387,4 +441,25 @@ export default function MaterialAddition(): React.ReactElement {
       </form>
     </Box>
   );
+}
+
+// This gets called on every request
+export async function getServerSideProps({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const materialDetails = await getMaterials_API();
+  const materialTags = await getMaterialTags_API();
+  if (params.id === "new")
+    return {
+      props: { constructionDetail: null, materialDetails, materialTags },
+    };
+  // Fetch data from external API
+  const constructionDetails = await getConstructionDetails_API();
+  const constructionDetail = constructionDetails.filter(
+    (d) => d.uniqueId === params.id
+  )[0];
+  // Pass data to the page via props
+  return { props: { constructionDetail, materialDetails, materialTags } };
 }

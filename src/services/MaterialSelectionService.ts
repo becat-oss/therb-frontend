@@ -1,4 +1,4 @@
-import { IConstructionDetail, IMaterialDetail } from "src/pages/material-addition/[id]";
+import { IConstructionDetail, IMaterialDetail } from "src/models/construction";
 
 export function getMaterialTags(): string[] {
   //TODO: prepare API for tags
@@ -6,7 +6,7 @@ export function getMaterialTags(): string[] {
 }
 
 export function getCategories(): string[] {
-  return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor"];
+  return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor", 'interiorWall'];
 }
 
 // export function getMaterialTypes(): string[] {

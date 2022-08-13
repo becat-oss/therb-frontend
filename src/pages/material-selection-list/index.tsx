@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -10,8 +10,13 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
-import { getMaterial, getMaterials } from "src/services/MaterialSelectionService";
+import {
+  getMaterial,
+  getMaterials,
+} from "src/services/MaterialSelectionService";
 import { useRouter } from "next/router";
+import { getConstructionDetails_API } from "src/api/material-construction/requests";
+import { IConstructionDetail } from "src/models/construction";
 
 const StyledPaperGeneral = styled(Paper)({
   height: 200,
@@ -34,10 +39,21 @@ const StyledTypography = styled(Typography)({
 const options = ["Delete"];
 const ITEM_HEIGHT = 48;
 
-export default function MaterialSelectionList(): React.ReactElement {
+export default function MaterialSelectionList({constructionDetails}: {constructionDetails: IConstructionDetail[]}): React.ReactElement {
   const router = useRouter();
 
-  const materials = getMaterials();
+  // const materials = getMaterials();
+
+  // const [constructionDetails,setConstructionDetails] = useState([] as IConstructionDetail[]);
+
+  // useEffect(()=>{
+  //   async function getConstructionDetails() {
+  //     const detail = await getConstructionDetails_API();
+  //     console.log(detail);
+  //     setConstructionDetails(detail);
+  //   }
+  //   getConstructionDetails();
+  // },[]);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -54,7 +70,7 @@ export default function MaterialSelectionList(): React.ReactElement {
   };
 
   const viewMaterial = (id: string) => {
-    router.push(`../material-addition/${id}`);    
+    router.push(`../material-addition/${id}`);
   };
 
   return (
@@ -79,12 +95,12 @@ export default function MaterialSelectionList(): React.ReactElement {
           </Box>
         </StyledPaperAdd>
       </Grid>
-      {materials.map((m, i) => (
-        <Grid key={m.uniqueId} item xs={3} sm={3} md={3}>
+      {constructionDetails.map((cd) => (
+        <Grid key={cd.uniqueId} item xs={3} sm={3} md={3}>
           <StyledPaperGeneral
             onClick={(e) => {
               e.preventDefault();
-              viewMaterial(m.uniqueId);
+              viewMaterial(cd.uniqueId);
             }}
           >
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -137,20 +153,22 @@ export default function MaterialSelectionList(): React.ReactElement {
                 flexDirection: "column",
               }}
             >
-              <StyledTypography>{m.insulationSummary}</StyledTypography>
-              {m.insulationType && (
+              <StyledTypography>{cd.name}</StyledTypography>
+              {cd.description && (
                 <StyledTypography variant="caption">
-                  {m.insulationType}{" "}
+                  {cd.description}{" "}
                 </StyledTypography>
               )}
-              {m.thermalTransmittance && (
+              {cd.description && (
                 <StyledTypography variant="caption">
-                  {m.thermalTransmittance}
+                  {cd.description}
                 </StyledTypography>
               )}
               <Box sx={{ width: 150, marginTop: 1 }}>
                 <MaterialRepresentation
-                  materialHeights={m.materialHeights}
+                  materialHeights={cd.layerStructure.map((l) =>
+                    parseFloat(l.thickness)
+                  )}
                   length={200}
                 ></MaterialRepresentation>
               </Box>
@@ -161,3 +179,14 @@ export default function MaterialSelectionList(): React.ReactElement {
     </Grid>
   );
 }
+
+// This gets called on every request
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const constructionDetails = await getConstructionDetails_API();
+  console.log(constructionDetails);
+
+  // Pass data to the page via props
+  return { props: { constructionDetails } };
+}
+
