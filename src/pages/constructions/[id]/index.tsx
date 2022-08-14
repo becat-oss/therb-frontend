@@ -26,13 +26,13 @@ import {
   getMaterialTags_API,
   postMaterialTags_API,
   saveConstructionDetail,
-} from "src/api/material-construction/requests";
+} from "src/api/construction/requests";
 import {
   IConstructionDetail,
   IMaterialDetail,
   ITag,
 } from "src/models/construction";
-import { IConstructionDetail_post } from "src/api/material-construction/models";
+import { IConstructionDetail_post } from "src/api/construction/models";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -48,7 +48,7 @@ function* layerIDGenerator() {
 }
 const layerIdCounter = layerIDGenerator();
 
-export default function MaterialAddition({
+export default function Construction({
   constructionDetail,
   materialDetails,
   materialTags,
@@ -141,7 +141,7 @@ export default function MaterialAddition({
       thickness: materialLayers.map((l) => l.thickness).join(" "),
     };
     saveConstructionDetail(constructionDetailToSave);
-    router.push("../material-selection-list");
+    router.push("../../constructions");
   };
 
   const [open, setOpen] = useState(false);
@@ -165,7 +165,7 @@ export default function MaterialAddition({
               <TextField
                 fullWidth
                 id="material_name"
-                label={name}
+                label="Name"
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}

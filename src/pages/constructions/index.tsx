@@ -15,7 +15,7 @@ import {
   getMaterials,
 } from "src/services/MaterialSelectionService";
 import { useRouter } from "next/router";
-import { getConstructionDetails_API } from "src/api/material-construction/requests";
+import { getConstructionDetails_API } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
 
 const StyledPaperGeneral = styled(Paper)({
@@ -39,7 +39,7 @@ const StyledTypography = styled(Typography)({
 const options = ["Delete"];
 const ITEM_HEIGHT = 48;
 
-export default function MaterialSelectionList({constructionDetails}: {constructionDetails: IConstructionDetail[]}): React.ReactElement {
+export default function Constructions({constructionDetails}: {constructionDetails: IConstructionDetail[]}): React.ReactElement {
   const router = useRouter();
 
   // const materials = getMaterials();
@@ -64,19 +64,19 @@ export default function MaterialSelectionList({constructionDetails}: {constructi
     setAnchorEl(null);
   };
 
-  const addMaterial = (e: any) => {
+  const addConstruction = (e: any) => {
     e.preventDefault();
-    router.push("../material-addition/new");
+    router.push("../constructions/new");
   };
 
-  const viewMaterial = (id: string) => {
-    router.push(`../material-addition/${id}`);
+  const viewConstruction = (id: string) => {
+    router.push(`../constructions/${id}`);
   };
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={3} sm={3} md={3}>
-        <StyledPaperAdd onClick={addMaterial}>
+        <StyledPaperAdd onClick={addConstruction}>
           <StyledTypography>Add New</StyledTypography>
           <Box
             sx={{
@@ -100,7 +100,7 @@ export default function MaterialSelectionList({constructionDetails}: {constructi
           <StyledPaperGeneral
             onClick={(e) => {
               e.preventDefault();
-              viewMaterial(cd.uniqueId);
+              viewConstruction(cd.uniqueId);
             }}
           >
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
