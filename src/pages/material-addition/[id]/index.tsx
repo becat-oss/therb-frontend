@@ -130,16 +130,25 @@ export default function MaterialAddition({
     // const tagsWithId: ITag[] = tags.filter(t=> t.id !== null);
     // const tagsInConstruction = tagsWithId.concat(newTagsWithId);
     // construction detail to save to backend
-    const constructionDetailToSave: IConstructionDetail_post = {
+    const constructionDetailToSave: IConstructionDetail = {
+      uniqueId: constructionDetail?.uniqueId || "new",
       name,
-      description,
-      materialIds: materialLayers.map((l) => l.id),
-      tags: tags.map((t) => {
-        return { id: t.id ? parseInt(t.id, 10) : null, name: t.label };
-      }),
       category,
-      thickness: materialLayers.map((l) => l.thickness).join(" "),
+      description,
+      tags: tags.map((t) => {
+        return { id: t.id, label: t.inputValue || t.label };
+      }),
+      layerStructure: materialLayers.map((l) => {
+        return { material: l.type, thickness: l.thickness };
+      }),
     };
+
+    // materialIds: materialLayers.map((l) => l.id),
+    //   tags: tags.map((t) => {
+    //     return { id: t.id ? parseInt(t.id, 10) : null, name: t.label };
+    //   }),
+    //   category,
+    //   thickness: materialLayers.map((l) => l.thickness).join(","),
     saveConstructionDetail(constructionDetailToSave);
     router.push("../material-selection-list");
   };
@@ -165,7 +174,7 @@ export default function MaterialAddition({
               <TextField
                 fullWidth
                 id="material_name"
-                label={name}
+                label="Name"
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
