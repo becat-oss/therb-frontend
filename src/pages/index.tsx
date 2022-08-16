@@ -7,7 +7,7 @@ export default function Index() {
   const router = useRouter();
 
   useEffect(()=>{
-    router.replace('/result');
+    router.replace('/material-selection-list');
     // router.replace('/projects');
   },[]);
   return (
