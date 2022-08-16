@@ -15,7 +15,7 @@ export interface ITag_get{
 }
 
 export interface IConstructionDetail_get {
-  categories: string;
+  category: string;
   description: string;
   id: string;
   materials: IMaterialDetail_get[];

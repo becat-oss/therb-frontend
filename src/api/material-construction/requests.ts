@@ -124,7 +124,7 @@ export async function saveConstructionDetail(material: IConstructionDetail) {
     materialIds:
       material.layerStructure?.map((l) => parseInt(l.material.id, 10)) || [],
     tagIds: material.tags?.map((t) => t.id) || [],
-    thickness: material.layerStructure?.map((l) => l.thickness).join(",") || "",
+    thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
   };
 
   // const url = isProd
@@ -160,7 +160,7 @@ export async function getConstructionDetails_API() {
     return {
       uniqueId: d.id.toString(),
       name: d.name,
-      category: d.categories,
+      category: d.category,
       tags: d.tags.map((t) => {
         return { label: t.name, id: t.id.toString() };
       }),
@@ -198,7 +198,7 @@ export async function getConstructionDetailById_API(id: string) {
   const formattedData: IConstructionDetail = {
     uniqueId: detail.id.toString(),
     name: detail.name,
-    category: detail.categories,
+    category: detail.category,
     tags: detail.tags.map((t) => {
       return { label: t.name, id: t.id.toString() };
     }),

@@ -184,7 +184,7 @@ export default function MaterialSelectionList({constructionDetails}: {constructi
 export async function getServerSideProps() {
   // Fetch data from external API
   const constructionDetails = await getConstructionDetails_API();
-  console.log(constructionDetails);
+  console.log('constructionDetails',constructionDetails);
 
   // Pass data to the page via props
   return { props: { constructionDetails } };

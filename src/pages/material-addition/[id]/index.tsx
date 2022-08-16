@@ -466,6 +466,7 @@ export async function getServerSideProps({
     };
   // Fetch data from external API
   const constructionDetails = await getConstructionDetails_API();
+  
   const constructionDetail = constructionDetails.filter(
     (d) => d.uniqueId === params.id
   )[0];
