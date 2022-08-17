@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -59,6 +60,7 @@ export default function MaterialAddition({
 }): React.ReactElement {
   const materialThickness = getMaterialSizes();
   const router = useRouter();
+  const { t } = useTranslation('add-construction')
 
   const [name, setName] = useState(constructionDetail?.name || "");
   const [category, setCategory] = useState(constructionDetail?.category || "");
@@ -121,14 +123,6 @@ export default function MaterialAddition({
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-
-    // save the tags first
-    // const newTags = tags.filter(t=> t.id === null);
-    // const newTagsString= newTags.map(t=>t.label);
-    // console.log(newTagsString);
-    // const newTagsWithId = await postMaterialTags_API(newTagsString);
-    // const tagsWithId: ITag[] = tags.filter(t=> t.id !== null);
-    // const tagsInConstruction = tagsWithId.concat(newTagsWithId);
     // construction detail to save to backend
     const constructionDetailToSave: IConstructionDetail = {
       uniqueId: constructionDetail?.uniqueId || "new",
@@ -142,13 +136,6 @@ export default function MaterialAddition({
         return { material: l.type, thickness: l.thickness };
       }),
     };
-
-    // materialIds: materialLayers.map((l) => l.id),
-    //   tags: tags.map((t) => {
-    //     return { id: t.id ? parseInt(t.id, 10) : null, name: t.label };
-    //   }),
-    //   category,
-    //   thickness: materialLayers.map((l) => l.thickness).join(","),
     saveConstructionDetail(constructionDetailToSave);
     router.push("../material-selection-list");
   };
@@ -165,7 +152,7 @@ export default function MaterialAddition({
       }}
     >
       <Typography variant="h5" ml={2}>
-        Registration of Material
+        {t('title')}
       </Typography>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
@@ -180,23 +167,6 @@ export default function MaterialAddition({
                 onChange={(e) => setName(e.target.value)}
                 sx={{ marginBottom: 2 }}
               />
-              {/* <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography>Category</Typography>
-                <Select
-                  label="Category"
-                  list={categories}
-                  sx={{ width: "80%" }}
-                ></Select>
-                e.target.value
-              </Box> */}
               <FormControl>
                 <InputLabel id={category}>Category</InputLabel>
                 <MuiSelect

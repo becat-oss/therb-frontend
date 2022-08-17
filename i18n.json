@@ -1,0 +1,10 @@
+{
+  "locales": ["en", "jp"],
+  "defaultLocale": "jp",
+  "pages": {
+    "*": ["common"],
+    "/": ["home"], 
+    "/constructions": ["constructions"],
+    "/constructions/[id]": ["add-construction"]
+  }
+}
