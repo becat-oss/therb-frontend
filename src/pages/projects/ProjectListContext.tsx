@@ -19,6 +19,7 @@ interface ProjectListProviderProps{
 }
 
 export default function ProjectListProvider({children}:ProjectListProviderProps):React.ReactElement{
+  //TODO:project情報の表示もできるようにする
   const req = getProjectData();
   const [projectData,setProjectData] = useState(initialState.projectData);
   
