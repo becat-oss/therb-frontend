@@ -34,6 +34,7 @@ import {
   ITag,
 } from "src/models/construction";
 import { IConstructionDetail_post } from "src/api/material-construction/models";
+import { calcUvalue } from "src/utils/calcLogics";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -85,6 +86,13 @@ export default function MaterialAddition({
   const [cost, setCost] = useState(constructionDetail?.cost || 0);
 
   const categories = getCategories();
+
+  useEffect(() => {
+    //calculate u-value based on layers
+    const uvalue=calcUvalue(materialLayers);
+    setUValue(uvalue);
+
+  },[materialLayers])
 
   const onAddLayer = () => {
     const tempMaterialLayers = materialLayers.slice();
@@ -373,8 +381,9 @@ export default function MaterialAddition({
                     InputProps={{
                       readOnly: true,
                     }}
+                    value={uValue}
                   />
-                  <Typography variant="caption">W/m2k</Typography>
+                  <Typography variant="caption">W/m2K</Typography>
                 </Grid>
                 <Grid item xs={4}>
                   <Typography width={"100%"}>LCCO2</Typography>
