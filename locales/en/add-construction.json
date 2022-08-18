@@ -1,3 +1,17 @@
 {
-  "title":"Registration of Material"
+  "title":"Register New Construction",
+  "name":"Name",
+  "category":"Category",
+  "tags":"Tags",
+  "description":"Description",
+  "construction":"Construction",
+  "outdoor":"Outdoor",
+  "indoor":"Indoor",
+  "material":"Material",
+  "add-layer":"Add Layer",
+  "performance":"Performance",
+  "u-value":"U-Value",
+  "lcco2":"LCCo2",
+  "cost":"Cost",
+  "save":"Save"
 }
