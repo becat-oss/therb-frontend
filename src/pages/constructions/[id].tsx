@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useTranslation from 'next-translate/useTranslation'
 import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -59,6 +60,7 @@ export default function MaterialAddition({
 }): React.ReactElement {
   const materialThickness = getMaterialSizes();
   const router = useRouter();
+  const { t } = useTranslation('add-construction')
 
   const [name, setName] = useState(constructionDetail?.name || "");
   const [category, setCategory] = useState(constructionDetail?.category || "");
@@ -121,14 +123,6 @@ export default function MaterialAddition({
 
   const onSubmit = (e: any) => {
     e.preventDefault();
-
-    // save the tags first
-    // const newTags = tags.filter(t=> t.id === null);
-    // const newTagsString= newTags.map(t=>t.label);
-    // console.log(newTagsString);
-    // const newTagsWithId = await postMaterialTags_API(newTagsString);
-    // const tagsWithId: ITag[] = tags.filter(t=> t.id !== null);
-    // const tagsInConstruction = tagsWithId.concat(newTagsWithId);
     // construction detail to save to backend
     const constructionDetailToSave: IConstructionDetail = {
       uniqueId: constructionDetail?.uniqueId || "new",
@@ -142,13 +136,6 @@ export default function MaterialAddition({
         return { material: l.type, thickness: l.thickness };
       }),
     };
-
-    // materialIds: materialLayers.map((l) => l.id),
-    //   tags: tags.map((t) => {
-    //     return { id: t.id ? parseInt(t.id, 10) : null, name: t.label };
-    //   }),
-    //   category,
-    //   thickness: materialLayers.map((l) => l.thickness).join(","),
     saveConstructionDetail(constructionDetailToSave);
     router.push("../material-selection-list");
   };
@@ -165,7 +152,7 @@ export default function MaterialAddition({
       }}
     >
       <Typography variant="h5" ml={2}>
-        Registration of Material
+        {t('title')}
       </Typography>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
@@ -174,36 +161,19 @@ export default function MaterialAddition({
               <TextField
                 fullWidth
                 id="material_name"
-                label="Name"
+                label={t('name')}
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
                 sx={{ marginBottom: 2 }}
               />
-              {/* <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography>Category</Typography>
-                <Select
-                  label="Category"
-                  list={categories}
-                  sx={{ width: "80%" }}
-                ></Select>
-                e.target.value
-              </Box> */}
               <FormControl>
-                <InputLabel id={category}>Category</InputLabel>
+                <InputLabel id={category}>{t('category')}</InputLabel>
                 <MuiSelect
                   labelId={category}
                   id={category}
                   value={category}
-                  label="Category"
+                  label={t('category')}
                   onChange={handleCategoryChange}
                 >
                   {categories.map((item, i) => (
@@ -217,7 +187,7 @@ export default function MaterialAddition({
               <Autocomplete
                 multiple
                 limitTags={4}
-                id="tags"
+                id={t('tags')}
                 options={materialTags}
                 getOptionLabel={(option) => {
                   if (option.inputValue) {
@@ -250,7 +220,7 @@ export default function MaterialAddition({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Material Tags"
+                    label={t('tags')}
                     placeholder="Material Tags"
                   />
                 )}
@@ -258,7 +228,7 @@ export default function MaterialAddition({
               <TextField
                 fullWidth
                 id="material_description"
-                label="Description"
+                label={t('description')}
                 variant="outlined"
                 defaultValue={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -269,7 +239,7 @@ export default function MaterialAddition({
           </Grid>
           <Grid container item xs={8}>
             <Typography variant="h6" ml={2}>
-              Layer Structure
+              {t('construction')}
             </Typography>
             <Box
               p={4}
@@ -290,7 +260,7 @@ export default function MaterialAddition({
                       display: "flex",
                     }}
                   >
-                    <Typography>Outdoor</Typography>
+                    <Typography>{t('outdoor')}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Box
@@ -318,12 +288,12 @@ export default function MaterialAddition({
                       display: "flex",
                     }}
                   >
-                    <Typography>Indoor</Typography>
+                    <Typography>{t('indoor')}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item xs={6}>
                   <Box width={"100%"}>
-                    <Typography>Material</Typography>
+                    <Typography>{t('material')}</Typography>
                     <Stack spacing={2}>
                       {materialLayers.map((l) => (
                         <Grid key={l.id} container>
@@ -376,7 +346,7 @@ export default function MaterialAddition({
                       ))}
                     </Stack>
                     <Button variant="outlined" onClick={onAddLayer}>
-                      Add Layer
+                      {t('add-layer')}
                     </Button>
                   </Box>
                 </Grid>
@@ -392,10 +362,10 @@ export default function MaterialAddition({
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography>Performance Value</Typography>
+                  <Typography>{t('performance')}</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography width={"100%"}>UValue</Typography>
+                  <Typography width={"100%"}>{t('u-value')}</Typography>
                   <TextField
                     id="first_field"
                     variant="outlined"
@@ -419,7 +389,7 @@ export default function MaterialAddition({
                   <Typography variant="caption">gCO2</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography width={"100%"}>コスト</Typography>
+                  <Typography width={"100%"}>{t('cost')}</Typography>
                   <TextField
                     id="first_field"
                     variant="outlined"
@@ -442,7 +412,7 @@ export default function MaterialAddition({
             >
               <Box></Box>
               <Button variant="contained" type="submit">
-                Submit
+                {t('save')}
               </Button>
             </Box>
           </Grid>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useTranslation from 'next-translate/useTranslation'
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -10,10 +11,6 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
-import {
-  getMaterial,
-  getMaterials,
-} from "src/services/MaterialSelectionService";
 import { useRouter } from "next/router";
 import { getConstructionDetails_API } from "src/api/material-construction/requests";
 import { IConstructionDetail } from "src/models/construction";
@@ -39,21 +36,13 @@ const StyledTypography = styled(Typography)({
 const options = ["Delete"];
 const ITEM_HEIGHT = 48;
 
-export default function MaterialSelectionList({constructionDetails}: {constructionDetails: IConstructionDetail[]}): React.ReactElement {
+export default function MaterialSelectionList({
+  constructionDetails,
+}: {
+  constructionDetails: IConstructionDetail[];
+}): React.ReactElement {
   const router = useRouter();
-
-  // const materials = getMaterials();
-
-  // const [constructionDetails,setConstructionDetails] = useState([] as IConstructionDetail[]);
-
-  // useEffect(()=>{
-  //   async function getConstructionDetails() {
-  //     const detail = await getConstructionDetails_API();
-  //     console.log(detail);
-  //     setConstructionDetails(detail);
-  //   }
-  //   getConstructionDetails();
-  // },[]);
+  const { t } = useTranslation('constructions');
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -66,18 +55,33 @@ export default function MaterialSelectionList({constructionDetails}: {constructi
 
   const addMaterial = (e: any) => {
     e.preventDefault();
-    router.push("../material-addition/new");
+    router.push("../constructions/new");
   };
 
   const viewMaterial = (id: string) => {
-    router.push(`../material-addition/${id}`);
+    router.push(`../constructions/${id}`);
   };
 
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12} sm={12} md={12}>
+      <StyledPaperGeneral sx={{height:"10px"}}>
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <StyledTypography>{t('query-box')}</StyledTypography>
+        </Box>
+        </StyledPaperGeneral>
+      </Grid>
       <Grid item xs={3} sm={3} md={3}>
         <StyledPaperAdd onClick={addMaterial}>
-          <StyledTypography>Add New</StyledTypography>
+          <StyledTypography>{t('add-new')}</StyledTypography>
           <Box
             sx={{
               width: 50,
@@ -184,9 +188,7 @@ export default function MaterialSelectionList({constructionDetails}: {constructi
 export async function getServerSideProps() {
   // Fetch data from external API
   const constructionDetails = await getConstructionDetails_API();
-  console.log('constructionDetails',constructionDetails);
 
   // Pass data to the page via props
   return { props: { constructionDetails } };
 }
-
