@@ -36,7 +36,7 @@ const StyledTypography = styled(Typography)({
 const options = ["Delete"];
 const ITEM_HEIGHT = 48;
 
-export default function MaterialSelectionList({
+export default function ConstructionList({
   constructionDetails,
 }: {
   constructionDetails: IConstructionDetail[];
