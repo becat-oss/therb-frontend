@@ -50,7 +50,7 @@ function* layerIDGenerator() {
 }
 const layerIdCounter = layerIDGenerator();
 
-export default function MaterialAddition({
+export default function Construction({
   constructionDetail,
   materialDetails,
   materialTags,

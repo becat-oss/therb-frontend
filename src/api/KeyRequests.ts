@@ -46,9 +46,9 @@ export async function getProjectData() {
   const url = isProd
     ? `https://stingray-app-vgak2.ondigitalocean.app/projects`
     : "http://localhost:5000/projects";
-  const response = await fetch(url, { mode: "cors" });
-  const data = await response.json();
-  return data;
+      const response = await fetch(url, { mode: "cors" });
+      const data = await response.json();
+      return data;    
 }
 
 export async function deleteProjectData(projectId: string) {
