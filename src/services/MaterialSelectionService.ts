@@ -90,7 +90,7 @@ export function getMaterials(): {
       insulationSummary: m.name,
       insulationType: m.category,
       thermalTransmittance: `${m.uValue} W/m2k`,
-      materialHeights: m.layerStructure.map((l) => parseFloat(l.thickness)),
+      materialHeights: m.layerStructure.map((l) => l.thickness),
     });
   });
   return results;

@@ -124,7 +124,8 @@ export async function saveConstructionDetail(material: IConstructionDetail) {
     materialIds:
       material.layerStructure?.map((l) => parseInt(l.material.id, 10)) || [],
     tagIds: material.tags?.map((t) => t.id) || [],
-    thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
+    //thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
+    thickness: material.layerStructure?.map((l) => l.thickness).join(",") || "",
   };
 
   // const url = isProd
@@ -174,7 +175,8 @@ export async function getConstructionDetails_API() {
             density: m.density,
             specificHeat: m.specificHeat,
           },
-          thickness: d.thickness[i].toString(),
+          //thickness: d.thickness[i].toString(),
+          thickness: d.thickness[i],
         };
       }),
     };
@@ -212,7 +214,7 @@ export async function getConstructionDetailById_API(id: string) {
           density: m.density,
           specificHeat: m.specificHeat,
         },
-        thickness: detail.thickness[i].toString(),
+        thickness: detail.thickness[i],
       };
     }),
   };
