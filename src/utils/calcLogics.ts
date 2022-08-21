@@ -1,6 +1,6 @@
 import { IMaterialDetail } from "src/models/construction";
 
-export function calcUvalue(construction:{ id: number; type: IMaterialDetail; thickness: string }[]):number{
+export function calcUvalue(construction:{ id: number; type: IMaterialDetail; thickness: number }[]):number{
   
   const heatResistance = construction.map(material=>{
     //FIXME: material.thickess should be used here

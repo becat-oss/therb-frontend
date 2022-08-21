@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useTranslation from 'next-translate/useTranslation'
+import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -7,11 +7,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import {
-  getCategories,
-  getMaterialSizes,
-  getMaterialTags,
-} from "src/services/MaterialSelectionService";
+import { getCategories } from "src/services/MaterialSelectionService";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
 import Select from "src/components/form-controls/select";
 import MuiSelect from "@mui/material/Select";
@@ -59,9 +55,8 @@ export default function MaterialAddition({
   materialDetails: IMaterialDetail[];
   materialTags: ITagType[];
 }): React.ReactElement {
-  const materialThickness = getMaterialSizes();
   const router = useRouter();
-  const { t } = useTranslation('add-construction')
+  const { t } = useTranslation("add-construction");
 
   const [name, setName] = useState(constructionDetail?.name || "");
   const [category, setCategory] = useState(constructionDetail?.category || "");
@@ -76,7 +71,7 @@ export default function MaterialAddition({
             thickness: l.thickness,
           };
         })
-      : ([] as { id: number; type: IMaterialDetail; thickness: string }[])
+      : ([] as { id: number; type: IMaterialDetail; thickness: number }[])
   );
   const [description, setDescription] = useState(
     constructionDetail?.description || ""
@@ -89,17 +84,16 @@ export default function MaterialAddition({
 
   useEffect(() => {
     //calculate u-value based on layers
-    const uvalue=calcUvalue(materialLayers);
+    const uvalue = calcUvalue(materialLayers);
     setUValue(uvalue);
-
-  },[materialLayers])
+  }, [materialLayers]);
 
   const onAddLayer = () => {
     const tempMaterialLayers = materialLayers.slice();
     tempMaterialLayers.push({
       id: layerIdCounter.next().value as number,
       type: materialDetails[0],
-      thickness: materialThickness[0],
+      thickness: 10,
     });
     setMaterialLayers(tempMaterialLayers);
   };
@@ -115,7 +109,7 @@ export default function MaterialAddition({
   const updateMaterialLayers = (
     id: number,
     type: IMaterialDetail,
-    thickness: string
+    thickness: number
   ) => {
     const tempMaterialLayers = materialLayers.slice();
     const found = tempMaterialLayers.findIndex((l) => l.id === id);
@@ -160,7 +154,7 @@ export default function MaterialAddition({
       }}
     >
       <Typography variant="h5" ml={2}>
-        {t('title')}
+        {t("title")}
       </Typography>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
@@ -169,19 +163,19 @@ export default function MaterialAddition({
               <TextField
                 fullWidth
                 id="material_name"
-                label={t('name')}
+                label={t("name")}
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
                 sx={{ marginBottom: 2 }}
               />
               <FormControl>
-                <InputLabel id={category}>{t('category')}</InputLabel>
+                <InputLabel id={category}>{t("category")}</InputLabel>
                 <MuiSelect
                   labelId={category}
                   id={category}
                   value={category}
-                  label={t('category')}
+                  label={t("category")}
                   onChange={handleCategoryChange}
                 >
                   {categories.map((item, i) => (
@@ -195,7 +189,7 @@ export default function MaterialAddition({
               <Autocomplete
                 multiple
                 limitTags={4}
-                id={t('tags')}
+                id={t("tags")}
                 options={materialTags}
                 getOptionLabel={(option) => {
                   if (option.inputValue) {
@@ -228,7 +222,7 @@ export default function MaterialAddition({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={t('tags')}
+                    label={t("tags")}
                     placeholder="Material Tags"
                   />
                 )}
@@ -236,7 +230,7 @@ export default function MaterialAddition({
               <TextField
                 fullWidth
                 id="material_description"
-                label={t('description')}
+                label={t("description")}
                 variant="outlined"
                 defaultValue={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -247,7 +241,7 @@ export default function MaterialAddition({
           </Grid>
           <Grid container item xs={8}>
             <Typography variant="h6" ml={2}>
-              {t('construction')}
+              {t("construction")}
             </Typography>
             <Box
               p={4}
@@ -268,7 +262,7 @@ export default function MaterialAddition({
                       display: "flex",
                     }}
                   >
-                    <Typography>{t('outdoor')}</Typography>
+                    <Typography>{t("outdoor")}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Box
@@ -280,9 +274,7 @@ export default function MaterialAddition({
                       }}
                     >
                       <MaterialRepresentation
-                        materialHeights={materialLayers.map((l) =>
-                          parseFloat(l.thickness)
-                        )}
+                        materialHeights={materialLayers.map((l) => l.thickness)}
                         length={250}
                       ></MaterialRepresentation>
                     </Box>
@@ -296,12 +288,12 @@ export default function MaterialAddition({
                       display: "flex",
                     }}
                   >
-                    <Typography>{t('indoor')}</Typography>
+                    <Typography>{t("indoor")}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item xs={6}>
                   <Box width={"100%"}>
-                    <Typography>{t('material')}</Typography>
+                    <Typography>{t("material")}</Typography>
                     <Stack spacing={2}>
                       {materialLayers.map((l) => (
                         <Grid key={l.id} container>
@@ -322,20 +314,32 @@ export default function MaterialAddition({
                               }
                             ></Select>
                           </Grid>
-                          <Grid item xs={4}>
-                            <Select
-                              label="Size"
-                              list={materialThickness}
-                              defaultValue={l.thickness}
-                              sx={{ display: "flex" }}
-                              onChange={(e: SelectChangeEvent) =>
-                                updateMaterialLayers(
-                                  l.id,
-                                  l.type,
-                                  e.target.value
-                                )
-                              }
-                            ></Select>
+                          <Grid
+                            item
+                            xs={4}
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              flexWrap: "nowrap",
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <TextField
+                              fullWidth
+                              id="size"
+                              label="size"
+                              variant="outlined"
+                              value={l.thickness}
+                              type="number"
+                              onChange={(e) => {
+                                const val = parseFloat(e.target.value);
+                                if (val >= 0) {
+                                  updateMaterialLayers(l.id, l.type, val);
+                                }
+                              }}
+                              sx={{ marginBottom: 2 }}
+                            />
+                            <Typography>mm</Typography>
                           </Grid>
                           <Grid item xs={1}>
                             <IconButton
@@ -354,7 +358,7 @@ export default function MaterialAddition({
                       ))}
                     </Stack>
                     <Button variant="outlined" onClick={onAddLayer}>
-                      {t('add-layer')}
+                      {t("add-layer")}
                     </Button>
                   </Box>
                 </Grid>
@@ -370,44 +374,49 @@ export default function MaterialAddition({
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography>{t('performance')}</Typography>
+                  <Typography>{t("performance")}</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography width={"100%"}>{t('u-value')}</Typography>
-                  <TextField
-                    id="first_field"
-                    variant="outlined"
-                    defaultValue={uValue}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    value={uValue}
-                  />
-                  <Typography variant="caption">W/m2K</Typography>
+                  <Typography width={"100%"}>{t("u-value")}</Typography>
+                  <Box sx={{ display: "flex", alignItems: "baseline" }}>
+                    <TextField
+                      id="first_field"
+                      variant="outlined"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      value={uValue}
+                    />
+                    <Typography>W/m2K</Typography>
+                  </Box>
                 </Grid>
                 <Grid item xs={4}>
                   <Typography width={"100%"}>LCCO2</Typography>
-                  <TextField
-                    id="first_field"
-                    variant="outlined"
-                    defaultValue={lcco2}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                  <Typography variant="caption">gCO2</Typography>
+                  <Box sx={{ display: "flex", alignItems: "baseline" }}>
+                    <TextField
+                      id="first_field"
+                      variant="outlined"
+                      defaultValue={lcco2}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <Typography>gCO2</Typography>
+                  </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography width={"100%"}>{t('cost')}</Typography>
-                  <TextField
-                    id="first_field"
-                    variant="outlined"
-                    defaultValue={cost}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                  <Typography variant="caption">円/m2</Typography>
+                  <Typography width={"100%"}>{t("cost")}</Typography>
+                  <Box sx={{ display: "flex", alignItems: "baseline" }}>
+                    <TextField
+                      id="first_field"
+                      variant="outlined"
+                      defaultValue={cost}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <Typography>円/m2</Typography>
+                  </Box>
                 </Grid>
               </Grid>
             </Box>
@@ -421,7 +430,7 @@ export default function MaterialAddition({
             >
               <Box></Box>
               <Button variant="contained" type="submit">
-                {t('save')}
+                {t("save")}
               </Button>
             </Box>
           </Grid>
@@ -445,7 +454,7 @@ export async function getServerSideProps({
     };
   // Fetch data from external API
   const constructionDetails = await getConstructionDetails_API();
-  
+
   const constructionDetail = constructionDetails.filter(
     (d) => d.uniqueId === params.id
   )[0];
