@@ -1,6 +1,6 @@
 import { IMaterialDetail } from "src/models/construction";
 
-export function calcUvalue(construction:{ id: number; type: IMaterialDetail; thickness: string }[]):number{
+export function calcUvalue(construction:{ id: number; type: IMaterialDetail; thickness: number }[]):number{
   
   const heatResistance = construction.map(material=>{
     //FIXME: material.thickess should be used here
@@ -16,7 +16,7 @@ export function calcUvalue(construction:{ id: number; type: IMaterialDetail; thi
 /**
  * 任意の桁で四捨五入する関数
  * @param {number} value 四捨五入する数値
- * @param {number} digit
+ * @param {number} digit 小数点以下の桁数
  * @return {number} 四捨五入した値
  */
  function orgRound(value:number, digit:number) :number{

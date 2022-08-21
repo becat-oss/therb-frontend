@@ -171,7 +171,8 @@ export default function ConstructionList({
               <Box sx={{ width: 150, marginTop: 1 }}>
                 <MaterialRepresentation
                   materialHeights={cd.layerStructure.map((l) =>
-                    parseFloat(l.thickness)
+                    //parseFloat(l.thickness)
+                    l.thickness
                   )}
                   length={200}
                 ></MaterialRepresentation>

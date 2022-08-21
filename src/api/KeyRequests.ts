@@ -25,12 +25,6 @@ type KeyRequest<K extends keyof KeyRequests> = [
 
 const isProd = process.env.NODE_ENV === "production";
 
-//TODO:実装途中
-// export function useKeyRequest<K extends keyof KeyRequests>(key:K): KeyRequest<K>{
-//   const [loading, setLoading] = useState<boolean>(false);
-//   const { url: requestURL, ...requestData} = useKeyRequestData<K>(key);
-// }
-
 //FIXME: 一つの関数にまとめることはできないか？
 export async function getTimeseriesData(projectId: string | string[]) {
   //TODO:とりあえず固定
