@@ -6,7 +6,8 @@ export function getMaterialTags(): string[] {
 }
 
 export function getCategories(): string[] {
-  return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor", 'interiorWall'];
+  //return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor", 'interiorWall'];
+  return ["exteriorWall", "interiorWall", "interiorFloor", "exteriorRoof", "groundFloor", 'window'];
 }
 
 // export function getMaterialTypes(): string[] {

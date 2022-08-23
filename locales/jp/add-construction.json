@@ -8,10 +8,18 @@
   "outdoor":"屋外側",
   "indoor":"室内側",
   "material":"材料",
+  "thickness":"厚さ",
+  "type" : "種類",
   "add-layer":"層構成を追加",
   "performance":"性能値",
   "u-value":"U値",
   "lcco2":"LCCo2",
   "cost":"コスト",
-  "save":"保存"
+  "save":"保存",
+  "exteriorWall":"外壁",
+  "interiorWall":"内壁",
+  "interiorFloor":"天井・床",
+  "exteriorRoof":"屋根",
+  "groundFloor":"地面に接する床",
+  "window":"窓"
 }

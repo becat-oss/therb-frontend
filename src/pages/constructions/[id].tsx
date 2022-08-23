@@ -180,7 +180,7 @@ export default function Construction({
                 >
                   {categories.map((item, i) => (
                     <MenuItem key={i} value={item}>
-                      {item}
+                      {t(item)}
                     </MenuItem>
                   ))}
                 </MuiSelect>
@@ -299,7 +299,7 @@ export default function Construction({
                         <Grid key={l.id} container>
                           <Grid item xs={7}>
                             <Select
-                              label="Type"
+                              label={t("type")}
                               list={materialDetails.map((m: any) => m.name)}
                               defaultValue={l.type}
                               sx={{ display: "flex" }}
@@ -327,7 +327,7 @@ export default function Construction({
                             <TextField
                               fullWidth
                               id="size"
-                              label="size"
+                              label={t("thickness")}
                               variant="outlined"
                               value={l.thickness}
                               type="number"

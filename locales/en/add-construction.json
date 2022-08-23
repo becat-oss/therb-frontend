@@ -8,10 +8,18 @@
   "outdoor":"Outdoor",
   "indoor":"Indoor",
   "material":"Material",
+  "thickness":"Thickness",
+  "type" : "Type",
   "add-layer":"Add Layer",
   "performance":"Performance",
   "u-value":"U-Value",
   "lcco2":"LCCo2",
   "cost":"Cost",
-  "save":"Save"
+  "save":"Save",
+  "exteriorWall":"Exterior Wall",
+  "interiorWall":"Interior Wall",
+  "interiorFloor":"Interior Floor",
+  "exteriorRoof":"Exterior Roof",
+  "groundFloor":"Ground Floor",
+  "window":"Window"
 }
