@@ -31,4 +31,5 @@ export interface IConstructionDetail_post {
   tagIds?: string[];
   category?: string;
   thickness?: string;
+  uvalue?: number;
 }

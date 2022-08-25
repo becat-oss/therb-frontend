@@ -126,6 +126,7 @@ export async function saveConstructionDetail(material: IConstructionDetail) {
     tagIds: material.tags?.map((t) => t.id) || [],
     //thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
     thickness: material.layerStructure?.map((l) => l.thickness).join(",") || "",
+    uvalue:material.uValue || 0,
   };
 
   // const url = isProd
