@@ -150,10 +150,12 @@ export default function Construction({
 
   const handleDescriptionChange = (description: string) => {
     setDescription(description);
-    description === "" ? errorMap.set("description", true) : errorMap.delete("description");
+    description === ""
+      ? errorMap.set("description", true)
+      : errorMap.delete("description");
   };
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
     const newErrorMap = new Map<string, boolean>();
     //Validation
@@ -177,16 +179,25 @@ export default function Construction({
         }),
       };
 
-      saveConstructionDetail(constructionDetailToSave);
-      router.push("../constructions");
+      const response = await saveConstructionDetail(constructionDetailToSave);
+      if (response.status === "success") {
+        setBackendSuccessAlertOpen(true);
+        setTimeout(() => {
+          router.push("../constructions");
+        }, 200);
+      } else {
+        setBackendErrorAlertOpen(true);
+      }
     } else {
       setErrorMap(newErrorMap);
-      setAlertOpen(true);
+      setErrorAlertOpen(true);
     }
   };
 
   const [open, setOpen] = useState(false);
-  const [alertOpen, setAlertOpen] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  const [backendErrorAlertOpen, setBackendErrorAlertOpen] = useState(false);
+  const [backendSuccessAlertOpen, setBackendSuccessAlertOpen] = useState(false);
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -194,9 +205,11 @@ export default function Construction({
     if (reason === "clickaway") {
       return;
     }
-
-    setAlertOpen(false);
+    setErrorAlertOpen(false);
+    setBackendErrorAlertOpen(false);
+    setBackendSuccessAlertOpen(false);
   };
+
   return (
     <Box
       sx={{
@@ -208,7 +221,35 @@ export default function Construction({
       }}
     >
       <Snackbar
-        open={alertOpen}
+        open={backendSuccessAlertOpen}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          variant="outlined"
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          New Construction Added
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={backendErrorAlertOpen}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          variant="outlined"
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          Something went wrong while adding construction
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={errorAlertOpen}
         autoHideDuration={6000}
         onClose={handleAlertClose}
       >
