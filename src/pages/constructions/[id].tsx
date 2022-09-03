@@ -181,23 +181,48 @@ export default function Construction({
 
       const response = await saveConstructionDetail(constructionDetailToSave);
       if (response.status === "success") {
-        setBackendSuccessAlertOpen(true);
+        setAlert({
+          open: true,
+          message: "Construction Added Successfully",
+          severity: "success",
+        });
         setTimeout(() => {
           router.push("../constructions");
         }, 200);
       } else {
-        setBackendErrorAlertOpen(true);
+        setAlert({
+          open: true,
+          message: "Something Went wrong in while adding construction",
+          severity: "error",
+        });
       }
     } else {
       setErrorMap(newErrorMap);
-      setErrorAlertOpen(true);
+      setAlert({
+        open: true,
+        message: "Please fill all the required details",
+        severity: "error",
+      });
     }
   };
 
+  const onCancel = () => {
+    setAlert({
+      open: true,
+      message: "Construction Cancelled",
+      severity: "error",
+    });
+    setTimeout(() => {
+      router.push("../constructions");
+    }, 200);
+  };
+
   const [open, setOpen] = useState(false);
-  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
-  const [backendErrorAlertOpen, setBackendErrorAlertOpen] = useState(false);
-  const [backendSuccessAlertOpen, setBackendSuccessAlertOpen] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  } as { open: boolean; message: string; severity: "success" | "error" });
   const handleAlertClose = (
     event?: React.SyntheticEvent | Event,
     reason?: string
@@ -205,9 +230,7 @@ export default function Construction({
     if (reason === "clickaway") {
       return;
     }
-    setErrorAlertOpen(false);
-    setBackendErrorAlertOpen(false);
-    setBackendSuccessAlertOpen(false);
+    setAlert({ open: false, message: "", severity: "success" });
   };
 
   return (
@@ -221,45 +244,17 @@ export default function Construction({
       }}
     >
       <Snackbar
-        open={backendSuccessAlertOpen}
+        open={alert.open}
         autoHideDuration={6000}
         onClose={handleAlertClose}
       >
         <Alert
           onClose={handleAlertClose}
           variant="outlined"
-          severity="success"
+          severity={alert.severity}
           sx={{ width: "100%" }}
         >
-          New Construction Added
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={backendErrorAlertOpen}
-        autoHideDuration={6000}
-        onClose={handleAlertClose}
-      >
-        <Alert
-          onClose={handleAlertClose}
-          variant="outlined"
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Something went wrong while adding construction
-        </Alert>
-      </Snackbar>
-      <Snackbar
-        open={errorAlertOpen}
-        autoHideDuration={6000}
-        onClose={handleAlertClose}
-      >
-        <Alert
-          onClose={handleAlertClose}
-          variant="outlined"
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          Please fill all the required details
+          {alert.message}
         </Alert>
       </Snackbar>
       <Typography variant="h5" ml={2}>
@@ -556,9 +551,19 @@ export default function Construction({
               }}
             >
               <Box></Box>
-              <Button variant="contained" type="submit">
-                {t("save")}
-              </Button>
+              <Box>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={onCancel}
+                  sx={{ mr: 1 }}
+                >
+                  {t("cancel")}
+                </Button>
+                <Button variant="contained" type="submit" sx={{ ml: 1 }}>
+                  {t("save")}
+                </Button>
+              </Box>
             </Box>
           </Grid>
         </Grid>
