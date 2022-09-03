@@ -14,7 +14,13 @@ import MuiSelect from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import { Button, IconButton, SelectChangeEvent } from "@mui/material";
+import {
+  Alert,
+  Button,
+  IconButton,
+  SelectChangeEvent,
+  Snackbar,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getConstructionDetailById_API,
@@ -29,7 +35,6 @@ import {
   IMaterialDetail,
   ITag,
 } from "src/models/construction";
-import { IConstructionDetail_post } from "src/api/material-construction/models";
 import { calcUvalue } from "src/utils/calcLogics";
 
 interface ITagType extends ITag {
@@ -58,6 +63,7 @@ export default function Construction({
   const router = useRouter();
   const { t } = useTranslation("add-construction");
 
+  const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(constructionDetail?.name || "");
   const [category, setCategory] = useState(constructionDetail?.category || "");
   const [tags, setTags] = useState<ITagType[]>(constructionDetail?.tags || []);
@@ -71,7 +77,13 @@ export default function Construction({
             thickness: l.thickness,
           };
         })
-      : ([] as { id: number; type: IMaterialDetail; thickness: number }[])
+      : ([
+          {
+            id: layerIdCounter.next().value as number,
+            type: materialDetails[0],
+            thickness: 10,
+          },
+        ] as { id: number; type: IMaterialDetail; thickness: number }[])
   );
   const [description, setDescription] = useState(
     constructionDetail?.description || ""
@@ -96,6 +108,7 @@ export default function Construction({
       thickness: 10,
     });
     setMaterialLayers(tempMaterialLayers);
+    errorMap.delete("materialLayers");
   };
 
   const onMaterialLayerDelete = (id: number) => {
@@ -104,6 +117,7 @@ export default function Construction({
     if (found !== -1) {
       tempMaterialLayers.splice(found, 1);
       setMaterialLayers(tempMaterialLayers);
+      tempMaterialLayers.length === 0 && errorMap.set("materialLayers", true);
     }
   };
   const updateMaterialLayers = (
@@ -119,30 +133,70 @@ export default function Construction({
     }
   };
 
+  const handleNameChange = (name: string) => {
+    setName(name);
+    name === "" ? errorMap.set("name", true) : errorMap.delete("name");
+  };
+
   const handleCategoryChange = (event: SelectChangeEvent) => {
     setCategory(event.target.value as string);
+    errorMap.delete("category");
+  };
+
+  const handleTagsChange = (tags: ITagType[]) => {
+    setTags(tags);
+    tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
+  };
+
+  const handleDescriptionChange = (description: string) => {
+    setDescription(description);
+    description === "" ? errorMap.set("description", true) : errorMap.delete("description");
   };
 
   const onSubmit = (e: any) => {
     e.preventDefault();
+    const newErrorMap = new Map<string, boolean>();
+    //Validation
+    name === "" && newErrorMap.set("name", true);
+    category === "" && newErrorMap.set("category", true);
+    description === "" && newErrorMap.set("description", true);
+    tags.length === 0 && newErrorMap.set("tags", true);
+    materialLayers.length === 0 && newErrorMap.set("materialLayers", true);
     // construction detail to save to backend
-    const constructionDetailToSave: IConstructionDetail = {
-      uniqueId: constructionDetail?.uniqueId || "new",
-      name,
-      category,
-      description,
-      tags: tags.map((t) => {
-        return { id: t.id, label: t.inputValue || t.label };
-      }),
-      layerStructure: materialLayers.map((l) => {
-        return { material: l.type, thickness: l.thickness };
-      }),
-    };
-    saveConstructionDetail(constructionDetailToSave);
-    router.push("../constructions");
+    if (newErrorMap.size === 0) {
+      const constructionDetailToSave: IConstructionDetail = {
+        uniqueId: constructionDetail?.uniqueId || "new",
+        name,
+        category,
+        description,
+        tags: tags.map((t) => {
+          return { id: t.id, label: t.inputValue || t.label };
+        }),
+        layerStructure: materialLayers.map((l) => {
+          return { material: l.type, thickness: l.thickness };
+        }),
+      };
+
+      saveConstructionDetail(constructionDetailToSave);
+      router.push("../constructions");
+    } else {
+      setErrorMap(newErrorMap);
+      setAlertOpen(true);
+    }
   };
 
   const [open, setOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setAlertOpen(false);
+  };
   return (
     <Box
       sx={{
@@ -153,6 +207,20 @@ export default function Construction({
         borderRadius: 1,
       }}
     >
+      <Snackbar
+        open={alertOpen}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          variant="outlined"
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          Please fill all the required details
+        </Alert>
+      </Snackbar>
       <Typography variant="h5" ml={2}>
         {t("title")}
       </Typography>
@@ -166,10 +234,12 @@ export default function Construction({
                 label={t("name")}
                 variant="outlined"
                 defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
                 sx={{ marginBottom: 2 }}
+                error={errorMap.get("name")}
+                helperText="Name is required"
               />
-              <FormControl>
+              <FormControl error={errorMap.get("category")}>
                 <InputLabel id={category}>{t("category")}</InputLabel>
                 <MuiSelect
                   labelId={category}
@@ -184,6 +254,11 @@ export default function Construction({
                     </MenuItem>
                   ))}
                 </MuiSelect>
+                {errorMap.get("category") && (
+                  <Typography variant="caption" color="#F00">
+                    Category is required
+                  </Typography>
+                )}
               </FormControl>
 
               <Autocomplete
@@ -200,7 +275,9 @@ export default function Construction({
                 renderOption={(props, option) => (
                   <li {...props}>{option.label}</li>
                 )}
-                onChange={(e, v) => setTags(v as unknown as ITagType[])}
+                onChange={(e, v) =>
+                  handleTagsChange(v as unknown as ITagType[])
+                }
                 filterOptions={(options, params) => {
                   const filtered = filter(options, params);
 
@@ -224,6 +301,8 @@ export default function Construction({
                     {...params}
                     label={t("tags")}
                     placeholder="Material Tags"
+                    error={errorMap.get("tags")}
+                    helperText="At least one tag is required"
                   />
                 )}
               />
@@ -233,9 +312,11 @@ export default function Construction({
                 label={t("description")}
                 variant="outlined"
                 defaultValue={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => handleDescriptionChange(e.target.value)}
                 multiline
                 rows={7}
+                error={errorMap.get("description")}
+                helperText="Description is required"
               />
             </Stack>
           </Grid>
@@ -248,7 +329,7 @@ export default function Construction({
               sx={{
                 width: "100%",
                 borderStyle: "solid",
-                color: "#000",
+                color: errorMap.get("materialLayers") ? "#F00" : "#000",
               }}
             >
               <Grid container>
@@ -364,6 +445,11 @@ export default function Construction({
                 </Grid>
               </Grid>
             </Box>
+            {errorMap.get("materialLayers") && (
+              <Typography variant="caption" color="#F00">
+                At least one layer is needed for construction
+              </Typography>
+            )}
             <Box
               sx={{
                 width: "100%",
