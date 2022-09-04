@@ -10,6 +10,12 @@ import {
   ITag_get,
 } from "./models";
 
+export interface IAPIResponse {
+  status: "success" | "failed";
+  message: string;
+  data?: any[];
+}
+
 const isProd = process.env.NODE_ENV === "production";
 
 export async function getMaterials_API() {
@@ -48,13 +54,17 @@ export async function getMaterialTags_API() {
   // return tags.map((t,i)=>{return {id: i.toString(), label: t}}) as ITag[];
 }
 
-export async function postMaterialTags_API(newtags: string[]) {
+export async function postMaterialTags_API(newtags: string[]): Promise<IAPIResponse> {
   const url = `https://stingray-app-vgak2.ondigitalocean.app/tags`;
   const tagsToPost = newtags.map((t) => {
     return { name: t, description: "" };
   });
 
-  const responseData: any = [];
+  const responseData: IAPIResponse = {
+    status: "failed",
+    message: "",
+    data: [],
+  };
   for (const tag of tagsToPost) {
     const response = await fetch(url, {
       method: "POST",
@@ -69,7 +79,14 @@ export async function postMaterialTags_API(newtags: string[]) {
       body: JSON.stringify(tag), // body data type must match "Content-Type" header
     });
     const data = await response.json();
-    responseData.push(data.data);
+    if(data.status === 'success'){
+      responseData.data.push(data.data);
+      responseData.status = "success";
+      responseData.message = "";
+    }
+    else{
+      responseData.message = data.message;
+    }
   }
   return responseData;
 
@@ -104,15 +121,18 @@ export async function getMaterialById(id: number) {
   return formattedData;
 }
 
-export async function saveConstructionDetail(material: IConstructionDetail) {
+export async function saveConstructionDetail(material: IConstructionDetail): Promise<IAPIResponse> {
   //save tags first
   const tagsWithoutId = material.tags.filter((t) => t.id === null);
   if (tagsWithoutId.length > 0) {
     const tagsLabels = tagsWithoutId.map((t) => t.label);
     const newTags = await postMaterialTags_API(tagsLabels);
+    if(newTags.status === "failed"){
+      return {status: "failed", message:"Failed while posting Tags"};
+    }
     console.log(newTags);
     const tagsWithId = material.tags.filter((t) => t.id !== null);
-    material.tags = tagsWithId.concat(newTags);
+    material.tags = tagsWithId.concat(newTags.data);
   }
 
   const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
@@ -126,9 +146,14 @@ export async function saveConstructionDetail(material: IConstructionDetail) {
     tagIds: material.tags?.map((t) => t.id) || [],
     //thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
     thickness: material.layerStructure?.map((l) => l.thickness).join(",") || "",
-    uvalue:material.uValue || 0,
+    uvalue: material.uValue || 0,
   };
 
+  const responseData: IAPIResponse = {
+    status: "failed",
+    message: "",
+    data: [],
+  };
   // const url = isProd
   //   ? `https://stingray-app-vgak2.ondigitalocean.app/constructions`
   //   : `http://localhost:5000/constructions`;
@@ -145,7 +170,15 @@ export async function saveConstructionDetail(material: IConstructionDetail) {
     body: JSON.stringify(constructionDetail_Post), // body data type must match "Content-Type" header
   });
   const data = await response.json();
-  return data.data;
+  if(data.status=== "success"){
+    responseData.status = "success";
+    responseData.data = [data.data];
+  }
+  else{
+    responseData.status = "failed";
+    responseData.message= data.message
+  }
+  return responseData;
 }
 
 export async function getConstructionDetails_API() {
