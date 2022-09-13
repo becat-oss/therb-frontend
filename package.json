@@ -37,6 +37,7 @@
     "lodash": "^4.17.21",
     "material-ui": "^0.20.2",
     "next": "^10.2.3",
+    "next-translate": "^1.5.0",
     "npm": "^8.13.1",
     "react": "^17.0.2",
     "react-datasheet": "^1.4.9",

@@ -6,7 +6,8 @@ export function getMaterialTags(): string[] {
 }
 
 export function getCategories(): string[] {
-  return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor", 'interiorWall'];
+  //return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor", 'interiorWall'];
+  return ["exteriorWall", "interiorWall", "interiorFloor", "exteriorRoof", "groundFloor", 'window'];
 }
 
 // export function getMaterialTypes(): string[] {
@@ -90,7 +91,7 @@ export function getMaterials(): {
       insulationSummary: m.name,
       insulationType: m.category,
       thermalTransmittance: `${m.uValue} W/m2k`,
-      materialHeights: m.layerStructure.map((l) => parseFloat(l.thickness)),
+      materialHeights: m.layerStructure.map((l) => l.thickness),
     });
   });
   return results;

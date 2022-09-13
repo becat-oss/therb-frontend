@@ -19,7 +19,7 @@ export interface IConstructionDetail {
   description?: string;
   layerStructure?: {
     material: IMaterialDetail;
-    thickness: string;
+    thickness: number;
   }[];
   uValue?: number;
   lcco2?: number;

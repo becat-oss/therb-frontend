@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -6,18 +7,20 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import {
-  getCategories,
-  getMaterialSizes,
-  getMaterialTags,
-} from "src/services/MaterialSelectionService";
+import { getCategories } from "src/services/MaterialSelectionService";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
 import Select from "src/components/form-controls/select";
 import MuiSelect from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import { Button, IconButton, SelectChangeEvent } from "@mui/material";
+import {
+  Alert,
+  Button,
+  IconButton,
+  SelectChangeEvent,
+  Snackbar,
+} from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getConstructionDetailById_API,
@@ -32,7 +35,7 @@ import {
   IMaterialDetail,
   ITag,
 } from "src/models/construction";
-import { IConstructionDetail_post } from "src/api/construction/models";
+import { calcUvalue } from "src/utils/calcLogics";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -57,9 +60,10 @@ export default function Construction({
   materialDetails: IMaterialDetail[];
   materialTags: ITagType[];
 }): React.ReactElement {
-  const materialThickness = getMaterialSizes();
   const router = useRouter();
+  const { t } = useTranslation("add-construction");
 
+  const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(constructionDetail?.name || "");
   const [category, setCategory] = useState(constructionDetail?.category || "");
   const [tags, setTags] = useState<ITagType[]>(constructionDetail?.tags || []);
@@ -73,7 +77,13 @@ export default function Construction({
             thickness: l.thickness,
           };
         })
-      : ([] as { id: number; type: IMaterialDetail; thickness: string }[])
+      : ([
+          {
+            id: layerIdCounter.next().value as number,
+            type: materialDetails[0],
+            thickness: 10,
+          },
+        ] as { id: number; type: IMaterialDetail; thickness: number }[])
   );
   const [description, setDescription] = useState(
     constructionDetail?.description || ""
@@ -84,14 +94,21 @@ export default function Construction({
 
   const categories = getCategories();
 
+  useEffect(() => {
+    //calculate u-value based on layers
+    const uvalue = calcUvalue(materialLayers);
+    setUValue(uvalue);
+  }, [materialLayers]);
+
   const onAddLayer = () => {
     const tempMaterialLayers = materialLayers.slice();
     tempMaterialLayers.push({
       id: layerIdCounter.next().value as number,
       type: materialDetails[0],
-      thickness: materialThickness[0],
+      thickness: 10,
     });
     setMaterialLayers(tempMaterialLayers);
+    errorMap.delete("materialLayers");
   };
 
   const onMaterialLayerDelete = (id: number) => {
@@ -100,12 +117,13 @@ export default function Construction({
     if (found !== -1) {
       tempMaterialLayers.splice(found, 1);
       setMaterialLayers(tempMaterialLayers);
+      tempMaterialLayers.length === 0 && errorMap.set("materialLayers", true);
     }
   };
   const updateMaterialLayers = (
     id: number,
     type: IMaterialDetail,
-    thickness: string
+    thickness: number
   ) => {
     const tempMaterialLayers = materialLayers.slice();
     const found = tempMaterialLayers.findIndex((l) => l.id === id);
@@ -115,36 +133,106 @@ export default function Construction({
     }
   };
 
-  const handleCategoryChange = (event: SelectChangeEvent) => {
-    setCategory(event.target.value as string);
+  const handleNameChange = (name: string) => {
+    setName(name);
+    name === "" ? errorMap.set("name", true) : errorMap.delete("name");
   };
 
-  const onSubmit = (e: any) => {
-    e.preventDefault();
+  const handleCategoryChange = (event: SelectChangeEvent) => {
+    setCategory(event.target.value as string);
+    errorMap.delete("category");
+  };
 
-    // save the tags first
-    // const newTags = tags.filter(t=> t.id === null);
-    // const newTagsString= newTags.map(t=>t.label);
-    // console.log(newTagsString);
-    // const newTagsWithId = await postMaterialTags_API(newTagsString);
-    // const tagsWithId: ITag[] = tags.filter(t=> t.id !== null);
-    // const tagsInConstruction = tagsWithId.concat(newTagsWithId);
+  const handleTagsChange = (tags: ITagType[]) => {
+    setTags(tags);
+    tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
+  };
+
+  const handleDescriptionChange = (description: string) => {
+    setDescription(description);
+    description === ""
+      ? errorMap.set("description", true)
+      : errorMap.delete("description");
+  };
+
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+    const newErrorMap = new Map<string, boolean>();
+    //Validation
+    name === "" && newErrorMap.set("name", true);
+    category === "" && newErrorMap.set("category", true);
+    description === "" && newErrorMap.set("description", true);
+    tags.length === 0 && newErrorMap.set("tags", true);
+    materialLayers.length === 0 && newErrorMap.set("materialLayers", true);
     // construction detail to save to backend
-    const constructionDetailToSave: IConstructionDetail_post = {
-      name,
-      description,
-      materialIds: materialLayers.map((l) => l.id),
-      tags: tags.map((t) => {
-        return { id: t.id ? parseInt(t.id, 10) : null, name: t.label };
-      }),
-      category,
-      thickness: materialLayers.map((l) => l.thickness).join(" "),
-    };
-    saveConstructionDetail(constructionDetailToSave);
-    router.push("../../constructions");
+    if (newErrorMap.size === 0) {
+      const constructionDetailToSave: IConstructionDetail = {
+        uniqueId: constructionDetail?.uniqueId || "new",
+        name,
+        category,
+        description,
+        tags: tags.map((t) => {
+          return { id: t.id, label: t.inputValue || t.label };
+        }),
+        layerStructure: materialLayers.map((l) => {
+          return { material: l.type, thickness: l.thickness };
+        }),
+      };
+
+      const response = await saveConstructionDetail(constructionDetailToSave);
+      if (response.status === "success") {
+        setAlert({
+          open: true,
+          message: "Construction Added Successfully",
+          severity: "success",
+        });
+        setTimeout(() => {
+          router.push("../constructions");
+        }, 200);
+      } else {
+        setAlert({
+          open: true,
+          message: "Something Went wrong in while adding construction",
+          severity: "error",
+        });
+      }
+    } else {
+      setErrorMap(newErrorMap);
+      setAlert({
+        open: true,
+        message: "Please fill all the required details",
+        severity: "error",
+      });
+    }
+  };
+
+  const onCancel = () => {
+    setAlert({
+      open: true,
+      message: "Construction Cancelled",
+      severity: "error",
+    });
+    setTimeout(() => {
+      router.push("../constructions");
+    }, 200);
   };
 
   const [open, setOpen] = useState(false);
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  } as { open: boolean; message: string; severity: "success" | "error" });
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlert({ open: false, message: "", severity: "success" });
+  };
+
   return (
     <Box
       sx={{
@@ -155,8 +243,22 @@ export default function Construction({
         borderRadius: 1,
       }}
     >
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          variant="outlined"
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
       <Typography variant="h5" ml={2}>
-        Registration of Material
+        {t("title")}
       </Typography>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
@@ -165,50 +267,40 @@ export default function Construction({
               <TextField
                 fullWidth
                 id="material_name"
-                label="Name"
+                label={t("name")}
                 variant="outlined"
                 defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
                 sx={{ marginBottom: 2 }}
+                error={errorMap.get("name")}
+                helperText="Name is required"
               />
-              {/* <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  width: "100%",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Typography>Category</Typography>
-                <Select
-                  label="Category"
-                  list={categories}
-                  sx={{ width: "80%" }}
-                ></Select>
-                e.target.value
-              </Box> */}
-              <FormControl>
-                <InputLabel id={category}>Category</InputLabel>
+              <FormControl error={errorMap.get("category")}>
+                <InputLabel id={category}>{t("category")}</InputLabel>
                 <MuiSelect
                   labelId={category}
                   id={category}
                   value={category}
-                  label="Category"
+                  label={t("category")}
                   onChange={handleCategoryChange}
                 >
                   {categories.map((item, i) => (
                     <MenuItem key={i} value={item}>
-                      {item}
+                      {t(item)}
                     </MenuItem>
                   ))}
                 </MuiSelect>
+                {errorMap.get("category") && (
+                  <Typography variant="caption" color="#F00">
+                    Category is required
+                  </Typography>
+                )}
               </FormControl>
 
               <Autocomplete
                 multiple
                 limitTags={4}
-                id="tags"
+                id={t("tags")}
                 options={materialTags}
                 getOptionLabel={(option) => {
                   if (option.inputValue) {
@@ -219,7 +311,9 @@ export default function Construction({
                 renderOption={(props, option) => (
                   <li {...props}>{option.label}</li>
                 )}
-                onChange={(e, v) => setTags(v as unknown as ITagType[])}
+                onChange={(e, v) =>
+                  handleTagsChange(v as unknown as ITagType[])
+                }
                 filterOptions={(options, params) => {
                   const filtered = filter(options, params);
 
@@ -241,33 +335,37 @@ export default function Construction({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Material Tags"
+                    label={t("tags")}
                     placeholder="Material Tags"
+                    error={errorMap.get("tags")}
+                    helperText="At least one tag is required"
                   />
                 )}
               />
               <TextField
                 fullWidth
                 id="material_description"
-                label="Description"
+                label={t("description")}
                 variant="outlined"
                 defaultValue={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={(e) => handleDescriptionChange(e.target.value)}
                 multiline
                 rows={7}
+                error={errorMap.get("description")}
+                helperText="Description is required"
               />
             </Stack>
           </Grid>
           <Grid container item xs={8}>
             <Typography variant="h6" ml={2}>
-              Layer Structure
+              {t("construction")}
             </Typography>
             <Box
               p={4}
               sx={{
                 width: "100%",
                 borderStyle: "solid",
-                color: "#000",
+                color: errorMap.get("materialLayers") ? "#F00" : "#000",
               }}
             >
               <Grid container>
@@ -281,7 +379,7 @@ export default function Construction({
                       display: "flex",
                     }}
                   >
-                    <Typography>Outdoor</Typography>
+                    <Typography>{t("outdoor")}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Box
@@ -293,9 +391,7 @@ export default function Construction({
                       }}
                     >
                       <MaterialRepresentation
-                        materialHeights={materialLayers.map((l) =>
-                          parseFloat(l.thickness)
-                        )}
+                        materialHeights={materialLayers.map((l) => l.thickness)}
                         length={250}
                       ></MaterialRepresentation>
                     </Box>
@@ -309,18 +405,18 @@ export default function Construction({
                       display: "flex",
                     }}
                   >
-                    <Typography>Indoor</Typography>
+                    <Typography>{t("indoor")}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item xs={6}>
                   <Box width={"100%"}>
-                    <Typography>Material</Typography>
+                    <Typography>{t("material")}</Typography>
                     <Stack spacing={2}>
                       {materialLayers.map((l) => (
                         <Grid key={l.id} container>
                           <Grid item xs={7}>
                             <Select
-                              label="Type"
+                              label={t("type")}
                               list={materialDetails.map((m: any) => m.name)}
                               defaultValue={l.type}
                               sx={{ display: "flex" }}
@@ -335,20 +431,32 @@ export default function Construction({
                               }
                             ></Select>
                           </Grid>
-                          <Grid item xs={4}>
-                            <Select
-                              label="Size"
-                              list={materialThickness}
-                              defaultValue={l.thickness}
-                              sx={{ display: "flex" }}
-                              onChange={(e: SelectChangeEvent) =>
-                                updateMaterialLayers(
-                                  l.id,
-                                  l.type,
-                                  e.target.value
-                                )
-                              }
-                            ></Select>
+                          <Grid
+                            item
+                            xs={4}
+                            sx={{
+                              display: "flex",
+                              flexDirection: "row",
+                              flexWrap: "nowrap",
+                              alignItems: "baseline",
+                            }}
+                          >
+                            <TextField
+                              fullWidth
+                              id="size"
+                              label={t("thickness")}
+                              variant="outlined"
+                              value={l.thickness}
+                              type="number"
+                              onChange={(e) => {
+                                const val = parseFloat(e.target.value);
+                                if (val >= 0) {
+                                  updateMaterialLayers(l.id, l.type, val);
+                                }
+                              }}
+                              sx={{ marginBottom: 2 }}
+                            />
+                            <Typography>mm</Typography>
                           </Grid>
                           <Grid item xs={1}>
                             <IconButton
@@ -367,8 +475,69 @@ export default function Construction({
                       ))}
                     </Stack>
                     <Button variant="outlined" onClick={onAddLayer}>
-                      Add Layer
+                      {t("add-layer")}
                     </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+            {errorMap.get("materialLayers") && (
+              <Typography variant="caption" color="#F00">
+                At least one layer is needed for construction
+              </Typography>
+            )}
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+                mt: 2,
+              }}
+            >
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <Typography>{t("performance")}</Typography>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography width={"100%"}>{t("u-value")}</Typography>
+                  <Box sx={{ display: "flex", alignItems: "baseline" }}>
+                    <TextField
+                      id="first_field"
+                      variant="outlined"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      value={uValue}
+                    />
+                    <Typography>W/m2K</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography width={"100%"}>LCCO2</Typography>
+                  <Box sx={{ display: "flex", alignItems: "baseline" }}>
+                    <TextField
+                      id="first_field"
+                      variant="outlined"
+                      defaultValue={lcco2}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <Typography>gCO2</Typography>
+                  </Box>
+                </Grid>
+                <Grid item xs={4}>
+                  <Typography width={"100%"}>{t("cost")}</Typography>
+                  <Box sx={{ display: "flex", alignItems: "baseline" }}>
+                    <TextField
+                      id="first_field"
+                      variant="outlined"
+                      defaultValue={cost}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                    <Typography>円/m2</Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -381,60 +550,20 @@ export default function Construction({
                 mt: 2,
               }}
             >
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <Typography>Performance Value</Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography width={"100%"}>UValue</Typography>
-                  <TextField
-                    id="first_field"
-                    variant="outlined"
-                    defaultValue={uValue}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                  <Typography variant="caption">W/m2k</Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography width={"100%"}>LCCO2</Typography>
-                  <TextField
-                    id="first_field"
-                    variant="outlined"
-                    defaultValue={lcco2}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                  <Typography variant="caption">gCO2</Typography>
-                </Grid>
-                <Grid item xs={4}>
-                  <Typography width={"100%"}>コスト</Typography>
-                  <TextField
-                    id="first_field"
-                    variant="outlined"
-                    defaultValue={cost}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                  />
-                  <Typography variant="caption">円/m2</Typography>
-                </Grid>
-              </Grid>
-            </Box>
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "space-between",
-                mt: 2,
-              }}
-            >
               <Box></Box>
-              <Button variant="contained" type="submit">
-                Submit
-              </Button>
+              <Box>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={onCancel}
+                  sx={{ mr: 1 }}
+                >
+                  {t("cancel")}
+                </Button>
+                <Button variant="contained" type="submit" sx={{ ml: 1 }}>
+                  {t("save")}
+                </Button>
+              </Box>
             </Box>
           </Grid>
         </Grid>
@@ -457,6 +586,7 @@ export async function getServerSideProps({
     };
   // Fetch data from external API
   const constructionDetails = await getConstructionDetails_API();
+
   const constructionDetail = constructionDetails.filter(
     (d) => d.uniqueId === params.id
   )[0];
