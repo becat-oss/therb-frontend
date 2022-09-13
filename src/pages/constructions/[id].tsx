@@ -23,19 +23,17 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  getConstructionDetailById_API,
   getConstructionDetails_API,
-  getMaterials_API,
-  getMaterialTags_API,
-  postMaterialTags_API,
+  getTags_API,
   saveConstructionDetail,
 } from "src/api/construction/requests";
 import {
   IConstructionDetail,
-  IMaterialDetail,
   ITag,
 } from "src/models/construction";
 import { calcUvalue } from "src/utils/calcLogics";
+import { getMaterials_API } from "src/api/material/request";
+import { IMaterialDetail } from "src/models/material";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -579,7 +577,7 @@ export async function getServerSideProps({
   params: { id: string };
 }) {
   const materialDetails = await getMaterials_API();
-  const materialTags = await getMaterialTags_API();
+  const materialTags = await getTags_API();
   if (params.id === "new")
     return {
       props: { constructionDetail: null, materialDetails, materialTags },

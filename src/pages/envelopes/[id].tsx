@@ -8,10 +8,9 @@ import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Select from "src/components/form-controls/select";
 import { Button, IconButton, SelectChangeEvent } from "@mui/material";
-import { getMaterialTags_API } from "src/api/construction/requests";
+import { getTags_API } from "src/api/construction/requests";
 import { IConstructionDetail, ITag } from "src/models/construction";
 import {
-  getConstructionOptions_API,
   getEnvelopeDetails_API,
 } from "src/api/envelope/request";
 import { IEnvelope } from "src/models/envelope";
@@ -26,11 +25,9 @@ const filter = createFilterOptions<ITagType>();
 export default function Envelope({
   constructionConfig,
   materialTags,
-  constructionOptions,
 }: {
   constructionConfig: IEnvelope;
   materialTags: ITagType[];
-  constructionOptions: { uniqueId: string; options: string[] }[];
 }): React.ReactElement {
   const router = useRouter();
 
@@ -40,42 +37,33 @@ export default function Envelope({
     constructionConfig?.description || ""
   );
 
-  const [config, setConfig] = useState(constructionConfig?.config || []);
-
-  const getConstructionOptions = (uniquId: string) => {
-    const found = constructionOptions.find((o) => o.uniqueId === uniquId);
-    return found;
-  };
-
-  const getConstructionVal = (uniqueId: string, index: number) => {
-    return getConstructionOptions(uniqueId).options[index];
-  };
+  const [config, setConfig] = useState(constructionConfig?.config || []); 
 
   const updateConfigVal = (
     uniqueId: string,
     constructVal?: string,
     uValue?: string
   ) => {
-    const tempConfig = [...config];
-    const index = tempConfig.findIndex((c) => c.uniqueId === uniqueId);
-    let constructionVal = tempConfig[index].constructionVal;
-    if (constructVal) {
-      const indexOfVal = getConstructionOptions(uniqueId).options.findIndex(
-        (o) => o === constructVal
-      );
-      constructionVal = indexOfVal;
-    }
+    // const tempConfig = [...config];
+    // const index = tempConfig.findIndex((c) => c.uniqueId === uniqueId);
+    // let constructionVal = tempConfig[index].constructionVal;
+    // if (constructVal) {
+    //   const indexOfVal = getConstructionOptions(uniqueId).options.findIndex(
+    //     (o) => o === constructVal
+    //   );
+    //   constructionVal = indexOfVal;
+    // }
 
-    let uVal = uValue || tempConfig[index].uVal;
+    // let uVal = uValue || tempConfig[index].uVal;
 
-    const changedVal = {
-      uniqueId,
-      label: tempConfig[index].label,
-      constructionVal,
-      uVal,
-    };
-    tempConfig.splice(index, 1, changedVal);
-    setConfig(tempConfig);
+    // const changedVal = {
+    //   uniqueId,
+    //   label: tempConfig[index].label,
+    //   constructionVal,
+    //   uVal,
+    // };
+    // tempConfig.splice(index, 1, changedVal);
+    // setConfig(tempConfig);
   };
 
   const setUValue = (value: string, index: number) => {
@@ -191,8 +179,8 @@ export default function Envelope({
                           <Grid item xs={4}>
                             <Select
                               label=""
-                              list={getConstructionOptions(l.uniqueId).options}
-                              defaultValue={getConstructionVal(l.uniqueId, 0)}
+                              list={[l.construction.name]}
+                              defaultValue={l.construction.name}
                               sx={{ display: "flex" }}
                               onChange={(e: SelectChangeEvent) => {
                                 updateConfigVal(l.uniqueId, e.target.value);
@@ -202,7 +190,7 @@ export default function Envelope({
                           <Grid item xs={4}>
                             <TextField
                               id="outlined-name"
-                              value={l.uVal}
+                              value={l.construction.uValue}
                               onChange={(e) => updateConfigVal(l.uniqueId, undefined, e.target.value)}
                             />
                           </Grid>
@@ -239,13 +227,12 @@ export async function getServerSideProps({
 }: {
   params: { id: string };
 }) {
-  const materialTags = await getMaterialTags_API();
+  const materialTags = await getTags_API();
   if (params.id === "new")
     return {
       props: {
         constructionConfig: null,
         materialTags,
-        constructionOptions: [],
       },
     };
   // Fetch data from external API
@@ -253,35 +240,7 @@ export async function getServerSideProps({
   const constructionConfig = constructionDetails.filter(
     (d) => d.id.toString() === params.id
   )[0];
-  const constructionOptions = [];
-  const exteriorWall = await getConstructionOptions_API("exterior_wall");
-  constructionOptions.push({
-    uniqueId: "exterior_wall",
-    options: exteriorWall,
-  });
-
-  const interiorWall = await getConstructionOptions_API("interior_wall");
-  constructionOptions.push({
-    uniqueId: "interior_wall",
-    options: interiorWall,
-  });
-
-  const floorCeiling = await getConstructionOptions_API("floor_ceiling");
-  constructionOptions.push({
-    uniqueId: "floor_ceiling",
-    options: floorCeiling,
-  });
-
-  const roof = await getConstructionOptions_API("roof");
-  constructionOptions.push({ uniqueId: "roof", options: roof });
-
-  const groundFloor = await getConstructionOptions_API("ground_floor");
-  constructionOptions.push({ uniqueId: "ground_floor", options: groundFloor });
-
-  const windowFloor = await getConstructionOptions_API("window_floor");
-  constructionOptions.push({ uniqueId: "window_floor", options: windowFloor });
-
   // const constructionConfig
   // Pass data to the page via props
-  return { props: { constructionConfig, materialTags, constructionOptions } };
+  return { props: { constructionConfig, materialTags } };
 }

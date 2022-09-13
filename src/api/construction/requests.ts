@@ -1,12 +1,10 @@
 import {
   IConstructionDetail,
-  IMaterialDetail,
   ITag,
 } from "src/models/construction";
 import {
   IConstructionDetail_get,
   IConstructionDetail_post,
-  IMaterialDetail_get,
   ITag_get,
 } from "./models";
 
@@ -18,28 +16,9 @@ export interface IAPIResponse {
 
 const isProd = process.env.NODE_ENV === "production";
 
-export async function getMaterials_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/materials`;
-  // const url = isProd
-  //   ? `https://stingray-app-vgak2.ondigitalocean.app/materials`
-  //   : `http://localhost:5000/materials`;
-  const response = await fetch(url, { mode: "cors" });
-  const data = await response.json();
-  const formattedData: IMaterialDetail[] = (
-    data.data as IMaterialDetail_get[]
-  ).map((d) => {
-    return {
-      id: d.id.toString(),
-      name: d.name || null,
-      conductivity: d.conductivity || null,
-      density: d.density || null,
-      specificHeat: d.specificHeat || null,
-    };
-  });
-  return formattedData;
-}
 
-export async function getMaterialTags_API() {
+
+export async function getTags_API() {
   const url = `https://stingray-app-vgak2.ondigitalocean.app/tags`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
@@ -98,28 +77,7 @@ export async function postMaterialTags_API(newtags: string[]): Promise<IAPIRespo
   // return newtags.map((t,i)=>{return {id: (prevtagsCount+i), name: t}}) as ITag_get[];
 }
 
-export async function getMaterialById(id: number) {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/materials`;
 
-  // const url = isProd
-  //   ? `https://stingray-app-vgak2.ondigitalocean.app/materials`
-  //   : `http://localhost:5000/materials`;
-  const response = await fetch(url, {
-    mode: "cors",
-    method: "GET",
-    body: JSON.stringify({ id }),
-  });
-  const data = await response.json();
-  const material = data.data as IMaterialDetail_get;
-  const formattedData: IMaterialDetail = {
-    id: material.id.toString(),
-    name: material.name,
-    conductivity: material.conductivity,
-    density: material.density,
-    specificHeat: material.specificHeat,
-  };
-  return formattedData;
-}
 
 export async function saveConstructionDetail(material: IConstructionDetail): Promise<IAPIResponse> {
   //save tags first
@@ -181,6 +139,31 @@ export async function saveConstructionDetail(material: IConstructionDetail): Pro
   return responseData;
 }
 
+export function parseConstructionDetail(detail: IConstructionDetail_get): IConstructionDetail{
+  return {
+    uniqueId: detail.id.toString(),
+    name: detail.name,
+    category: detail.category,
+    tags: detail.tags.map((t) => {
+      return { label: t.name, id: t.id.toString() };
+    }),
+    description: detail.description,
+    layerStructure: detail.materials.map((m, i) => {
+      return {
+        material: {
+          id: m.id.toString(),
+          name: m.name,
+          conductivity: m.conductivity,
+          density: m.density,
+          specificHeat: m.specificHeat,
+        },
+        //thickness: d.thickness[i].toString(),
+        thickness: detail.thickness[i],
+      };
+    }),
+  };
+}
+
 export async function getConstructionDetails_API() {
   const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
 
@@ -191,30 +174,7 @@ export async function getConstructionDetails_API() {
   const data = await response.json();
   const formattedData: IConstructionDetail[] = (
     data.data as IConstructionDetail_get[]
-  ).map((d) => {
-    return {
-      uniqueId: d.id.toString(),
-      name: d.name,
-      category: d.category,
-      tags: d.tags.map((t) => {
-        return { label: t.name, id: t.id.toString() };
-      }),
-      description: d.description,
-      layerStructure: d.materials.map((m, i) => {
-        return {
-          material: {
-            id: m.id.toString(),
-            name: m.name,
-            conductivity: m.conductivity,
-            density: m.density,
-            specificHeat: m.specificHeat,
-          },
-          //thickness: d.thickness[i].toString(),
-          thickness: d.thickness[i],
-        };
-      }),
-    };
-  });
+  ).map((d) => parseConstructionDetail(d));
   return formattedData;
 }
 

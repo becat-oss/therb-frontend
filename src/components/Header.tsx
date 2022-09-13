@@ -65,6 +65,11 @@ export default function Header(): React.ReactElement {
                   Constructions
                 </Typography>
               </Link>
+              <Link href={"/envelopes"}>
+                <Typography style={{ marginRight: 16 }}>
+                  Envelopes
+                </Typography>
+              </Link>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <LanguageIcon sx={{ margin: 1 }} />

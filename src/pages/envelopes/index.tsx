@@ -12,9 +12,16 @@ import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
 import { IEnvelope } from "src/models/envelope";
 import { getEnvelopeDetails_API } from "src/api/envelope/request";
+import {
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
 
 const StyledPaperGeneral = styled(Paper)({
-  height: 200,
+  height: 250,
   elevation: 2,
   overflow: "hidden",
 });
@@ -34,7 +41,11 @@ const StyledTypography = styled(Typography)({
 const options = ["Delete"];
 const ITEM_HEIGHT = 48;
 
-export default function Envelopes({envelopeDetails}: {envelopeDetails: IEnvelope[]}): React.ReactElement {
+export default function Envelopes({
+  envelopeDetails,
+}: {
+  envelopeDetails: IEnvelope[];
+}): React.ReactElement {
   const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -136,9 +147,31 @@ export default function Envelopes({envelopeDetails}: {envelopeDetails: IEnvelope
               }}
             >
               <StyledTypography>{ed.name}</StyledTypography>
-              <StyledTypography>{ed.description}</StyledTypography>
-              
-              <Box sx={{ width: 150, marginTop: 1 }}>                
+              <Box sx={{ width: 150, marginTop: 1 }}>
+                <TableContainer>
+                  <Table size="small" aria-label="construction table">
+                    <TableBody>
+                      {ed.config.map((cinfo) => (
+                        <TableRow key={cinfo.uniqueId}>
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            sx={{ border: "none", padding: 0 }}
+                          >
+                            <Typography variant="caption">
+                              {cinfo.label}
+                            </Typography>
+                          </TableCell>
+                          <TableCell align="right">
+                            <Typography variant="caption">
+                              {Math.random().toFixed(2)}W/m2K
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Box>
             </Box>
           </StyledPaperGeneral>
@@ -156,4 +189,3 @@ export async function getServerSideProps() {
   // Pass data to the page via props
   return { props: { envelopeDetails } };
 }
-

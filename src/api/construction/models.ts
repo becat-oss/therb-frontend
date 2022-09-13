@@ -1,13 +1,4 @@
-
-
-export interface IMaterialDetail_get {
-  conductivity: number;
-  density: number;
-  description: string;
-  id: string;
-  name: string;
-  specificHeat: number;
-}
+import { IMaterialDetail_get } from "../material/models";
 
 export interface ITag_get{
   id: string;
@@ -22,6 +13,7 @@ export interface IConstructionDetail_get {
   name: string;
   tags: ITag_get[]
   thickness: number[];
+  uvalue: number;
 }
 
 export interface IConstructionDetail_post {
