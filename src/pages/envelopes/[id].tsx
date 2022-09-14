@@ -7,14 +7,14 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import Select from "src/components/form-controls/select";
-import { Button, IconButton, SelectChangeEvent } from "@mui/material";
-import { getTags_API } from "src/api/construction/requests";
+import { Button, SelectChangeEvent } from "@mui/material";
+import { getConstructionDetails_API, getTags_API } from "src/api/construction/requests";
 import { IConstructionDetail, ITag } from "src/models/construction";
 import {
   getEnvelopeDetails_API,
 } from "src/api/envelope/request";
 import { IEnvelope } from "src/models/envelope";
-import { uniqueId } from "lodash";
+import { ConstructionCategory } from "src/models/category";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -23,47 +23,68 @@ interface ITagType extends ITag {
 const filter = createFilterOptions<ITagType>();
 
 export default function Envelope({
-  constructionConfig,
+  envelope,
   materialTags,
+  constructionDetails
 }: {
-  constructionConfig: IEnvelope;
+  envelope: IEnvelope;
   materialTags: ITagType[];
+  constructionDetails: IConstructionDetail[]
 }): React.ReactElement {
   const router = useRouter();
 
-  const [name, setName] = useState(constructionConfig?.name || "");
-  const [tags, setTags] = useState<ITagType[]>(constructionConfig?.tags || []);
+  const [name, setName] = useState(envelope?.name || "");
+  const [tags, setTags] = useState<ITagType[]>(envelope?.tags || []);
   const [description, setDescription] = useState(
-    constructionConfig?.description || ""
+    envelope?.description || ""
   );
 
-  const [config, setConfig] = useState(constructionConfig?.config || []); 
+  const categoryConstructionDetailsMap = new Map<string, IConstructionDetail[]>();
+  constructionDetails.forEach(c=>{
+    const contructions = categoryConstructionDetailsMap.get(c.category);
+    if(contructions){
+      contructions.push(c);
+    }
+    else{
+      categoryConstructionDetailsMap.set(c.category, [c]);
+    }
+  });
+
+  const initialConfig = envelope ? envelope.config : [
+    {category: ConstructionCategory.EXTERIOR_WALL, label: "Exterior Wall", construction: categoryConstructionDetailsMap.has(ConstructionCategory.EXTERIOR_WALL) ? categoryConstructionDetailsMap.get(ConstructionCategory.EXTERIOR_WALL)[0] : null},
+    {category: ConstructionCategory.INTERIOR_WALL, label: "Interior Wall", construction: categoryConstructionDetailsMap.has(ConstructionCategory.INTERIOR_WALL) ? categoryConstructionDetailsMap.get(ConstructionCategory.INTERIOR_WALL)[0] : null},
+    {category: ConstructionCategory.INTERIOR_FLOOR, label: "Floor & Ceiling", construction: categoryConstructionDetailsMap.has(ConstructionCategory.INTERIOR_FLOOR) ? categoryConstructionDetailsMap.get(ConstructionCategory.INTERIOR_FLOOR)[0] : null},
+    {category: ConstructionCategory.EXTERIOR_ROOF, label: "Roof", construction: categoryConstructionDetailsMap.has(ConstructionCategory.EXTERIOR_ROOF) ? categoryConstructionDetailsMap.get(ConstructionCategory.EXTERIOR_ROOF)[0] : null},
+    {category: ConstructionCategory.GROUND_FLOOR, label: "Ground Floor", construction: categoryConstructionDetailsMap.has(ConstructionCategory.GROUND_FLOOR) ? categoryConstructionDetailsMap.get(ConstructionCategory.GROUND_FLOOR)[0] : null},
+    {category: ConstructionCategory.WINDOW, label: "Window", construction: categoryConstructionDetailsMap.has(ConstructionCategory.WINDOW) ? categoryConstructionDetailsMap.get(ConstructionCategory.WINDOW)[0] : null},
+  ]
+
+  const [constructionConfigs, setConstructionConfigs] = useState(initialConfig); 
 
   const updateConfigVal = (
-    uniqueId: string,
-    constructVal?: string,
+    category: ConstructionCategory,
+    constructionName?: string,
     uValue?: string
   ) => {
-    // const tempConfig = [...config];
-    // const index = tempConfig.findIndex((c) => c.uniqueId === uniqueId);
-    // let constructionVal = tempConfig[index].constructionVal;
-    // if (constructVal) {
-    //   const indexOfVal = getConstructionOptions(uniqueId).options.findIndex(
-    //     (o) => o === constructVal
-    //   );
-    //   constructionVal = indexOfVal;
-    // }
+    const tempConfig = [...constructionConfigs];
+    const index = tempConfig.findIndex((c) => c.category === category);
+    let constructionVal = tempConfig[index].construction;
+    if (constructionName) {
+      const newConstructionDetail = categoryConstructionDetailsMap.get(constructionVal.category).find(
+        o => o.name === constructionName
+      );
+      constructionVal = newConstructionDetail;
+    }
 
-    // let uVal = uValue || tempConfig[index].uVal;
+    let uVal = uValue || constructionVal.uValue;
 
-    // const changedVal = {
-    //   uniqueId,
-    //   label: tempConfig[index].label,
-    //   constructionVal,
-    //   uVal,
-    // };
-    // tempConfig.splice(index, 1, changedVal);
-    // setConfig(tempConfig);
+    const changedVal = {
+      category,
+      label: tempConfig[index].label,
+      construction: constructionVal
+    };
+    tempConfig.splice(index, 1, changedVal);
+    setConstructionConfigs(tempConfig);
   };
 
   const setUValue = (value: string, index: number) => {
@@ -99,7 +120,6 @@ export default function Envelope({
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => setName(e.target.value)}
-                sx={{ marginBottom: 2 }}
               />
               <Autocomplete
                 multiple
@@ -171,19 +191,19 @@ export default function Envelope({
                   <Box width={"100%"}>
                     <Typography>Material</Typography>
                     <Stack spacing={2}>
-                      {config.map((l, i) => (
-                        <Grid key={l.uniqueId} container>
+                      {constructionConfigs.map((l, i) => (
+                        <Grid key={l.category} container>
                           <Grid item xs={4}>
                             <Typography>{l.label}</Typography>
                           </Grid>
                           <Grid item xs={4}>
                             <Select
                               label=""
-                              list={[l.construction.name]}
+                              list={categoryConstructionDetailsMap.get(l.construction.category).map(c=>c.name)}
                               defaultValue={l.construction.name}
                               sx={{ display: "flex" }}
                               onChange={(e: SelectChangeEvent) => {
-                                updateConfigVal(l.uniqueId, e.target.value);
+                                updateConfigVal(l.category, e.target.value);
                               }}
                             ></Select>
                           </Grid>
@@ -191,7 +211,7 @@ export default function Envelope({
                             <TextField
                               id="outlined-name"
                               value={l.construction.uValue}
-                              onChange={(e) => updateConfigVal(l.uniqueId, undefined, e.target.value)}
+                              onChange={(e) => updateConfigVal(l.category, undefined, e.target.value)}
                             />
                           </Grid>
                         </Grid>
@@ -228,19 +248,21 @@ export async function getServerSideProps({
   params: { id: string };
 }) {
   const materialTags = await getTags_API();
+  const constructionDetails = await getConstructionDetails_API();
   if (params.id === "new")
     return {
       props: {
-        constructionConfig: null,
+        envelope: null,
         materialTags,
+        constructionDetails
       },
     };
   // Fetch data from external API
-  const constructionDetails = await getEnvelopeDetails_API();
-  const constructionConfig = constructionDetails.filter(
+  const envelopeDetails = await getEnvelopeDetails_API();
+  const envelope = envelopeDetails.filter(
     (d) => d.id.toString() === params.id
   )[0];
   // const constructionConfig
   // Pass data to the page via props
-  return { props: { constructionConfig, materialTags } };
+  return { props: { envelope, materialTags, constructionDetails } };
 }

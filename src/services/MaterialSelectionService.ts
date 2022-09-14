@@ -1,14 +1,15 @@
-import { IConstructionDetail, IMaterialDetail } from "src/models/construction";
+import { IConstructionDetail } from "src/models/construction";
+import { IMaterialDetail } from "src/models/material";
 
 export function getMaterialTags(): string[] {
   //TODO: prepare API for tags
   return ["木造", "コンクリート造", "鉄骨造", "低コスト"];
 }
 
-export function getCategories(): string[] {
-  //return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor", 'interiorWall'];
-  return ["exteriorWall", "interiorWall", "interiorFloor", "exteriorRoof", "groundFloor", 'window'];
-}
+// export function getCategories(): string[] {
+//   //return ["Exterior Wall", "Interior Wall", "Roof", "ceiling", "floor", 'interiorWall'];
+//   return ["exteriorWall", "interiorWall", "interiorFloor", "exteriorRoof", "groundFloor", 'window'];
+// }
 
 // export function getMaterialTypes(): string[] {
 //   return [

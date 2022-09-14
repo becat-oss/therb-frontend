@@ -1,3 +1,4 @@
+import { ConstructionCategory } from "src/models/category";
 import { IEnvelope } from "src/models/envelope";
 import { parseConstructionDetail } from "../construction/requests";
 import { IEnvelope_get } from "./model";
@@ -19,12 +20,12 @@ export async function getEnvelopeDetails_API() {
           description: d.description,
           tags: [],
           config: [
-            {uniqueId: "exterior_wall", label: "Exterior Wall", construction: parseConstructionDetail(d.exteriorWall)},
-            {uniqueId: "interior_wall", label: "Interior Wall", construction: parseConstructionDetail(d.interiorWall)},
-            {uniqueId: "floor_ceiling", label: "Floor & Ceiling", construction: parseConstructionDetail(d.floorCeiling)},
-            {uniqueId: "roof", label: "Roof", construction: parseConstructionDetail(d.roof)},
-            {uniqueId: "ground_floor", label: "Ground Wall", construction: parseConstructionDetail(d.groundFloor)},
-            {uniqueId: "window", label: "Window", construction: parseConstructionDetail(d.window)}
+            {category: ConstructionCategory.EXTERIOR_WALL, label: "Exterior Wall", construction: parseConstructionDetail(d.exteriorWall)},
+            {category: ConstructionCategory.INTERIOR_WALL, label: "Interior Wall", construction: parseConstructionDetail(d.interiorWall)},
+            {category: ConstructionCategory.INTERIOR_FLOOR, label: "Floor & Ceiling", construction: parseConstructionDetail(d.floorCeiling)},
+            {category: ConstructionCategory.EXTERIOR_ROOF, label: "Roof", construction: parseConstructionDetail(d.roof)},
+            {category: ConstructionCategory.GROUND_FLOOR, label: "Ground Floor", construction: parseConstructionDetail(d.groundFloor)},
+            {category: ConstructionCategory.WINDOW, label: "Window", construction: parseConstructionDetail(d.window)}
           ]
         };
       }

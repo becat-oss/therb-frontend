@@ -7,7 +7,6 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import { getCategories } from "src/services/MaterialSelectionService";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
 import Select from "src/components/form-controls/select";
 import MuiSelect from "@mui/material/Select";
@@ -32,7 +31,7 @@ import {
   ITag,
 } from "src/models/construction";
 import { calcUvalue } from "src/utils/calcLogics";
-import { getMaterials_API } from "src/api/material/request";
+import { getCategories, getMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 
 interface ITagType extends ITag {

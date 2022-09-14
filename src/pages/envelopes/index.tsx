@@ -152,7 +152,7 @@ export default function Envelopes({
                   <Table size="small" aria-label="construction table">
                     <TableBody>
                       {ed.config.map((cinfo) => (
-                        <TableRow key={cinfo.uniqueId}>
+                        <TableRow key={cinfo.category}>
                           <TableCell
                             component="th"
                             scope="row"
@@ -162,7 +162,7 @@ export default function Envelopes({
                               {cinfo.label}
                             </Typography>
                           </TableCell>
-                          <TableCell align="right">
+                          <TableCell align="right" sx={{ border: "none", padding: 0 }}>
                             <Typography variant="caption">
                               {Math.random().toFixed(2)}W/m2K
                             </Typography>

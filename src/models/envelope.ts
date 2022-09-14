@@ -1,3 +1,4 @@
+import { ConstructionCategory } from "./category";
 import { IConstructionDetail, ITag } from "./construction";
 
 export interface IEnvelope {
@@ -5,6 +6,6 @@ export interface IEnvelope {
   name: string;
   description: string;
   tags: ITag[];
-  config: {uniqueId: string, label: string, construction: IConstructionDetail}[];  
+  config: {category: ConstructionCategory, label: string, construction: IConstructionDetail}[];  
 }
 

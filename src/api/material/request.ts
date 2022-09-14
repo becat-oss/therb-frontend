@@ -1,3 +1,4 @@
+import { ConstructionCategory } from "src/models/category";
 import { IMaterialDetail } from "src/models/material";
 import { IMaterialDetail_get } from "./models";
 
@@ -36,4 +37,9 @@ export async function getMaterialById(id: number) {
     specificHeat: material.specificHeat,
   };
   return formattedData;
+}
+
+
+export function getCategories():string[]{
+  return Object.values(ConstructionCategory)
 }
