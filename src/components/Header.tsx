@@ -1,19 +1,9 @@
-import {
-  AppBar,
-  Toolbar,
-  makeStyles,
-  createStyles,
-  Typography,
-  Theme,
-  Select,
-  MenuItem,
-  FormControl,
-} from "@material-ui/core";
+
 import { useAppContext } from "src/AppContext";
 import Link from "next/link";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import { Box, SelectChangeEvent } from "@mui/material";
+import { AppBar, Box, MenuItem, Select, Toolbar, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import LanguageIcon from "@mui/icons-material/Language";
 
@@ -21,16 +11,15 @@ interface ILanguageLocale {
   lable: string;
   locale: string;
 }
-const useStayles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-      flex: 1,
-    },
-  })
-);
+// const useStayles = makeStyles((theme: Theme) =>
+//   createStyles({
+//     root: {
+//       display: "flex",
+//       flex: 1,
+//     },
+//   })
+// );
 export default function Header(): React.ReactElement {
-  const classes = useStayles();
   const router = useRouter();
   const languages: ILanguageLocale[] = [
     { lable: "English", locale: "en" },
@@ -49,7 +38,7 @@ export default function Header(): React.ReactElement {
   };
 
   return (
-    <div className={classes.root}>
+    <Box sx={{ display: "flex", flex: 1}} >
       <AppBar position="static">
         <Toolbar>
           <Box sx={{ display: "flex", justifyContent:"space-between", width:"100%"}}>
@@ -94,6 +83,6 @@ export default function Header(): React.ReactElement {
                     </Typography> */}
         </Toolbar>
       </AppBar>
-    </div>
+    </Box>
   );
 }
