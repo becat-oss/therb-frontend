@@ -6,13 +6,20 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import Select from "src/components/form-controls/select";
-import { Button, SelectChangeEvent } from "@mui/material";
-import { getConstructionDetails_API, getTags_API } from "src/api/construction/requests";
-import { IConstructionDetail, ITag } from "src/models/construction";
+import MuiSelect from "@mui/material/Select";
 import {
-  getEnvelopeDetails_API,
-} from "src/api/envelope/request";
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
+import {
+  getConstructionDetails_API,
+  getTags_API,
+} from "src/api/construction/requests";
+import { IConstructionDetail, ITag } from "src/models/construction";
+import { getEnvelopeDetails_API } from "src/api/envelope/request";
 import { IEnvelope } from "src/models/envelope";
 import { ConstructionCategory } from "src/models/category";
 
@@ -25,41 +32,101 @@ const filter = createFilterOptions<ITagType>();
 export default function Envelope({
   envelope,
   materialTags,
-  constructionDetails
+  constructionDetails,
 }: {
   envelope: IEnvelope;
   materialTags: ITagType[];
-  constructionDetails: IConstructionDetail[]
+  constructionDetails: IConstructionDetail[];
 }): React.ReactElement {
   const router = useRouter();
 
   const [name, setName] = useState(envelope?.name || "");
   const [tags, setTags] = useState<ITagType[]>(envelope?.tags || []);
-  const [description, setDescription] = useState(
-    envelope?.description || ""
-  );
+  const [description, setDescription] = useState(envelope?.description || "");
 
-  const categoryConstructionDetailsMap = new Map<string, IConstructionDetail[]>();
-  constructionDetails.forEach(c=>{
+  const categoryConstructionDetailsMap = new Map<
+    string,
+    IConstructionDetail[]
+  >();
+  constructionDetails.forEach((c) => {
     const contructions = categoryConstructionDetailsMap.get(c.category);
-    if(contructions){
+    if (contructions) {
       contructions.push(c);
-    }
-    else{
+    } else {
       categoryConstructionDetailsMap.set(c.category, [c]);
     }
   });
 
-  const initialConfig = envelope ? envelope.config : [
-    {category: ConstructionCategory.EXTERIOR_WALL, label: "Exterior Wall", construction: categoryConstructionDetailsMap.has(ConstructionCategory.EXTERIOR_WALL) ? categoryConstructionDetailsMap.get(ConstructionCategory.EXTERIOR_WALL)[0] : null},
-    {category: ConstructionCategory.INTERIOR_WALL, label: "Interior Wall", construction: categoryConstructionDetailsMap.has(ConstructionCategory.INTERIOR_WALL) ? categoryConstructionDetailsMap.get(ConstructionCategory.INTERIOR_WALL)[0] : null},
-    {category: ConstructionCategory.INTERIOR_FLOOR, label: "Floor & Ceiling", construction: categoryConstructionDetailsMap.has(ConstructionCategory.INTERIOR_FLOOR) ? categoryConstructionDetailsMap.get(ConstructionCategory.INTERIOR_FLOOR)[0] : null},
-    {category: ConstructionCategory.EXTERIOR_ROOF, label: "Roof", construction: categoryConstructionDetailsMap.has(ConstructionCategory.EXTERIOR_ROOF) ? categoryConstructionDetailsMap.get(ConstructionCategory.EXTERIOR_ROOF)[0] : null},
-    {category: ConstructionCategory.GROUND_FLOOR, label: "Ground Floor", construction: categoryConstructionDetailsMap.has(ConstructionCategory.GROUND_FLOOR) ? categoryConstructionDetailsMap.get(ConstructionCategory.GROUND_FLOOR)[0] : null},
-    {category: ConstructionCategory.WINDOW, label: "Window", construction: categoryConstructionDetailsMap.has(ConstructionCategory.WINDOW) ? categoryConstructionDetailsMap.get(ConstructionCategory.WINDOW)[0] : null},
-  ]
+  const initialConfig = envelope
+    ? envelope.config
+    : [
+        {
+          category: ConstructionCategory.EXTERIOR_WALL,
+          label: "Exterior Wall",
+          construction: categoryConstructionDetailsMap.has(
+            ConstructionCategory.EXTERIOR_WALL
+          )
+            ? categoryConstructionDetailsMap.get(
+                ConstructionCategory.EXTERIOR_WALL
+              )[0]
+            : null,
+        },
+        {
+          category: ConstructionCategory.INTERIOR_WALL,
+          label: "Interior Wall",
+          construction: categoryConstructionDetailsMap.has(
+            ConstructionCategory.INTERIOR_WALL
+          )
+            ? categoryConstructionDetailsMap.get(
+                ConstructionCategory.INTERIOR_WALL
+              )[0]
+            : null,
+        },
+        {
+          category: ConstructionCategory.INTERIOR_FLOOR,
+          label: "Floor & Ceiling",
+          construction: categoryConstructionDetailsMap.has(
+            ConstructionCategory.INTERIOR_FLOOR
+          )
+            ? categoryConstructionDetailsMap.get(
+                ConstructionCategory.INTERIOR_FLOOR
+              )[0]
+            : null,
+        },
+        {
+          category: ConstructionCategory.EXTERIOR_ROOF,
+          label: "Roof",
+          construction: categoryConstructionDetailsMap.has(
+            ConstructionCategory.EXTERIOR_ROOF
+          )
+            ? categoryConstructionDetailsMap.get(
+                ConstructionCategory.EXTERIOR_ROOF
+              )[0]
+            : null,
+        },
+        {
+          category: ConstructionCategory.GROUND_FLOOR,
+          label: "Ground Floor",
+          construction: categoryConstructionDetailsMap.has(
+            ConstructionCategory.GROUND_FLOOR
+          )
+            ? categoryConstructionDetailsMap.get(
+                ConstructionCategory.GROUND_FLOOR
+              )[0]
+            : null,
+        },
+        {
+          category: ConstructionCategory.WINDOW,
+          label: "Window",
+          construction: categoryConstructionDetailsMap.has(
+            ConstructionCategory.WINDOW
+          )
+            ? categoryConstructionDetailsMap.get(ConstructionCategory.WINDOW)[0]
+            : null,
+        },
+      ];
 
-  const [constructionConfigs, setConstructionConfigs] = useState(initialConfig); 
+  const [constructionConfigs, setConstructionConfigs] = useState(initialConfig);
 
   const updateConfigVal = (
     category: ConstructionCategory,
@@ -70,9 +137,9 @@ export default function Envelope({
     const index = tempConfig.findIndex((c) => c.category === category);
     let constructionVal = tempConfig[index].construction;
     if (constructionName) {
-      const newConstructionDetail = categoryConstructionDetailsMap.get(constructionVal.category).find(
-        o => o.name === constructionName
-      );
+      const newConstructionDetail = categoryConstructionDetailsMap
+        .get(constructionVal.category)
+        .find((o) => o.name === constructionName);
       constructionVal = newConstructionDetail;
     }
 
@@ -81,7 +148,7 @@ export default function Envelope({
     const changedVal = {
       category,
       label: tempConfig[index].label,
-      construction: constructionVal
+      construction: constructionVal,
     };
     tempConfig.splice(index, 1, changedVal);
     setConstructionConfigs(tempConfig);
@@ -189,29 +256,55 @@ export default function Envelope({
               <Grid container>
                 <Grid container item xs={8}>
                   <Box width={"100%"}>
-                    <Typography>Material</Typography>
                     <Stack spacing={2}>
+                      <Grid key="header" container>
+                        <Grid item xs={4}></Grid>
+                        <Grid item xs={4}>
+                          <Typography sx={{ textAlign: "center" }}>
+                            Construction
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={4}>
+                          <Typography sx={{ textAlign: "center" }}>
+                            UValue
+                          </Typography>
+                        </Grid>
+                      </Grid>
                       {constructionConfigs.map((l, i) => (
                         <Grid key={l.category} container>
                           <Grid item xs={4}>
                             <Typography>{l.label}</Typography>
                           </Grid>
                           <Grid item xs={4}>
-                            <Select
-                              label=""
-                              list={categoryConstructionDetailsMap.get(l.construction.category).map(c=>c.name)}
-                              defaultValue={l.construction.name}
-                              sx={{ display: "flex" }}
-                              onChange={(e: SelectChangeEvent) => {
-                                updateConfigVal(l.category, e.target.value);
-                              }}
-                            ></Select>
+                            <FormControl fullWidth>
+                              <MuiSelect
+                                id={l.construction.uniqueId}
+                                value={l.construction.name}
+                                onChange={(e: SelectChangeEvent) => {
+                                  updateConfigVal(l.category, e.target.value);
+                                }}
+                              >
+                                {categoryConstructionDetailsMap
+                                  .get(l.construction.category)
+                                  .map((item, i) => (
+                                    <MenuItem key={i} value={item.name}>
+                                      {item.name}
+                                    </MenuItem>
+                                  ))}
+                              </MuiSelect>
+                            </FormControl>
                           </Grid>
                           <Grid item xs={4}>
                             <TextField
                               id="outlined-name"
                               value={l.construction.uValue}
-                              onChange={(e) => updateConfigVal(l.category, undefined, e.target.value)}
+                              onChange={(e) =>
+                                updateConfigVal(
+                                  l.category,
+                                  undefined,
+                                  e.target.value
+                                )
+                              }
                             />
                           </Grid>
                         </Grid>
@@ -254,7 +347,7 @@ export async function getServerSideProps({
       props: {
         envelope: null,
         materialTags,
-        constructionDetails
+        constructionDetails,
       },
     };
   // Fetch data from external API
