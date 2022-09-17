@@ -7,9 +7,7 @@ import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import { getCategories } from "src/services/MaterialSelectionService";
 import MaterialRepresentation from "src/components/MaterialRepresentation";
-import Select from "src/components/form-controls/select";
 import MuiSelect from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
@@ -23,19 +21,14 @@ import {
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  getConstructionDetailById_API,
   getConstructionDetails_API,
-  getMaterials_API,
-  getMaterialTags_API,
-  postMaterialTags_API,
+  getTags_API,
   saveConstructionDetail,
-} from "src/api/material-construction/requests";
-import {
-  IConstructionDetail,
-  IMaterialDetail,
-  ITag,
-} from "src/models/construction";
+} from "src/api/construction/requests";
+import { IConstructionDetail, ITag } from "src/models/construction";
 import { calcUvalue } from "src/utils/calcLogics";
+import { getCategories, getMaterials_API } from "src/api/material/request";
+import { IMaterialDetail } from "src/models/material";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -415,21 +408,30 @@ export default function Construction({
                       {materialLayers.map((l) => (
                         <Grid key={l.id} container>
                           <Grid item xs={7}>
-                            <Select
-                              label={t("type")}
-                              list={materialDetails.map((m: any) => m.name)}
-                              defaultValue={l.type}
-                              sx={{ display: "flex" }}
-                              onChange={(e: SelectChangeEvent) =>
-                                updateMaterialLayers(
-                                  l.id,
-                                  materialDetails.find(
-                                    (m: any) => m.name === e.target.value
-                                  ),
-                                  l.thickness
-                                )
-                              }
-                            ></Select>
+                            <FormControl fullWidth >
+                              <InputLabel>{t("type")}</InputLabel>
+                              <MuiSelect
+                                labelId={category}
+                                id={category}
+                                value={l.type.name}
+                                label={t("type")}
+                                onChange={(e: SelectChangeEvent) =>
+                                  updateMaterialLayers(
+                                    l.id,
+                                    materialDetails.find(
+                                      (m: any) => m.name === e.target.value
+                                    ),
+                                    l.thickness
+                                  )
+                                }
+                              >
+                                {materialDetails.map((item, i) => (
+                                  <MenuItem key={i} value={item.name}>
+                                    {t(item.name)}
+                                  </MenuItem>
+                                ))}
+                              </MuiSelect>
+                            </FormControl>
                           </Grid>
                           <Grid
                             item
@@ -579,7 +581,7 @@ export async function getServerSideProps({
   params: { id: string };
 }) {
   const materialDetails = await getMaterials_API();
-  const materialTags = await getMaterialTags_API();
+  const materialTags = await getTags_API();
   if (params.id === "new")
     return {
       props: { constructionDetail: null, materialDetails, materialTags },
