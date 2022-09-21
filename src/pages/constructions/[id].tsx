@@ -170,6 +170,7 @@ export default function Construction({
         layerStructure: materialLayers.map((l) => {
           return { material: l.type, thickness: l.thickness };
         }),
+        uValue,
       };
 
       const response = await saveConstructionDetail(constructionDetailToSave);
