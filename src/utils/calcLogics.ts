@@ -1,4 +1,4 @@
-import { IMaterialDetail } from "src/models/construction";
+import { IMaterialDetail } from "src/models/material";
 
 export function calcUvalue(construction:{ id: number; type: IMaterialDetail; thickness: number }[]):number{
   
