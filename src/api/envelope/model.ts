@@ -11,3 +11,14 @@ export interface IEnvelope_get {
   roof: IConstructionDetail_get;
   window: IConstructionDetail_get;
 }
+
+export interface IEnvelope_post {
+  name: string;
+  description: string;
+  exteriorWallId: number;
+  interiorWallId: number;
+  roofId: number;
+  groundFloorId: number;
+  floorCeilingId: number;
+  windowId: number;
+}

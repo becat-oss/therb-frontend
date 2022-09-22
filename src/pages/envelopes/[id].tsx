@@ -19,7 +19,7 @@ import {
   getTags_API,
 } from "src/api/construction/requests";
 import { IConstructionDetail, ITag } from "src/models/construction";
-import { getEnvelopeDetails_API } from "src/api/envelope/request";
+import { getEnvelopeDetails_API, saveEnvelope } from "src/api/envelope/request";
 import { IEnvelope } from "src/models/envelope";
 import { ConstructionCategory } from "src/models/category";
 
@@ -158,9 +158,20 @@ export default function Envelope({
     console.log(value, index);
   };
 
-  const onSubmit = (e: any) => {
+  const onSubmit = async (e: any) => {
     e.preventDefault();
+    const envelopeToSave: IEnvelope = {
+      id: envelope.id,
+      name,
+      description,
+      tags,
+      config: constructionConfigs,
+    }
+
+    const response = await saveEnvelope(envelopeToSave);
+
     router.push("../../envelopes");
+
   };
 
   return (
