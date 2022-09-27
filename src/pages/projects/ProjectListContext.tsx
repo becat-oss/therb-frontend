@@ -26,7 +26,7 @@ export default function ProjectListProvider({children}:ProjectListProviderProps)
   useEffect(()=>{
     async function getProjects(){
       const response = await req;
-
+      console.log("response",response);
       setProjectData(response["data"]);
     }
     getProjects();

@@ -37,12 +37,11 @@ export async function getTimeseriesData(projectId: string | string[]) {
 }
 
 export async function getProjectData() {
-  const url = isProd
-    ? `https://stingray-app-vgak2.ondigitalocean.app/projects`
-    : "http://localhost:5000/projects";
-      const response = await fetch(url, { mode: "cors" });
-      const data = await response.json();
-      return data;    
+  const url = "https://oyster-app-8jboe.ondigitalocean.app/projects";
+  const response = await fetch(url, { mode: "cors" });
+  const data = await response.json();
+  console.log(data);
+  return data;    
 }
 
 export async function deleteProjectData(projectId: string) {
@@ -52,9 +51,13 @@ export async function deleteProjectData(projectId: string) {
   return data;
 }
 
-export async function getDownload(projectName: string) {
-  const url = `http://localhost:5000/download/${projectName}`;
+export async function getDownload(projectId: number) {
+  //const url = `http://localhost:5000/download/${projectId}`;
+  const url = `https://ufhcn59q7f.execute-api.ap-northeast-1.amazonaws.com/stage/therb/download/${projectId}`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
-  return data;
+  console.log("data",data);
+  const downloadUrl = data.url;
+  const downloadResponse = await fetch(downloadUrl, { mode: "cors" });
+  return downloadResponse;
 }

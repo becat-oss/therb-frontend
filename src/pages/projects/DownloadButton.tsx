@@ -11,13 +11,12 @@ export default function DownloadButton({params}:Props):React.ReactElement{
   const { replace } = useRouter();
   
   const handleClick = () =>{
-    // async function download(){
-    //   const response = await getDownload(params.name);
-    //   console.log('response["data"]',response["data"]);
-    // }
-    // console.log('click');
-    // download();
-    replace(`http://localhost:5000/download/${params.name}`);
+    async function download(){
+      const response = await getDownload(params.id);
+      replace(response.url);
+    }
+    console.log('click');
+    const redirectUrl = download();
   }
 
   return(

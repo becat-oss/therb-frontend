@@ -13,7 +13,7 @@ import { GET_PROJECTS } from "src/queries/posts.query";
 
 export default function ProjectList(){
   const { projectData } = useProjectListContext();
-
+  console.log("projectData",projectData);
   //TODO: allProjectsのエンドポイントがうまくいってない
   // const { loading,error,data } = useQuery(GET_PROJECTS);
 
