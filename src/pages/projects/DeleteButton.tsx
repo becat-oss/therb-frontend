@@ -1,7 +1,7 @@
 import React from 'react';
 import { GridCellParams } from "@material-ui/data-grid";
 import Button from '@material-ui/core/Button';
-import { deleteProjectData } from 'src/api/KeyRequests';
+import { deleteProjectData,deleteTherbData } from 'src/api/KeyRequests';
 
 interface Props{
   params: GridCellParams["row"];
@@ -10,8 +10,9 @@ export default function DeleteButton({params}:Props):React.ReactElement{
 
   const handleClick = () =>{
     async function deleteProject(){
-      const response = await deleteProjectData(params.id);
-      console.log('response["data"]',response["data"]);
+      const response1 = await deleteProjectData(params.id);
+      console.log('response["data"]',response1["data"]);
+      const response2 = await deleteTherbData(params.id);
     }
     deleteProject();
   }

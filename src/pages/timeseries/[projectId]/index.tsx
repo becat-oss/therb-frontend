@@ -11,15 +11,13 @@ export default function Timeseries(): React.ReactElement{
   return(
     <AppProvider>
       <TimeseriesProvider>
-        <Layout>
-          <div style={{display:'flex',width:'100%'}}>
-            <Stack direction={{xs:'column',sm:'row'}}>
-              <KeySelector/>
-              <DateSelector />
-            </Stack>
-          </div>
-          {/* <LineChartComponent/> */}
-        </Layout>
+        <div style={{display:'flex',width:'100%'}}>
+          <Stack direction={{xs:'column',sm:'row'}}>
+            <KeySelector/>
+            <DateSelector />
+          </Stack>
+        </div>
+        {/* <LineChartComponent/> */}
       </TimeseriesProvider>
     </AppProvider>
     

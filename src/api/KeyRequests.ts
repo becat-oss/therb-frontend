@@ -45,18 +45,23 @@ export async function getProjectData() {
 }
 
 export async function deleteProjectData(projectId: string) {
-  const url = `http://localhost:5000/projects/${projectId}`;
+  const url = `https://oyster-app-8jboe.ondigitalocean.app/projects/${projectId}`;
   const response = await fetch(url, { mode: "cors", method: "DELETE" });
   const data = await response.json();
   return data;
 }
 
-export async function getDownload(projectId: number) {
-  //const url = `http://localhost:5000/download/${projectId}`;
-  const url = `https://ufhcn59q7f.execute-api.ap-northeast-1.amazonaws.com/stage/therb/download/${projectId}`;
+export async function deleteTherbData(projectId: string) {
+  const url = `https://oyster-app-8jboe.ondigitalocean.app/therb/${projectId}`;
+  const response = await fetch(url, { mode: "cors", method: "DELETE" });
+  const data = await response.json();
+  return data;
+}
+
+export async function getDownload(fileType:string,projectId: number) {
+  const url = `https://ufhcn59q7f.execute-api.ap-northeast-1.amazonaws.com/stage/therb/download/${fileType}/${projectId}`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
-  console.log("data",data);
   const downloadUrl = data.url;
   const downloadResponse = await fetch(downloadUrl, { mode: "cors" });
   return downloadResponse;

@@ -12,7 +12,7 @@ export default function DownloadButton({params}:Props):React.ReactElement{
   
   const handleClick = () =>{
     async function download(){
-      const response = await getDownload(params.id);
+      const response = await getDownload("excel",params.id);
       replace(response.url);
     }
     console.log('click');
