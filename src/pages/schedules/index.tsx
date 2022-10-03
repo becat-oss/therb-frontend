@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import useTranslation from 'next-translate/useTranslation'
+import React from "react";
+import useTranslation from "next-translate/useTranslation";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -10,13 +10,14 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
-import MaterialRepresentation from "src/components/MaterialRepresentation";
 import { useRouter } from "next/router";
-import { getConstructionDetails_API } from "src/api/construction/requests";
-import { IConstructionDetail } from "src/models/construction";
+import { getSchedules_API } from "src/api/schedule/request";
+import { IScheduleDetail } from "src/models/schedule";
+import LineChart, { ILineData } from "src/components/chartjs/lineChart";
+import { IDailySchedule } from "src/api/schedule/model";
 
 const StyledPaperGeneral = styled(Paper)({
-  height: 200,
+  height: 300,
   elevation: 2,
   overflow: "hidden",
 });
@@ -36,13 +37,13 @@ const StyledTypography = styled(Typography)({
 const options = ["Delete"];
 const ITEM_HEIGHT = 48;
 
-export default function ConstructionList({
-  constructionDetails,
+export default function ScheduleList({
+  scheduleDetails,
 }: {
-  constructionDetails: IConstructionDetail[];
+  scheduleDetails: IScheduleDetail[];
 }): React.ReactElement {
   const router = useRouter();
-  const { t } = useTranslation('constructions');
+  const { t } = useTranslation("schedules");
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -53,35 +54,77 @@ export default function ConstructionList({
     setAnchorEl(null);
   };
 
-  const addMaterial = (e: any) => {
+  const addSchedule = (e: any) => {
     e.preventDefault();
-    router.push("../constructions/new");
+    router.push("../schedules/new");
   };
 
-  const viewMaterial = (id: string) => {
-    router.push(`../constructions/${id}`);
+  const viewSchedule = (id: string) => {
+    router.push(`../schedules/${id}`);
+  };
+
+  // const getDataForChart = (data: IDailySchedule): ILineData => {
+  //   console.log(data);
+  //   return {
+  //     labels: [...Array<boolean>(24).keys()].map((k) => `${k + 1}`),
+  //     datasets: [
+  //       {
+  //         label: "Heating",
+  //         data: data.heating.map((hour, i) => (hour)),
+  //         borderColor: "rgb(255, 99, 132)",
+  //         backgroundColor: "rgba(255, 99, 132, 0.5)",
+  //       },
+  //       {
+  //         label: "Cooling",
+  //         data: data.cooling.map((hour, i) => (hour)),
+  //         borderColor: "rgb(53, 162, 235)",
+  //         backgroundColor: "rgba(53, 162, 235, 0.5)",
+  //       },
+  //     ],
+  //   };
+  // };
+
+  const getDataForChart = (data: IDailySchedule): ILineData => {
+    console.log(data);
+    return {
+      labels: [...Array<boolean>(24).keys()].map((k) => `${k + 1}`),
+      datasets: [
+        {
+          label: "Heating",
+          data: data.heating.map((hour, i) => (data.hvac[i] ? hour : null)),
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+        {
+          label: "Cooling",
+          data: data.cooling.map((hour, i) => (data.hvac[i] ? hour : null)),
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.5)",
+        },
+      ],
+    };
   };
 
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={12} md={12}>
-      <StyledPaperGeneral sx={{height:"10px"}}>
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <StyledTypography>{t('query-box')}</StyledTypography>
-        </Box>
+        <StyledPaperGeneral sx={{ height: "10px" }}>
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <StyledTypography>{t("query-box")}</StyledTypography>
+          </Box>
         </StyledPaperGeneral>
       </Grid>
       <Grid item xs={3} sm={3} md={3}>
-        <StyledPaperAdd onClick={addMaterial}>
-          <StyledTypography>{t('add-new')}</StyledTypography>
+        <StyledPaperAdd onClick={addSchedule}>
+          <StyledTypography>{t("add-new")}</StyledTypography>
           <Box
             sx={{
               width: 50,
@@ -99,12 +142,12 @@ export default function ConstructionList({
           </Box>
         </StyledPaperAdd>
       </Grid>
-      {constructionDetails.map((cd) => (
-        <Grid key={cd.uniqueId} item xs={3} sm={3} md={3}>
+      {scheduleDetails.map((sd) => (
+        <Grid key={sd.id} item xs={3} sm={3} md={3}>
           <StyledPaperGeneral
             onClick={(e) => {
               e.preventDefault();
-              viewMaterial(cd.uniqueId);
+              viewSchedule(sd.id);
             }}
           >
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -157,25 +200,14 @@ export default function ConstructionList({
                 flexDirection: "column",
               }}
             >
-              <StyledTypography>{cd.name}</StyledTypography>
-              {cd.description && (
+              <StyledTypography>{sd.name}</StyledTypography>
+              {sd.description && (
                 <StyledTypography variant="caption">
-                  {cd.description}{" "}
+                  {sd.description}{" "}
                 </StyledTypography>
               )}
-              {cd.description && (
-                <StyledTypography variant="caption">
-                  {cd.description}
-                </StyledTypography>
-              )}
-              <Box sx={{ width: 150, marginTop: 1 }}>
-                <MaterialRepresentation
-                  materialHeights={cd.layerStructure.map((l) =>
-                    //parseFloat(l.thickness)
-                    l.thickness
-                  )}
-                  length={200}
-                ></MaterialRepresentation>
+              <Box sx={{ width: "100%", marginTop: 1 }}>
+                <LineChart data={getDataForChart(sd.daily)}></LineChart>
               </Box>
             </Box>
           </StyledPaperGeneral>
@@ -188,8 +220,8 @@ export default function ConstructionList({
 // This gets called on every request
 export async function getServerSideProps() {
   // Fetch data from external API
-  const constructionDetails = await getConstructionDetails_API();
-
+  const scheduleDetails = await getSchedules_API();
+  console.log("details", scheduleDetails);
   // Pass data to the page via props
-  return { props: { constructionDetails } };
+  return { props: { scheduleDetails } };
 }

@@ -1,9 +1,5 @@
 import { IMaterialDetail } from "./material";
-
-export interface ITag{
-  label: string;
-  id: string;
-}
+import { ITag } from "./tags";
 
 export interface IConstructionDetail {
   uniqueId: string;
@@ -19,4 +15,3 @@ export interface IConstructionDetail {
   lcco2?: number;
   cost?: number;
 }
-

@@ -1,6 +1,7 @@
 import { ConstructionCategory } from "src/models/category";
 import { IEnvelope } from "src/models/envelope";
-import { IAPIResponse, parseConstructionDetail } from "../construction/requests";
+import { IAPIResponse } from "../ApiResponse";
+import { parseConstructionDetail } from "../construction/requests";
 import { IEnvelope_get, IEnvelope_post } from "./model";
 
 export async function getEnvelopeDetails_API() {

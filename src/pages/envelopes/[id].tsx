@@ -16,14 +16,16 @@ import {
 } from "@mui/material";
 import {
   getConstructionDetails_API,
-  getTags_API,
 } from "src/api/construction/requests";
-import { IConstructionDetail, ITag } from "src/models/construction";
+import { IConstructionDetail } from "src/models/construction";
 import { getEnvelopeDetails_API, saveEnvelope } from "src/api/envelope/request";
 import { IEnvelope } from "src/models/envelope";
 import { ConstructionCategory } from "src/models/category";
+import { getTags_API } from "src/api/tags/request";
+import { ITag } from "src/models/tags";
 
 interface ITagType extends ITag {
+  label: string;
   inputValue?: string;
 }
 
@@ -370,3 +372,4 @@ export async function getServerSideProps({
   // Pass data to the page via props
   return { props: { envelope, materialTags, constructionDetails } };
 }
+

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
@@ -23,55 +23,22 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
+
+import { ITag } from "src/models/tags";
+import { getTags_API } from "src/api/tags/request";
 import {
-  getConstructionDetails_API,
-  getTags_API,
-} from "src/api/construction/requests";
-import { IConstructionDetail, ITag } from "src/models/construction";
-import {
-  Chart as ChartJS,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
+  getSchedules_API,
+  saveScheduleDetail_API,
+} from "src/api/schedule/request";
+import { IScheduleDetail } from "src/models/schedule";
+import LineChart, { ILineData } from "src/components/chartjs/lineChart";
+import { IDailySchedule, ISchedule_post } from "src/api/schedule/model";
 
 interface ITagType extends ITag {
   inputValue?: string;
 }
 
 const filter = createFilterOptions<ITagType>();
-
-ChartJS.register(LinearScale, PointElement, LineElement, Tooltip, Legend);
-
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top" as const,
-    },
-  },
-  scales: {
-    x: {
-      display: true,
-      title: {
-        display: true,
-        text: "time",
-      },
-    },
-    y: {
-      display: true,
-      title: {
-        display: true,
-        text: "set point",
-      },
-    },
-  },
-};
-
 const months = [
   "Jan",
   "Feb",
@@ -88,44 +55,88 @@ const months = [
 ];
 
 export default function Schedule({
-  constructionDetail,
-  materialTags,
+  scheduleDetail,
+  allTags,
 }: {
-  constructionDetail: IConstructionDetail;
-  materialTags: ITagType[];
+  scheduleDetail: IScheduleDetail;
+  allTags: ITagType[];
 }): React.ReactElement {
   const router = useRouter();
   const { t } = useTranslation("add-construction");
 
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
-  const [name, setName] = useState(constructionDetail?.name || "");
-  const [tags, setTags] = useState<ITagType[]>(constructionDetail?.tags || []);
+  const [name, setName] = useState(scheduleDetail?.name || "");
+  // const [tags, setTags] = useState<ITagType[]>(scheduleDetail?.tag || []);
+  const [tags, setTags] = useState<ITagType[]>([]);
   const [description, setDescription] = useState(
-    constructionDetail?.description || ""
+    scheduleDetail?.description || ""
   );
 
+  // 0: no AC
+  // 1: heating
+  // 2: cooling
+  // 3: heating & cooling
+
   const [weeklySchedule, setWeeklySchedule] = useState(
-    [...Array<boolean>(3).keys()].map((k) => true)
+    scheduleDetail
+      ? scheduleDetail.weekly.hvac.map((k) => !!k)
+      : [...Array<boolean>(3).keys()].map((k) => true)
   );
   const [monthlyHeatSchedule, setMonthlyHeatSchedule] = useState(
-    [...Array<boolean>(12).keys()].map((k) => false)
+    scheduleDetail
+      ? scheduleDetail.monthly.hvac.map((k) => !!(k & 1))
+      : [...Array<boolean>(12).keys()].map((k) => false)
   );
   const [monthlyCoolSchedule, setMonthlyCoolSchedule] = useState(
-    [...Array<boolean>(12).keys()].map((k) => false)
+    scheduleDetail
+      ? scheduleDetail.monthly.hvac.map((k) => !!(k & 2))
+      : [...Array<boolean>(12).keys()].map((k) => false)
   );
 
   const [dailyScheduleHVAC, setDailyScheduleHVAC] = useState(
-    [...Array<boolean>(24).keys()].map((k) => true)
+    scheduleDetail
+      ? scheduleDetail.daily.hvac.map((k) => !!k)
+      : [...Array<boolean>(24).keys()].map((k) => true)
   );
 
   const [dailySchedule, setDailySchedule] = useState(
-    [...Array<boolean>(24).keys()].map((k) => {
-      return {
-        heating: faker.datatype.number({ min: 0, max: 100 }),
-        cooling: faker.datatype.number({ min: 0, max: 100 }),
-      };
-    })
+    scheduleDetail
+      ? scheduleDetail.daily.hvac.map((_k, i) => {
+          return {
+            heating: scheduleDetail.daily.heating[i],
+            cooling: scheduleDetail.daily.cooling[i],
+          };
+        })
+      : [...Array<boolean>(24).keys()].map((k) => {
+          return {
+            heating: 20,
+            cooling: 28,
+          };
+        })
   );
+
+  const getDataForChart = (
+    data: { heating: number; cooling: number }[],
+    hvac: boolean[]
+  ): ILineData => {
+    return {
+      labels: [...Array<boolean>(24).keys()].map((k) => `${k + 1}`),
+      datasets: [
+        {
+          label: "Heating",
+          data: hvac.map((h, i) => (h ? data[i].heating : null)),
+          borderColor: "rgb(255, 99, 132)",
+          backgroundColor: "rgba(255, 99, 132, 0.5)",
+        },
+        {
+          label: "Cooling",
+          data: hvac.map((h, i) => (h ? data[i].cooling : null)),
+          borderColor: "rgb(53, 162, 235)",
+          backgroundColor: "rgba(53, 162, 235, 0.5)",
+        },
+      ],
+    };
+  };
 
   const updateOnOff = (
     setter: (arr: boolean[]) => void,
@@ -149,24 +160,6 @@ export default function Schedule({
       : { heating: value, cooling: dailySchedule[index].cooling };
     temp.splice(index, 1, data);
     setDailySchedule(temp);
-  };
-
-  const data = {
-    labels: [...Array<boolean>(24).keys()].map((k) => `${k + 1}`),
-    datasets: [
-      {
-        label: "Heating",
-        data: dailySchedule.map((hour) => hour.heating),
-        borderColor: "rgb(255, 99, 132)",
-        backgroundColor: "rgba(255, 99, 132, 0.5)",
-      },
-      {
-        label: "Cooling",
-        data: dailySchedule.map((hour) => hour.cooling),
-        borderColor: "rgb(53, 162, 235)",
-        backgroundColor: "rgba(53, 162, 235, 0.5)",
-      },
-    ],
   };
 
   const handleNameChange = (name: string) => {
@@ -193,8 +186,46 @@ export default function Schedule({
     name === "" && newErrorMap.set("name", true);
     description === "" && newErrorMap.set("description", true);
     tags.length === 0 && newErrorMap.set("tags", true);
-    // construction detail to save to backend
+    // schedule detail to save to backend
     if (newErrorMap.size === 0) {
+      //schedule detail to save
+      const scheduleToSave: ISchedule_post = {
+        name,
+        description,
+        tagIds: [],
+        daily: {
+          id: "",
+          hvac: dailyScheduleHVAC.map((b) => (b ? 1 : 0)),
+          heating: dailySchedule.map((b) => b.heating),
+          cooling: dailySchedule.map((b) => b.cooling),
+        },
+        weekly: { id: "", hvac: weeklySchedule.map((b) => (b ? 1 : 0)) },
+        monthly: {
+          id: "",
+          hvac: months.map(
+            (_m, i) =>
+              (monthlyCoolSchedule[i] ? 2 : 0) |
+              (monthlyHeatSchedule[i] ? 1 : 0)
+          ),
+        },
+      };
+      const response = await saveScheduleDetail_API(scheduleToSave);
+      if (response.status === "success") {
+        setAlert({
+          open: true,
+          message: "Schedules Added Successfully",
+          severity: "success",
+        });
+        setTimeout(() => {
+          router.push("../schedules");
+        }, 200);
+      } else {
+        setAlert({
+          open: true,
+          message: "Something Went wrong in while adding schedules",
+          severity: "error",
+        });
+      }
     } else {
       setErrorMap(newErrorMap);
       setAlert({
@@ -208,11 +239,11 @@ export default function Schedule({
   const onCancel = () => {
     setAlert({
       open: true,
-      message: "Construction Cancelled",
+      message: "Schedule Cancelled",
       severity: "error",
     });
     setTimeout(() => {
-      router.push("../constructions");
+      router.push("../schedules");
     }, 200);
   };
 
@@ -299,7 +330,7 @@ export default function Schedule({
                 multiple
                 limitTags={4}
                 id={t("tags")}
-                options={materialTags}
+                options={allTags}
                 getOptionLabel={(option) => {
                   if (option.inputValue) {
                     return option.inputValue;
@@ -385,7 +416,9 @@ export default function Schedule({
                         alignContent: "center",
                       }}
                     >
-                      <Line options={options} data={data} />
+                      <LineChart
+                        data={getDataForChart(dailySchedule, dailyScheduleHVAC)}
+                      />
                     </Box>
                   </Grid>
                   <Grid
@@ -493,77 +526,55 @@ export default function Schedule({
                       </Box>
                       <Box>
                         <Typography>Cooling Season</Typography>
-                        <TableContainer component={Paper}>
-                          <Table
-                            sx={{ minWidth: 650 }}
-                            size="small"
-                            aria-label="a dense table"
-                          >
-                            <TableBody>
-                              <TableRow>
-                                {months.map((month, i) => (
-                                  <TableCell
-                                    sx={{
-                                      border: "solid",
-                                      backgroundColor: monthlyCoolSchedule[i]
-                                        ? "royalblue"
-                                        : "",
-                                    }}
-                                    scope="row"
-                                    onClick={() => {
-                                      const temp = [...monthlyCoolSchedule];
-                                      temp.splice(
-                                        i,
-                                        1,
-                                        !monthlyCoolSchedule[i]
-                                      );
-                                      setMonthlyCoolSchedule(temp);
-                                    }}
-                                  >
-                                    {month}
-                                  </TableCell>
-                                ))}
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
+                        <Grid container spacing={0}>
+                          {months.map((month, i) => (
+                            <Grid item xs={2}>
+                              <Box
+                                sx={{
+                                  border: "solid",
+                                  padding: 1,
+                                  backgroundColor: monthlyCoolSchedule[i]
+                                    ? "royalblue"
+                                    : "",
+                                  textAlign: "center",
+                                }}
+                                onClick={() => {
+                                  const temp = [...monthlyCoolSchedule];
+                                  temp.splice(i, 1, !monthlyCoolSchedule[i]);
+                                  setMonthlyCoolSchedule(temp);
+                                }}
+                              >
+                                <Typography>{month}</Typography>
+                              </Box>
+                            </Grid>
+                          ))}
+                        </Grid>
                       </Box>
                       <Box>
                         <Typography>Heating Season</Typography>
-                        <TableContainer component={Paper}>
-                          <Table
-                            sx={{ minWidth: 650 }}
-                            size="small"
-                            aria-label="a dense table"
-                          >
-                            <TableBody>
-                              <TableRow>
-                                {months.map((month, i) => (
-                                  <TableCell
-                                    sx={{
-                                      border: "solid",
-                                      backgroundColor: monthlyHeatSchedule[i]
-                                        ? "crimson"
-                                        : "",
-                                    }}
-                                    scope="row"
-                                    onClick={() => {
-                                      const temp = [...monthlyHeatSchedule];
-                                      temp.splice(
-                                        i,
-                                        1,
-                                        !monthlyHeatSchedule[i]
-                                      );
-                                      setMonthlyHeatSchedule(temp);
-                                    }}
-                                  >
-                                    {month}
-                                  </TableCell>
-                                ))}
-                              </TableRow>
-                            </TableBody>
-                          </Table>
-                        </TableContainer>
+                        <Grid container spacing={0}>
+                          {months.map((month, i) => (
+                            <Grid item xs={2}>
+                              <Box
+                                sx={{
+                                  border: "solid",
+                                  padding: 1,
+                                  backgroundColor: monthlyHeatSchedule[i]
+                                    ? "crimson"
+                                    : "",
+                                  textAlign: "center",
+                                }}
+                                onClick={() => {
+                                  const temp = [...monthlyHeatSchedule];
+                                  temp.splice(i, 1, !monthlyHeatSchedule[i]);
+                                  setMonthlyHeatSchedule(temp);
+                                }}
+                              >
+                                <Typography>{month}</Typography>
+                              </Box>
+                            </Grid>
+                          ))}
+                        </Grid>
                       </Box>
                     </Stack>
                   </Box>
@@ -610,7 +621,7 @@ export default function Schedule({
                               dailyScheduleHVAC,
                               id,
                               val
-                            );                            
+                            );
                           }}
                         />
                       </TableCell>
@@ -723,17 +734,16 @@ export async function getServerSideProps({
 }: {
   params: { id: string };
 }) {
-  const materialTags = await getTags_API();
+  const tags = await getTags_API();
   if (params.id === "new")
     return {
-      props: { constructionDetail: null, materialTags },
+      props: { scheduleDetail: null, allTags: tags },
     };
   // Fetch data from external API
-  const constructionDetails = await getConstructionDetails_API();
+  const scheduleDetails = await getSchedules_API();
 
-  const constructionDetail = constructionDetails.filter(
-    (d) => d.uniqueId === params.id
-  )[0];
+  const scheduleDetail = scheduleDetails.filter((d) => d.id === params.id)[0];
+  console.log(scheduleDetail);
   // Pass data to the page via props
-  return { props: { constructionDetail, materialTags } };
+  return { props: { scheduleDetail, allTags: tags } };
 }

@@ -22,13 +22,14 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getConstructionDetails_API,
-  getTags_API,
   saveConstructionDetail,
 } from "src/api/construction/requests";
-import { IConstructionDetail, ITag } from "src/models/construction";
+import { IConstructionDetail } from "src/models/construction";
 import { calcUvalue } from "src/utils/calcLogics";
 import { getCategories, getMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
+import { ITag } from "src/models/tags";
+import { getTags_API } from "src/api/tags/request";
 
 interface ITagType extends ITag {
   inputValue?: string;

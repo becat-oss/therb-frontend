@@ -1,9 +1,5 @@
 import { IMaterialDetail_get } from "../material/models";
-
-export interface ITag_get{
-  id: string;
-  name: string;
-}
+import { ITag_get } from "../tags/model";
 
 export interface IConstructionDetail_get {
   category: string;
