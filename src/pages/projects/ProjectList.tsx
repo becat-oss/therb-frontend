@@ -13,7 +13,7 @@ import { GET_PROJECTS } from "src/queries/posts.query";
 
 export default function ProjectList(){
   const { projectData } = useProjectListContext();
-
+  console.log("projectData",projectData);
   //TODO: allProjectsのエンドポイントがうまくいってない
   // const { loading,error,data } = useQuery(GET_PROJECTS);
 
@@ -26,12 +26,12 @@ export default function ProjectList(){
     {field:'id',headerName:"id",flex:1},
     {field:'name',headerName:"プロジェクト名",flex:2},
     {
-      field:'detail',headerName:"詳細",
+      field:'detail',headerName:"グラフデータ",
       flex:2,
       renderCell:(params:GridCellParams)=><DetailButton params={params.row}/>
     },
     {
-      field:'download',headerName:"データダウンロード",
+      field:'download',headerName:"Excelデータダウンロード",
       flex:2,
       renderCell:(params:GridCellParams)=><DownloadButton params={params.row}/>
     },

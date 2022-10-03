@@ -146,7 +146,8 @@ export interface TimeSeriesData{
   [key:string]:number[];
 }
 
-export const timeseriesKeys = ['roomT','clodS','rhexS','ahexS','fs','clodL','rhexL','ahexL','fl','mrt'];
+//export const timeseriesKeys = ['roomT','clodS','rhexS','ahexS','fs','clodL','rhexL','ahexL','fl','mrt'];
+export const timeseriesKeys = ['温度','相対湿度','絶対湿度','潜熱負荷','顕熱負荷'];
 
 export type TimeSeriesKey = typeof timeseriesKeys[number];
 
