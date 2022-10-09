@@ -17,9 +17,9 @@ export async function getSchedules_API() {
         name: d.name,
         description: d.description,
         tagIds: d.tagIds || [],
-        daily: d.daily[0],
-        weekly: d.weekly[0],
-        monthly: d.monthly[0],
+        daily: d.daily,
+        weekly: d.weekly,
+        monthly: d.monthly,
       };
     }
   );

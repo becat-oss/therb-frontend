@@ -355,6 +355,7 @@ export async function getServerSideProps({
 }) {
   const materialTags = await getTags_API();
   const constructionDetails = await getConstructionDetails_API();
+  console.log("constructionDetails",constructionDetails); 
   if (params.id === "new")
     return {
       props: {

@@ -16,9 +16,9 @@ export interface IMonthlySchedule {
 }
 
 export interface ISchedule_get {
-  daily: IDailySchedule[];
-  weekly: IWeeklySchedule[];
-  monthly: IMonthlySchedule[];  
+  daily: IDailySchedule;
+  weekly: IWeeklySchedule;
+  monthly: IMonthlySchedule;  
   id: string;
   name: string;
   description: string;
