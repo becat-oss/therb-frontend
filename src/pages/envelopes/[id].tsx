@@ -8,11 +8,13 @@ import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import MuiSelect from "@mui/material/Select";
 import {
+  Alert,
   Button,
   FormControl,
   InputLabel,
   MenuItem,
   SelectChangeEvent,
+  Snackbar,
 } from "@mui/material";
 import {
   getConstructionDetails_API,
@@ -163,7 +165,6 @@ export default function Envelope({
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const envelopeToSave: IEnvelope = {
-      id: envelope.id,
       name,
       description,
       tags,
@@ -171,9 +172,38 @@ export default function Envelope({
     }
 
     const response = await saveEnvelope(envelopeToSave);
+    if (response.status === "success") {
+      setAlert({
+        open: true,
+        message: "Construction Added Successfully",
+        severity: "success",
+      });
+      setTimeout(() => {
+        router.push("../../envelopes");
+      }, 200);
+    } else {
+      setAlert({
+        open: true,
+        message: "Something Went wrong in while adding construction",
+        severity: "error",
+      });
+    }  
 
-    router.push("../../envelopes");
+  };
 
+  const [alert, setAlert] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  } as { open: boolean; message: string; severity: "success" | "error" });
+  const handleAlertClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlert({ open: false, message: "", severity: "success" });
   };
 
   return (
@@ -186,6 +216,20 @@ export default function Envelope({
         borderRadius: 1,
       }}
     >
+      <Snackbar
+        open={alert.open}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+      >
+        <Alert
+          onClose={handleAlertClose}
+          variant="outlined"
+          severity={alert.severity}
+          sx={{ width: "100%" }}
+        >
+          {alert.message}
+        </Alert>
+      </Snackbar>
       <Typography variant="h5" ml={2}>
         Register Envelope
       </Typography>
@@ -311,13 +355,9 @@ export default function Envelope({
                             <TextField
                               id="outlined-name"
                               value={l.construction.uValue}
-                              onChange={(e) =>
-                                updateConfigVal(
-                                  l.category,
-                                  undefined,
-                                  e.target.value
-                                )
-                              }
+                              InputProps={{
+                                readOnly: true,
+                              }}
                             />
                           </Grid>
                         </Grid>

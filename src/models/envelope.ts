@@ -1,8 +1,9 @@
 import { ConstructionCategory } from "./category";
-import { IConstructionDetail, ITag } from "./construction";
+import { IConstructionDetail } from "./construction";
+import { ITag } from "./tags";
 
 export interface IEnvelope {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   tags: ITag[];

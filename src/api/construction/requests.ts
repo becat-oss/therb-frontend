@@ -91,6 +91,7 @@ export function parseConstructionDetail(detail: IConstructionDetail_get): IConst
         thickness: detail.thickness[i],
       };
     }),
+    uValue: detail.uvalue
   };
 }
 
