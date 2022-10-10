@@ -39,6 +39,7 @@ interface ITagType extends ITag {
 }
 
 const filter = createFilterOptions<ITagType>();
+const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const months = [
   "Jan",
   "Feb",
@@ -80,7 +81,7 @@ export default function Schedule({
   const [weeklySchedule, setWeeklySchedule] = useState(
     scheduleDetail
       ? scheduleDetail.weekly.hvac.map((k) => !!k)
-      : [...Array<boolean>(3).keys()].map((k) => true)
+      : [...Array<boolean>(7).keys()].map((k) => true)
   );
   const [monthlyHeatSchedule, setMonthlyHeatSchedule] = useState(
     scheduleDetail
@@ -445,24 +446,15 @@ export default function Schedule({
                             <TableHead>
                               <TableRow>
                                 <TableCell sx={{ border: "solid" }}></TableCell>
-                                <TableCell
-                                  align="right"
-                                  sx={{ border: "solid" }}
-                                >
-                                  Weekday
-                                </TableCell>
-                                <TableCell
-                                  align="right"
-                                  sx={{ border: "solid" }}
-                                >
-                                  Saturday
-                                </TableCell>
-                                <TableCell
-                                  align="right"
-                                  sx={{ border: "solid" }}
-                                >
-                                  Sunday
-                                </TableCell>
+                                {weekDays.map((day) => (
+                                  <TableCell
+                                    key={day}
+                                    align="center"
+                                    sx={{ border: "solid" }}
+                                  >
+                                    {day}
+                                  </TableCell>
+                                ))}
                               </TableRow>
                             </TableHead>
                             <TableBody>
@@ -474,51 +466,25 @@ export default function Schedule({
                                 >
                                   HVAC
                                 </TableCell>
-                                <TableCell
-                                  align="right"
-                                  sx={{ padding: 0, border: "solid" }}
-                                >
-                                  <OnOffSelect
-                                    val={weeklySchedule[0]}
-                                    callback={(val: boolean) => {
-                                      updateOnOff(
-                                        setWeeklySchedule,
-                                        weeklySchedule,
-                                        0,
-                                        val
-                                      );
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell
-                                  align="right"
-                                  sx={{ padding: 0, border: "solid" }}
-                                >
-                                  <OnOffSelect
-                                    val={weeklySchedule[1]}
-                                    callback={(val: boolean) => {
-                                      updateOnOff(
-                                        setWeeklySchedule,
-                                        weeklySchedule,
-                                        1,
-                                        val
-                                      );
-                                    }}
-                                  />
-                                </TableCell>
-                                <TableCell align="right" sx={{ padding: 0 }}>
-                                  <OnOffSelect
-                                    val={weeklySchedule[2]}
-                                    callback={(val: boolean) => {
-                                      updateOnOff(
-                                        setWeeklySchedule,
-                                        weeklySchedule,
-                                        2,
-                                        val
-                                      );
-                                    }}
-                                  />
-                                </TableCell>
+
+                                {weekDays.map((_day, i) => (
+                                  <TableCell
+                                    align="right"
+                                    sx={{ padding: 0, border: "solid" }}
+                                  >
+                                    <OnOffSelect
+                                      val={weeklySchedule[i]}
+                                      callback={(val: boolean) => {
+                                        updateOnOff(
+                                          setWeeklySchedule,
+                                          weeklySchedule,
+                                          i,
+                                          val
+                                        );
+                                      }}
+                                    />
+                                  </TableCell>
+                                ))}
                               </TableRow>
                             </TableBody>
                           </Table>
