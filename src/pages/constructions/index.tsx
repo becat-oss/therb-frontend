@@ -165,7 +165,7 @@ export default function ConstructionList({
               )}
               {cd.description && (
                 <StyledTypography variant="caption">
-                  {cd.description}
+                  {t("u-value")} {cd.uValue}W/m2K
                 </StyledTypography>
               )}
               <Box sx={{ width: 150, marginTop: 1 }}>
