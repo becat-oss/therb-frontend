@@ -59,18 +59,34 @@ export default function Header(): React.ReactElement {
                 THERB 2.0
               </Typography>
               <Link href={"/projects"}>
-                <Typography style={{ marginRight: 16 }}>Projects</Typography>
+                <Button>
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Projects
+                  </Typography>
+                </Button>
               </Link>
               <Link href={"/constructions"}>
-                <Typography style={{ marginRight: 16 }}>
-                  Constructions
-                </Typography>
+                <Button>
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Constructions
+                  </Typography>
+                </Button>
               </Link>
               <Link href={"/envelopes"}>
-                <Typography style={{ marginRight: 16 }}>Envelopes</Typography>
+                <Button>
+                  {" "}
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Envelopes
+                  </Typography>
+                </Button>
               </Link>
               <Link href={"/schedules"}>
-                <Typography style={{ marginRight: 16 }}>Schedules</Typography>
+                <Button>
+                  {" "}
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Schedules
+                  </Typography>
+                </Button>
               </Link>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -91,9 +107,6 @@ export default function Header(): React.ReactElement {
               </Select>
             </Box>
           </Box>
-          {/* <Typography style={{ marginRight: 16 }}>
-                        Settings
-                    </Typography> */}
         </Toolbar>
       </AppBar>
     </Box>
