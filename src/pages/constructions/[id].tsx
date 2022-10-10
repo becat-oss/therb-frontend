@@ -155,8 +155,8 @@ export default function Construction({
     //Validation
     name === "" && newErrorMap.set("name", true);
     category === "" && newErrorMap.set("category", true);
-    description === "" && newErrorMap.set("description", true);
-    tags.length === 0 && newErrorMap.set("tags", true);
+    // description === "" && newErrorMap.set("description", true);
+    // tags.length === 0 && newErrorMap.set("tags", true);
     materialLayers.length === 0 && newErrorMap.set("materialLayers", true);
     // construction detail to save to backend
     if (newErrorMap.size === 0) {
@@ -332,8 +332,8 @@ export default function Construction({
                     {...params}
                     label={t("tags")}
                     placeholder="Material Tags"
-                    error={errorMap.get("tags")}
-                    helperText="At least one tag is required"
+                    // error={errorMap.get("tags")}
+                    // helperText="At least one tag is required"
                   />
                 )}
               />
@@ -346,8 +346,8 @@ export default function Construction({
                 onChange={(e) => handleDescriptionChange(e.target.value)}
                 multiline
                 rows={7}
-                error={errorMap.get("description")}
-                helperText="Description is required"
+                // error={errorMap.get("description")}
+                // helperText="Description is required"
               />
             </Stack>
           </Grid>

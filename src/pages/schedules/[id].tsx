@@ -185,8 +185,8 @@ export default function Schedule({
     const newErrorMap = new Map<string, boolean>();
     //Validation
     name === "" && newErrorMap.set("name", true);
-    description === "" && newErrorMap.set("description", true);
-    tags.length === 0 && newErrorMap.set("tags", true);
+    // description === "" && newErrorMap.set("description", true);
+    // tags.length === 0 && newErrorMap.set("tags", true);
     // schedule detail to save to backend
     if (newErrorMap.size === 0) {
       //schedule detail to save
@@ -367,8 +367,8 @@ export default function Schedule({
                     {...params}
                     label={t("tags")}
                     placeholder="Material Tags"
-                    error={errorMap.get("tags")}
-                    helperText="At least one tag is required"
+                    // error={errorMap.get("tags")}
+                    // helperText="At least one tag is required"
                   />
                 )}
               />
@@ -381,8 +381,8 @@ export default function Schedule({
                 onChange={(e) => handleDescriptionChange(e.target.value)}
                 multiline
                 rows={7}
-                error={errorMap.get("description")}
-                helperText="Description is required"
+                // error={errorMap.get("description")}
+                // helperText="Description is required"
               />
             </Stack>
           </Grid>
