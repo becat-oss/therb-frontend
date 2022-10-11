@@ -221,7 +221,6 @@ export default function ScheduleList({
 export async function getServerSideProps() {
   // Fetch data from external API
   const scheduleDetails = await getSchedules_API();
-  console.log("details", scheduleDetails);
   // Pass data to the page via props
   return { props: { scheduleDetails } };
 }

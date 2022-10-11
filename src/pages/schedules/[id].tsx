@@ -709,7 +709,6 @@ export async function getServerSideProps({
   const scheduleDetails = await getSchedules_API();
 
   const scheduleDetail = scheduleDetails.filter((d) => d.id === params.id)[0];
-  console.log(scheduleDetail);
   // Pass data to the page via props
   return { props: { scheduleDetail, allTags: tags } };
 }
