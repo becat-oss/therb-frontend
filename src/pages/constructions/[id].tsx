@@ -22,13 +22,14 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   getConstructionDetails_API,
-  getTags_API,
   saveConstructionDetail,
 } from "src/api/construction/requests";
-import { IConstructionDetail, ITag } from "src/models/construction";
+import { IConstructionDetail } from "src/models/construction";
 import { calcUvalue } from "src/utils/calcLogics";
 import { getCategories, getMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
+import { ITag } from "src/models/tags";
+import { getTags_API } from "src/api/tags/request";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -154,8 +155,8 @@ export default function Construction({
     //Validation
     name === "" && newErrorMap.set("name", true);
     category === "" && newErrorMap.set("category", true);
-    description === "" && newErrorMap.set("description", true);
-    tags.length === 0 && newErrorMap.set("tags", true);
+    // description === "" && newErrorMap.set("description", true);
+    // tags.length === 0 && newErrorMap.set("tags", true);
     materialLayers.length === 0 && newErrorMap.set("materialLayers", true);
     // construction detail to save to backend
     if (newErrorMap.size === 0) {
@@ -331,8 +332,8 @@ export default function Construction({
                     {...params}
                     label={t("tags")}
                     placeholder="Material Tags"
-                    error={errorMap.get("tags")}
-                    helperText="At least one tag is required"
+                    // error={errorMap.get("tags")}
+                    // helperText="At least one tag is required"
                   />
                 )}
               />
@@ -345,8 +346,8 @@ export default function Construction({
                 onChange={(e) => handleDescriptionChange(e.target.value)}
                 multiline
                 rows={7}
-                error={errorMap.get("description")}
-                helperText="Description is required"
+                // error={errorMap.get("description")}
+                // helperText="Description is required"
               />
             </Stack>
           </Grid>

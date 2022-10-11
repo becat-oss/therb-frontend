@@ -1,4 +1,4 @@
-import { IConstructionDetail_get, ITag_get } from "../construction/models";
+import { IConstructionDetail_get } from "../construction/models";
 
 export interface IEnvelope_get {
   id: number;

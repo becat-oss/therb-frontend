@@ -1,9 +1,15 @@
-
 import { useAppContext } from "src/AppContext";
 import Link from "next/link";
 import Button from "@mui/material/Button";
 import { useState } from "react";
-import { AppBar, Box, MenuItem, Select, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  MenuItem,
+  Select,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { useRouter } from "next/router";
 import LanguageIcon from "@mui/icons-material/Language";
 
@@ -38,26 +44,49 @@ export default function Header(): React.ReactElement {
   };
 
   return (
-    <Box sx={{ display: "flex", flex: 1}} >
+    <Box sx={{ display: "flex", flex: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Box sx={{ display: "flex", justifyContent:"space-between", width:"100%"}}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography variant="h5" style={{ marginRight: 50 }}>
                 THERB 2.0
               </Typography>
               <Link href={"/projects"}>
-                <Typography style={{ marginRight: 16 }}>Projects</Typography>
+                <Button>
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Projects
+                  </Typography>
+                </Button>
               </Link>
               <Link href={"/constructions"}>
-                <Typography style={{ marginRight: 16 }}>
-                  Constructions
-                </Typography>
+                <Button>
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Constructions
+                  </Typography>
+                </Button>
               </Link>
               <Link href={"/envelopes"}>
-                <Typography style={{ marginRight: 16 }}>
-                  Envelopes
-                </Typography>
+                <Button>
+                  {" "}
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Envelopes
+                  </Typography>
+                </Button>
+              </Link>
+              <Link href={"/schedules"}>
+                <Button>
+                  {" "}
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Schedules
+                  </Typography>
+                </Button>
               </Link>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -78,9 +107,6 @@ export default function Header(): React.ReactElement {
               </Select>
             </Box>
           </Box>
-          {/* <Typography style={{ marginRight: 16 }}>
-                        Settings
-                    </Typography> */}
         </Toolbar>
       </AppBar>
     </Box>

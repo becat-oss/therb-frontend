@@ -4,7 +4,8 @@ export function calcUvalue(construction:{ id: number; type: IMaterialDetail; thi
   
   const heatResistance = construction.map(material=>{
     //FIXME: material.thickess should be used here
-    return 0.01/material.type.conductivity;
+    console.log(material.thickness)
+    return material.thickness/1000/material.type.conductivity;
   }).reduce((accumulator, current) => {
     return accumulator + current;
   }, 0)+(1/9)+(1/23);
