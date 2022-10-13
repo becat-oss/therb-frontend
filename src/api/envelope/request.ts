@@ -9,13 +9,14 @@ const isProd = false;
 
 export async function getEnvelopeDetails_API() {
   //const url = `https://stingray-app-vgak2.ondigitalocean.app/envelopes`;
-
+  console.log("getEnvelopeDetails_API");
   const url = isProd
     ? `https://stingray-app-vgak2.ondigitalocean.app/envelopes`
     : `http://localhost:5000/envelopes`;
   try {
     const response = await fetch(url, { mode: "cors" });
     const data = await response.json();
+    console.log("data: ", data);
     const formattedData: IEnvelope[] = (data.data as IEnvelope_get[]).map(
       (d) => {
         return {

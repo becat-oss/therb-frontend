@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -157,6 +157,10 @@ export default function Envelope({
     tempConfig.splice(index, 1, changedVal);
     setConstructionConfigs(tempConfig);
   };
+
+  useEffect(() => {
+    console.log("constructionConfigs", constructionConfigs);
+  }, [constructionConfigs]);
 
   const setUValue = (value: string, index: number) => {
     console.log(value, index);
