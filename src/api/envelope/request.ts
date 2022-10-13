@@ -4,12 +4,15 @@ import { IAPIResponse } from "../ApiResponse";
 import { parseConstructionDetail } from "../construction/requests";
 import { IEnvelope_get, IEnvelope_post } from "./model";
 
-export async function getEnvelopeDetails_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/envelopes`;
+//const isProd = process.env.NODE_ENV === "production";
+const isProd = false;
 
-  // const url = isProd
-  //   ? `https://stingray-app-vgak2.ondigitalocean.app/constructions`
-  //   : `http://localhost:5000/constructions`;
+export async function getEnvelopeDetails_API() {
+  //const url = `https://stingray-app-vgak2.ondigitalocean.app/envelopes`;
+
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/envelopes`
+    : `http://localhost:5000/envelopes`;
   try {
     const response = await fetch(url, { mode: "cors" });
     const data = await response.json();
@@ -39,7 +42,10 @@ export async function getEnvelopeDetails_API() {
 }
 
 export async function saveEnvelope(envelope: IEnvelope):Promise<IAPIResponse>{
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/envelopes`;
+
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/envelopes`
+    : `http://localhost:5000/envelopes`;
 
   const envelopePost: IEnvelope_post = {
     name: envelope.name,

@@ -2,12 +2,15 @@ import { IScheduleDetail } from "src/models/schedule";
 import { IAPIResponse } from "../ApiResponse";
 import { ISchedule_get, ISchedule_post } from "./model";
 
-export async function getSchedules_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/schedules`;
+//const isProd = process.env.NODE_ENV === "production";
+const isProd = false;
 
-  // const url = isProd
-  //   ? `https://stingray-app-vgak2.ondigitalocean.app/constructions`
-  //   : `http://localhost:5000/constructions`;
+export async function getSchedules_API() {
+  //const url = `https://stingray-app-vgak2.ondigitalocean.app/schedules`;
+
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/schedules`
+    : `http://localhost:5000/schedules`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
   const formattedData: IScheduleDetail[] = (data.data as ISchedule_get[]).map(
@@ -39,10 +42,11 @@ export async function saveScheduleDetail_API(schedule: ISchedule_post): Promise<
   //   material.tags = tagsWithId.concat(newTags.data);
   // }
 
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/schedules`;
-
+  //const url = `https://stingray-app-vgak2.ondigitalocean.app/schedules`;
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/schedules`
+    : `http://localhost:5000/schedules`;
   
-
   const responseData: IAPIResponse = {
     status: "failed",
     message: "",
