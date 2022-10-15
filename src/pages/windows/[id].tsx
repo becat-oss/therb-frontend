@@ -26,11 +26,11 @@ import {
 } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
 import { calcUvalue } from "src/utils/calcLogics";
-import { getMaterials_API } from "src/api/material/request";
+import { getCategories, getMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 import { ITag } from "src/models/tags";
 import { getTags_API } from "src/api/tags/request";
-import { ConstructionCategory } from "src/models/category";
+import { getWindowDetails_API, saveWindowDetail } from "src/api/window/requests";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -63,6 +63,7 @@ export default function Construction({
   const [category, setCategory] = useState(constructionDetail?.category || "");
   const [tags, setTags] = useState<ITagType[]>(constructionDetail?.tags || []);
 
+  console.log("tags", tags);
   const [materialLayers, setMaterialLayers] = useState(
     constructionDetail?.layerStructure
       ? constructionDetail.layerStructure.map((l) => {
@@ -87,7 +88,7 @@ export default function Construction({
   const [lcco2, setLcco2] = useState(constructionDetail?.lcco2 || 0);
   const [cost, setCost] = useState(constructionDetail?.cost || 0);
 
-  const categories = Object.values(ConstructionCategory);//.filter(cat => cat !== "window" )
+  const categories = ["window"];
 
   useEffect(() => {
     //calculate u-value based on layers
@@ -140,14 +141,14 @@ export default function Construction({
 
   const handleTagsChange = (tags: ITagType[]) => {
     setTags(tags);
-    // tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
+    tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
   };
 
   const handleDescriptionChange = (description: string) => {
     setDescription(description);
-    // description === ""
-    //   ? errorMap.set("description", true)
-    //   : errorMap.delete("description");
+    description === ""
+      ? errorMap.set("description", true)
+      : errorMap.delete("description");
   };
 
   const onSubmit = async (e: any) => {
@@ -175,7 +176,7 @@ export default function Construction({
         uValue,
       };
 
-      const response = await saveConstructionDetail(constructionDetailToSave);
+      const response = await saveWindowDetail(constructionDetailToSave);
       if (response.status === "success") {
         setAlert({
           open: true,
@@ -183,7 +184,7 @@ export default function Construction({
           severity: "success",
         });
         setTimeout(() => {
-          router.push("../constructions");
+          router.push("../windows");
         }, 200);
       } else {
         setAlert({
@@ -209,7 +210,7 @@ export default function Construction({
       severity: "error",
     });
     setTimeout(() => {
-      router.push("../constructions");
+      router.push("../windows");
     }, 200);
   };
 
@@ -566,7 +567,7 @@ export default function Construction({
                 >
                   {t("cancel")}
                 </Button>
-                <Button variant="contained" type="submit" disabled={!!constructionDetail} sx={{ ml: 1 }}>
+                <Button variant="contained" disabled={!!constructionDetail} type="submit" sx={{ ml: 1 }}>
                   {t("save")}
                 </Button>
               </Box>
@@ -591,11 +592,12 @@ export async function getServerSideProps({
       props: { constructionDetail: null, materialDetails, materialTags },
     };
   // Fetch data from external API
-  const constructionDetails = await getConstructionDetails_API();
+  const constructionDetails = await getWindowDetails_API();
 
   const constructionDetail = constructionDetails.filter(
     (d) => d.uniqueId === params.id
   )[0];
+  console.log("constructionDetail",constructionDetail);
   // Pass data to the page via props
   return { props: { constructionDetail, materialDetails, materialTags } };
 }

@@ -2,14 +2,11 @@ import {
   IConstructionDetail,
 } from "src/models/construction";
 import { IAPIResponse } from "../ApiResponse";
+import { IConstructionDetail_post, IConstructionDetail_get } from "../construction/models";
 import { postMaterialTags_API } from "../tags/request";
-import {
-  IConstructionDetail_get,
-  IConstructionDetail_post,
-} from "./models";
 
 
-export async function saveConstructionDetail(material: IConstructionDetail): Promise<IAPIResponse> {
+export async function saveWindowDetail(material: IConstructionDetail): Promise<IAPIResponse> {
   //save tags first
   const tagsWithoutId = material.tags.filter((t) => t.id === null);
   if (tagsWithoutId.length > 0) {
@@ -23,7 +20,7 @@ export async function saveConstructionDetail(material: IConstructionDetail): Pro
     material.tags = tagsWithId.concat(newTags.data);
   }
 
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+  const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
 
   const constructionDetail_Post: IConstructionDetail_post = {
     name: material.name || "",
@@ -73,7 +70,7 @@ export function parseConstructionDetail(detail: IConstructionDetail_get): IConst
   return {
     uniqueId: detail.id.toString(),
     name: detail.name,
-    category: detail.category || null,
+    category: "window",
     tags: detail.tags.map((t) => {
       return { label: t.name, id: t.id.toString() };
     }),
@@ -95,8 +92,8 @@ export function parseConstructionDetail(detail: IConstructionDetail_get): IConst
   };
 }
 
-export async function getConstructionDetails_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+export async function getWindowDetails_API() {
+  const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
 
   // const url = isProd
   //   ? `https://stingray-app-vgak2.ondigitalocean.app/constructions`
@@ -110,7 +107,7 @@ export async function getConstructionDetails_API() {
 }
 
 export async function getConstructionDetailById_API(id: string) {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+  const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
 
   // const url = isProd
   //   ? `https://stingray-app-vgak2.ondigitalocean.app/materials`

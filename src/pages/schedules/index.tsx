@@ -63,27 +63,6 @@ export default function ScheduleList({
     router.push(`../schedules/${id}`);
   };
 
-  // const getDataForChart = (data: IDailySchedule): ILineData => {
-  //   console.log(data);
-  //   return {
-  //     labels: [...Array<boolean>(24).keys()].map((k) => `${k + 1}`),
-  //     datasets: [
-  //       {
-  //         label: "Heating",
-  //         data: data.heating.map((hour, i) => (hour)),
-  //         borderColor: "rgb(255, 99, 132)",
-  //         backgroundColor: "rgba(255, 99, 132, 0.5)",
-  //       },
-  //       {
-  //         label: "Cooling",
-  //         data: data.cooling.map((hour, i) => (hour)),
-  //         borderColor: "rgb(53, 162, 235)",
-  //         backgroundColor: "rgba(53, 162, 235, 0.5)",
-  //       },
-  //     ],
-  //   };
-  // };
-
   const getDataForChart = (data: IDailySchedule): ILineData => {
     console.log(data);
     return {
@@ -221,7 +200,6 @@ export default function ScheduleList({
 export async function getServerSideProps() {
   // Fetch data from external API
   const scheduleDetails = await getSchedules_API();
-  console.log("details", scheduleDetails);
   // Pass data to the page via props
   return { props: { scheduleDetails } };
 }

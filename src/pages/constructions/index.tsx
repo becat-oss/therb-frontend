@@ -189,6 +189,7 @@ export default function ConstructionList({
 export async function getServerSideProps() {
   // Fetch data from external API
   const constructionDetails = await getConstructionDetails_API();
+  console.log("construction Details", constructionDetails);
 
   // Pass data to the page via props
   return { props: { constructionDetails } };

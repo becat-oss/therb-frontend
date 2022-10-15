@@ -170,14 +170,14 @@ export default function Schedule({
 
   const handleTagsChange = (tags: ITagType[]) => {
     setTags(tags);
-    tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
+    // tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
   };
 
   const handleDescriptionChange = (description: string) => {
     setDescription(description);
-    description === ""
-      ? errorMap.set("description", true)
-      : errorMap.delete("description");
+    // description === ""
+    //   ? errorMap.set("description", true)
+    //   : errorMap.delete("description");
   };
 
   const onSubmit = async (e: any) => {
@@ -190,10 +190,13 @@ export default function Schedule({
     // schedule detail to save to backend
     if (newErrorMap.size === 0) {
       //schedule detail to save
-      const scheduleToSave: ISchedule_post = {
+      const scheduleToSave: IScheduleDetail = {
+        id: scheduleDetail?.id || "new",
         name,
         description,
-        tagIds: [],
+        tags: tags.map((t) => {
+          return { id: t.id, label: t.inputValue || t.label };
+        }),
         daily: {
           id: "",
           hvac: dailyScheduleHVAC.map((b) => (b ? 1 : 0)),
@@ -331,6 +334,7 @@ export default function Schedule({
                 multiple
                 limitTags={4}
                 id={t("tags")}
+                defaultValue={tags}
                 options={allTags}
                 getOptionLabel={(option) => {
                   if (option.inputValue) {
@@ -682,7 +686,7 @@ export default function Schedule({
                 >
                   {t("cancel")}
                 </Button>
-                <Button variant="contained" type="submit" sx={{ ml: 1 }}>
+                <Button variant="contained" disabled={!!scheduleDetail} type="submit" sx={{ ml: 1 }}>
                   {t("save")}
                 </Button>
               </Box>

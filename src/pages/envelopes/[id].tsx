@@ -25,6 +25,8 @@ import { IEnvelope } from "src/models/envelope";
 import { ConstructionCategory } from "src/models/category";
 import { getTags_API } from "src/api/tags/request";
 import { ITag } from "src/models/tags";
+import { ContactSupportOutlined } from "@material-ui/icons";
+import { getWindowDetails_API } from "src/api/window/requests";
 
 interface ITagType extends ITag {
   label: string;
@@ -37,13 +39,16 @@ export default function Envelope({
   envelope,
   materialTags,
   constructionDetails,
+  windowDetails
 }: {
   envelope: IEnvelope;
   materialTags: ITagType[];
   constructionDetails: IConstructionDetail[];
+  windowDetails: IConstructionDetail[]
 }): React.ReactElement {
   const router = useRouter();
 
+  const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(envelope?.name || "");
   const [tags, setTags] = useState<ITagType[]>(envelope?.tags || []);
   const [description, setDescription] = useState(envelope?.description || "");
@@ -53,6 +58,15 @@ export default function Envelope({
     IConstructionDetail[]
   >();
   constructionDetails.forEach((c) => {
+    const contructions = categoryConstructionDetailsMap.get(c.category);
+    if (contructions) {
+      contructions.push(c);
+    } else {
+      categoryConstructionDetailsMap.set(c.category, [c]);
+    }
+  });
+
+  windowDetails.forEach((c) => {
     const contructions = categoryConstructionDetailsMap.get(c.category);
     if (contructions) {
       contructions.push(c);
@@ -129,6 +143,7 @@ export default function Envelope({
             : null,
         },
       ];
+  console.log("initialConfig",initialConfig);
 
   const [constructionConfigs, setConstructionConfigs] = useState(initialConfig);
 
@@ -158,9 +173,10 @@ export default function Envelope({
     setConstructionConfigs(tempConfig);
   };
 
-  const setUValue = (value: string, index: number) => {
-    console.log(value, index);
-  };
+  const handleNameChange = (name: string) => {
+    setName(name);
+    name === "" ? errorMap.set("name", true) : errorMap.delete("name");
+  }; 
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -170,6 +186,8 @@ export default function Envelope({
       tags,
       config: constructionConfigs,
     }
+
+    console.log(envelopeToSave);
 
     const response = await saveEnvelope(envelopeToSave);
     if (response.status === "success") {
@@ -243,12 +261,13 @@ export default function Envelope({
                 label="Name"
                 variant="outlined"
                 defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
               />
               <Autocomplete
                 multiple
                 limitTags={4}
                 id="tags"
+                defaultValue={tags}
                 options={materialTags}
                 getOptionLabel={(option) => {
                   if (option.inputValue) {
@@ -335,15 +354,15 @@ export default function Envelope({
                           <Grid item xs={4}>
                             <FormControl fullWidth>
                               <MuiSelect
-                                id={l.construction.uniqueId}
-                                value={l.construction.name}
+                                id={l.construction?.uniqueId || null}
+                                value={l.construction?.name}
                                 onChange={(e: SelectChangeEvent) => {
                                   updateConfigVal(l.category, e.target.value);
                                 }}
                               >
                                 {categoryConstructionDetailsMap
-                                  .get(l.construction.category)
-                                  .map((item, i) => (
+                                  .get(l.construction?.category)
+                                  ?.map((item, i) => (
                                     <MenuItem key={i} value={item.name}>
                                       {item.name}
                                     </MenuItem>
@@ -354,7 +373,7 @@ export default function Envelope({
                           <Grid item xs={4}>
                             <TextField
                               id="outlined-name"
-                              value={l.construction.uValue}
+                              value={l.construction?.uValue}
                               InputProps={{
                                 readOnly: true,
                               }}
@@ -376,7 +395,7 @@ export default function Envelope({
               }}
             >
               <Box></Box>
-              <Button variant="contained" type="submit">
+              <Button variant="contained" disabled={!!envelope} type="submit" >
                 Save
               </Button>
             </Box>
@@ -395,13 +414,15 @@ export async function getServerSideProps({
 }) {
   const materialTags = await getTags_API();
   const constructionDetails = await getConstructionDetails_API();
-  console.log("constructionDetails",constructionDetails); 
+  const windowDetails = await getWindowDetails_API();
+  console.log("constructionDetails" , constructionDetails);
   if (params.id === "new")
     return {
       props: {
         envelope: null,
         materialTags,
         constructionDetails,
+        windowDetails
       },
     };
   // Fetch data from external API
@@ -411,6 +432,6 @@ export async function getServerSideProps({
   )[0];
   // const constructionConfig
   // Pass data to the page via props
-  return { props: { envelope, materialTags, constructionDetails } };
+  return { props: { envelope, materialTags, constructionDetails, windowDetails } };
 }
 
