@@ -87,7 +87,9 @@ export default function Construction({
   const [lcco2, setLcco2] = useState(constructionDetail?.lcco2 || 0);
   const [cost, setCost] = useState(constructionDetail?.cost || 0);
 
-  const categories = Object.values(ConstructionCategory);//.filter(cat => cat !== "window" )
+  const categories = Object.values(ConstructionCategory).filter(
+    (cat) => cat !== ConstructionCategory.WINDOW
+  );
 
   useEffect(() => {
     //calculate u-value based on layers
@@ -412,7 +414,7 @@ export default function Construction({
                       {materialLayers.map((l) => (
                         <Grid key={l.id} container>
                           <Grid item xs={7}>
-                            <FormControl fullWidth >
+                            <FormControl fullWidth>
                               <InputLabel>{t("type")}</InputLabel>
                               <MuiSelect
                                 labelId={category}
@@ -566,7 +568,12 @@ export default function Construction({
                 >
                   {t("common:cancel")}
                 </Button>
-                <Button variant="contained" type="submit" disabled={!!constructionDetail} sx={{ ml: 1 }}>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled={!!constructionDetail}
+                  sx={{ ml: 1 }}
+                >
                   {t("common:save")}
                 </Button>
               </Box>
@@ -584,7 +591,8 @@ export async function getServerSideProps({
 }: {
   params: { id: string };
 }) {
-  const materialDetails = await getMaterials_API();
+  let materialDetails = await getMaterials_API();
+  materialDetails = materialDetails.filter((m) => m.classification === 1);
   const materialTags = await getTags_API();
   if (params.id === "new")
     return {
