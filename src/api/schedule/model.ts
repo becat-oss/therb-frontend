@@ -1,3 +1,5 @@
+import { ITag_get } from "../tags/model";
+
 export interface IDailySchedule {
   hvac: number[];
   heating: number[];
@@ -22,7 +24,7 @@ export interface ISchedule_get {
   id: string;
   name: string;
   description: string;
-  tagIds: string[]
+  tags: ITag_get[]
 }
 
 export interface ISchedule_post {

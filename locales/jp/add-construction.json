@@ -1,9 +1,5 @@
 {
-  "title":"層構成登録",
-  "name":"登録名",
-  "category":"カテゴリ",
-  "tags":"タグ",
-  "description":"説明（任意）",
+  "title":"層構成登録",  
   "construction":"層構成",
   "outdoor":"屋外側",
   "indoor":"室内側",
@@ -15,7 +11,6 @@
   "u-value":"U値",
   "lcco2":"LCCo2",
   "cost":"コスト",
-  "save":"保存",
   "exteriorWall":"外壁",
   "interiorWall":"内壁",
   "interiorFloor":"天井・床",

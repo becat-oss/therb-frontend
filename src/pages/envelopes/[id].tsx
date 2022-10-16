@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -16,15 +17,15 @@ import {
   SelectChangeEvent,
   Snackbar,
 } from "@mui/material";
-import {
-  getConstructionDetails_API,
-} from "src/api/construction/requests";
+import { getConstructionDetails_API } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
 import { getEnvelopeDetails_API, saveEnvelope } from "src/api/envelope/request";
 import { IEnvelope } from "src/models/envelope";
 import { ConstructionCategory } from "src/models/category";
 import { getTags_API } from "src/api/tags/request";
 import { ITag } from "src/models/tags";
+import { ContactSupportOutlined } from "@material-ui/icons";
+import { getWindowDetails_API } from "src/api/window/requests";
 
 interface ITagType extends ITag {
   label: string;
@@ -37,13 +38,17 @@ export default function Envelope({
   envelope,
   materialTags,
   constructionDetails,
+  windowDetails,
 }: {
   envelope: IEnvelope;
   materialTags: ITagType[];
   constructionDetails: IConstructionDetail[];
+  windowDetails: IConstructionDetail[];
 }): React.ReactElement {
   const router = useRouter();
+  const { t } = useTranslation("add-envelope");
 
+  const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(envelope?.name || "");
   const [tags, setTags] = useState<ITagType[]>(envelope?.tags || []);
   const [description, setDescription] = useState(envelope?.description || "");
@@ -60,6 +65,20 @@ export default function Envelope({
       categoryConstructionDetailsMap.set(c.category, [c]);
     }
   });
+
+  const windowsConstruction = categoryConstructionDetailsMap.get(
+    ConstructionCategory.WINDOW
+  );
+  if (windowsConstruction) {
+    windowsConstruction.push(...windowDetails);
+  } else {
+    categoryConstructionDetailsMap.set(
+      ConstructionCategory.WINDOW,
+      windowDetails
+    );
+  }
+
+  console.log("windowDetails", windowDetails, categoryConstructionDetailsMap);
 
   const initialConfig = envelope
     ? envelope.config
@@ -129,6 +148,7 @@ export default function Envelope({
             : null,
         },
       ];
+  console.log("initialConfig", initialConfig);
 
   const [constructionConfigs, setConstructionConfigs] = useState(initialConfig);
 
@@ -158,8 +178,9 @@ export default function Envelope({
     setConstructionConfigs(tempConfig);
   };
 
-  const setUValue = (value: string, index: number) => {
-    console.log(value, index);
+  const handleNameChange = (name: string) => {
+    setName(name);
+    name === "" ? errorMap.set("name", true) : errorMap.delete("name");
   };
 
   const onSubmit = async (e: any) => {
@@ -169,7 +190,9 @@ export default function Envelope({
       description,
       tags,
       config: constructionConfigs,
-    }
+    };
+
+    console.log(envelopeToSave);
 
     const response = await saveEnvelope(envelopeToSave);
     if (response.status === "success") {
@@ -187,8 +210,18 @@ export default function Envelope({
         message: "Something Went wrong in while adding construction",
         severity: "error",
       });
-    }  
+    }
+  };
 
+  const onCancel = () => {
+    setAlert({
+      open: true,
+      message: "Envelope Cancelled",
+      severity: "error",
+    });
+    setTimeout(() => {
+      router.push("../envelopes");
+    }, 200);
   };
 
   const [alert, setAlert] = useState({
@@ -231,7 +264,7 @@ export default function Envelope({
         </Alert>
       </Snackbar>
       <Typography variant="h5" ml={2}>
-        Register Envelope
+        {t("title")}
       </Typography>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
@@ -240,15 +273,16 @@ export default function Envelope({
               <TextField
                 fullWidth
                 id="envelope_name"
-                label="Name"
+                label={t("common:name")}
                 variant="outlined"
                 defaultValue={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={(e) => handleNameChange(e.target.value)}
               />
               <Autocomplete
                 multiple
                 limitTags={4}
-                id="tags"
+                id={t("common:tags")}
+                defaultValue={tags}
                 options={materialTags}
                 getOptionLabel={(option) => {
                   if (option.inputValue) {
@@ -281,7 +315,7 @@ export default function Envelope({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Material Tags"
+                    label={t("common:tags")}
                     placeholder="Material Tags"
                   />
                 )}
@@ -289,7 +323,7 @@ export default function Envelope({
               <TextField
                 fullWidth
                 id="material_description"
-                label="Description"
+                label={t("common:description")}
                 variant="outlined"
                 defaultValue={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -335,15 +369,15 @@ export default function Envelope({
                           <Grid item xs={4}>
                             <FormControl fullWidth>
                               <MuiSelect
-                                id={l.construction.uniqueId}
-                                value={l.construction.name}
+                                id={l.construction?.uniqueId || null}
+                                value={l.construction?.name}
                                 onChange={(e: SelectChangeEvent) => {
                                   updateConfigVal(l.category, e.target.value);
                                 }}
                               >
                                 {categoryConstructionDetailsMap
-                                  .get(l.construction.category)
-                                  .map((item, i) => (
+                                  .get(l.category)
+                                  ?.map((item, i) => (
                                     <MenuItem key={i} value={item.name}>
                                       {item.name}
                                     </MenuItem>
@@ -354,7 +388,7 @@ export default function Envelope({
                           <Grid item xs={4}>
                             <TextField
                               id="outlined-name"
-                              value={l.construction.uValue}
+                              value={l.construction?.uValue}
                               InputProps={{
                                 readOnly: true,
                               }}
@@ -376,9 +410,19 @@ export default function Envelope({
               }}
             >
               <Box></Box>
-              <Button variant="contained" type="submit">
-                Save
-              </Button>
+              <Box>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={onCancel}
+                  sx={{ mr: 1 }}
+                >
+                  {t("common:cancel")}
+                </Button>
+                <Button variant="contained" disabled={!!envelope} type="submit">
+                  {t("common:save")}
+                </Button>
+              </Box>
             </Box>
           </Grid>
         </Grid>
@@ -395,12 +439,14 @@ export async function getServerSideProps({
 }) {
   const materialTags = await getTags_API();
   const constructionDetails = await getConstructionDetails_API();
+  const windowDetails = await getWindowDetails_API();
   if (params.id === "new")
     return {
       props: {
         envelope: null,
         materialTags,
         constructionDetails,
+        windowDetails,
       },
     };
   // Fetch data from external API
@@ -410,6 +456,7 @@ export async function getServerSideProps({
   )[0];
   // const constructionConfig
   // Pass data to the page via props
-  return { props: { envelope, materialTags, constructionDetails } };
+  return {
+    props: { envelope, materialTags, constructionDetails, windowDetails },
+  };
 }
-

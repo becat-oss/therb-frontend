@@ -72,6 +72,13 @@ export default function Header(): React.ReactElement {
                   </Typography>
                 </Button>
               </Link>
+              <Link href={"/windows"}>
+                <Button>
+                  <Typography style={{ marginRight: 16, color: "#FFF" }}>
+                    Windows
+                  </Typography>
+                </Button>
+              </Link>
               <Link href={"/envelopes"}>
                 <Button>
                   {" "}

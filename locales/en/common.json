@@ -1,0 +1,11 @@
+{
+  "query-box": "Query Box",
+  "add-new": "Add New",
+  "edit": "Edit",
+  "name":"Name",
+  "category":"Category",
+  "tags":"Tags",
+  "description":"Description",
+  "save":"Save",
+  "cancel":"Cancel"
+}
