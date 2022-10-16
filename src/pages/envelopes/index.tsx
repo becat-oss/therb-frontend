@@ -181,7 +181,7 @@ export default function Envelopes({
                           </TableCell>
                           <TableCell align="right" sx={{ border: "none", padding: 0 }}>
                             <Typography variant="caption">
-                              {Math.random().toFixed(2)}W/m2K
+                              {cinfo.construction.uValue}W/m2K
                             </Typography>
                           </TableCell>
                         </TableRow>
