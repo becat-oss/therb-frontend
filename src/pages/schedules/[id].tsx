@@ -32,7 +32,6 @@ import {
 } from "src/api/schedule/request";
 import { IScheduleDetail } from "src/models/schedule";
 import LineChart, { ILineData } from "src/components/chartjs/lineChart";
-import { IDailySchedule, ISchedule_post } from "src/api/schedule/model";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -65,10 +64,10 @@ export default function Schedule({
   const router = useRouter();
   const { t } = useTranslation("add-construction");
 
+  console.log(scheduleDetail);
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(scheduleDetail?.name || "");
-  // const [tags, setTags] = useState<ITagType[]>(scheduleDetail?.tag || []);
-  const [tags, setTags] = useState<ITagType[]>([]);
+  const [tags, setTags] = useState<ITagType[]>(scheduleDetail?.tags || []);
   const [description, setDescription] = useState(
     scheduleDetail?.description || ""
   );

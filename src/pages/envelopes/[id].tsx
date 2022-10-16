@@ -16,9 +16,7 @@ import {
   SelectChangeEvent,
   Snackbar,
 } from "@mui/material";
-import {
-  getConstructionDetails_API,
-} from "src/api/construction/requests";
+import { getConstructionDetails_API } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
 import { getEnvelopeDetails_API, saveEnvelope } from "src/api/envelope/request";
 import { IEnvelope } from "src/models/envelope";
@@ -39,12 +37,12 @@ export default function Envelope({
   envelope,
   materialTags,
   constructionDetails,
-  windowDetails
+  windowDetails,
 }: {
   envelope: IEnvelope;
   materialTags: ITagType[];
   constructionDetails: IConstructionDetail[];
-  windowDetails: IConstructionDetail[]
+  windowDetails: IConstructionDetail[];
 }): React.ReactElement {
   const router = useRouter();
 
@@ -66,14 +64,19 @@ export default function Envelope({
     }
   });
 
-  windowDetails.forEach((c) => {
-    const contructions = categoryConstructionDetailsMap.get(c.category);
-    if (contructions) {
-      contructions.push(c);
-    } else {
-      categoryConstructionDetailsMap.set(c.category, [c]);
-    }
-  });
+  const windowsConstruction = categoryConstructionDetailsMap.get(
+    ConstructionCategory.WINDOW
+  );
+  if (windowsConstruction) {
+    windowsConstruction.push(...windowDetails);
+  } else {
+    categoryConstructionDetailsMap.set(
+      ConstructionCategory.WINDOW,
+      windowDetails
+    );
+  }
+
+  console.log("windowDetails", windowDetails, categoryConstructionDetailsMap);
 
   const initialConfig = envelope
     ? envelope.config
@@ -143,7 +146,7 @@ export default function Envelope({
             : null,
         },
       ];
-  console.log("initialConfig",initialConfig);
+  console.log("initialConfig", initialConfig);
 
   const [constructionConfigs, setConstructionConfigs] = useState(initialConfig);
 
@@ -176,7 +179,7 @@ export default function Envelope({
   const handleNameChange = (name: string) => {
     setName(name);
     name === "" ? errorMap.set("name", true) : errorMap.delete("name");
-  }; 
+  };
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
@@ -185,7 +188,7 @@ export default function Envelope({
       description,
       tags,
       config: constructionConfigs,
-    }
+    };
 
     console.log(envelopeToSave);
 
@@ -205,8 +208,7 @@ export default function Envelope({
         message: "Something Went wrong in while adding construction",
         severity: "error",
       });
-    }  
-
+    }
   };
 
   const [alert, setAlert] = useState({
@@ -361,7 +363,7 @@ export default function Envelope({
                                 }}
                               >
                                 {categoryConstructionDetailsMap
-                                  .get(l.construction?.category)
+                                  .get(l.category)
                                   ?.map((item, i) => (
                                     <MenuItem key={i} value={item.name}>
                                       {item.name}
@@ -395,7 +397,7 @@ export default function Envelope({
               }}
             >
               <Box></Box>
-              <Button variant="contained" disabled={!!envelope} type="submit" >
+              <Button variant="contained" disabled={!!envelope} type="submit">
                 Save
               </Button>
             </Box>
@@ -415,14 +417,14 @@ export async function getServerSideProps({
   const materialTags = await getTags_API();
   const constructionDetails = await getConstructionDetails_API();
   const windowDetails = await getWindowDetails_API();
-  console.log("constructionDetails" , constructionDetails);
+  console.log("constructionDetails", constructionDetails);
   if (params.id === "new")
     return {
       props: {
         envelope: null,
         materialTags,
         constructionDetails,
-        windowDetails
+        windowDetails,
       },
     };
   // Fetch data from external API
@@ -432,6 +434,7 @@ export async function getServerSideProps({
   )[0];
   // const constructionConfig
   // Pass data to the page via props
-  return { props: { envelope, materialTags, constructionDetails, windowDetails } };
+  return {
+    props: { envelope, materialTags, constructionDetails, windowDetails },
+  };
 }
-
