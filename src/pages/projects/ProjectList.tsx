@@ -1,14 +1,9 @@
 import { useProjectListContext } from "./ProjectListContext";
 import { DataGrid,GridColumns } from '@mui/x-data-grid';
-import { GridCellParams, GridColDef, GridRowParams, GridRowsProp } from "@material-ui/data-grid";
-import { useCallback, useMemo } from "react";
-import { useRouter } from "next/router";
-import Button from "@material-ui/core/Button";
+import { GridCellParams, GridColDef, GridRowsProp } from "@material-ui/data-grid";
 import DetailButton from "./DetailButton";
 import DownloadButton from "./DownloadButton";
 import DeleteButton from "./DeleteButton";
-import { useQuery } from "@apollo/client";
-import { GET_PROJECTS } from "src/queries/posts.query";
 
 
 export default function ProjectList(){
@@ -25,6 +20,7 @@ export default function ProjectList(){
   const columns: GridColDef[] = [
     {field:'id',headerName:"id",flex:1},
     {field:'name',headerName:"プロジェクト名",flex:2},
+    {field:'comfortableTime',headerName:"Comfortable Time",flex:2},
     {
       field:'detail',headerName:"グラフデータ",
       flex:2,
