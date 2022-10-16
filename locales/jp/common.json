@@ -1,0 +1,11 @@
+{
+  "query-box": "クエリボックス",
+  "add-new": "追加",
+  "edit": "編集",
+  "name":"登録名",
+  "category":"カテゴリ",
+  "tags":"タグ",
+  "description":"説明（任意）",
+  "save":"保存",
+  "cancel":"キャンセル"
+}

@@ -62,7 +62,7 @@ export default function Schedule({
   allTags: ITagType[];
 }): React.ReactElement {
   const router = useRouter();
-  const { t } = useTranslation("add-construction");
+  const { t } = useTranslation("add-schedule");
 
   console.log(scheduleDetail);
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
@@ -321,7 +321,7 @@ export default function Schedule({
               <TextField
                 fullWidth
                 id="material_name"
-                label={t("name")}
+                label={t("common:name")}
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => handleNameChange(e.target.value)}
@@ -332,7 +332,7 @@ export default function Schedule({
               <Autocomplete
                 multiple
                 limitTags={4}
-                id={t("tags")}
+                id={t("common:tags")}
                 defaultValue={tags}
                 options={allTags}
                 getOptionLabel={(option) => {
@@ -368,7 +368,7 @@ export default function Schedule({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={t("tags")}
+                    label={t("common:tags")}
                     placeholder="Material Tags"
                     // error={errorMap.get("tags")}
                     // helperText="At least one tag is required"
@@ -378,14 +378,12 @@ export default function Schedule({
               <TextField
                 fullWidth
                 id="material_description"
-                label={t("description")}
+                label={t("common:description")}
                 variant="outlined"
                 defaultValue={description}
                 onChange={(e) => handleDescriptionChange(e.target.value)}
                 multiline
                 rows={7}
-                // error={errorMap.get("description")}
-                // helperText="Description is required"
               />
             </Stack>
           </Grid>
@@ -395,7 +393,6 @@ export default function Schedule({
               sx={{
                 width: "100%",
                 borderStyle: "solid",
-                color: errorMap.get("materialLayers") ? "#F00" : "#000",
               }}
             >
               <Grid container>
@@ -683,10 +680,10 @@ export default function Schedule({
                   onClick={onCancel}
                   sx={{ mr: 1 }}
                 >
-                  {t("cancel")}
+                  {t("common:cancel")}
                 </Button>
                 <Button variant="contained" disabled={!!scheduleDetail} type="submit" sx={{ ml: 1 }}>
-                  {t("save")}
+                  {t("common:save")}
                 </Button>
               </Box>
             </Box>

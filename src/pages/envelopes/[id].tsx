@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
+import useTranslation from "next-translate/useTranslation";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -45,6 +46,7 @@ export default function Envelope({
   windowDetails: IConstructionDetail[];
 }): React.ReactElement {
   const router = useRouter();
+  const { t } = useTranslation("add-envelope");
 
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(envelope?.name || "");
@@ -211,6 +213,17 @@ export default function Envelope({
     }
   };
 
+  const onCancel = () => {
+    setAlert({
+      open: true,
+      message: "Envelope Cancelled",
+      severity: "error",
+    });
+    setTimeout(() => {
+      router.push("../envelopes");
+    }, 200);
+  };
+
   const [alert, setAlert] = useState({
     open: false,
     message: "",
@@ -251,7 +264,7 @@ export default function Envelope({
         </Alert>
       </Snackbar>
       <Typography variant="h5" ml={2}>
-        Register Envelope
+        {t("title")}
       </Typography>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
@@ -260,7 +273,7 @@ export default function Envelope({
               <TextField
                 fullWidth
                 id="envelope_name"
-                label="Name"
+                label={t("common:name")}
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => handleNameChange(e.target.value)}
@@ -268,7 +281,7 @@ export default function Envelope({
               <Autocomplete
                 multiple
                 limitTags={4}
-                id="tags"
+                id={t("common:tags")}
                 defaultValue={tags}
                 options={materialTags}
                 getOptionLabel={(option) => {
@@ -302,7 +315,7 @@ export default function Envelope({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Material Tags"
+                    label={t("common:tags")}
                     placeholder="Material Tags"
                   />
                 )}
@@ -310,7 +323,7 @@ export default function Envelope({
               <TextField
                 fullWidth
                 id="material_description"
-                label="Description"
+                label={t("common:description")}
                 variant="outlined"
                 defaultValue={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -397,9 +410,19 @@ export default function Envelope({
               }}
             >
               <Box></Box>
-              <Button variant="contained" disabled={!!envelope} type="submit">
-                Save
-              </Button>
+              <Box>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={onCancel}
+                  sx={{ mr: 1 }}
+                >
+                  {t("common:cancel")}
+                </Button>
+                <Button variant="contained" disabled={!!envelope} type="submit">
+                  {t("common:save")}
+                </Button>
+              </Box>
             </Box>
           </Grid>
         </Grid>

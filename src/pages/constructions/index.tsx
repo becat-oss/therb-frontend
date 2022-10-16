@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import useTranslation from 'next-translate/useTranslation'
+import useTranslation from "next-translate/useTranslation";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -16,7 +16,6 @@ import { getConstructionDetails_API } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
 
 const StyledPaperGeneral = styled(Paper)({
-  height: 200,
   elevation: 2,
   overflow: "hidden",
 });
@@ -42,7 +41,7 @@ export default function ConstructionList({
   constructionDetails: IConstructionDetail[];
 }): React.ReactElement {
   const router = useRouter();
-  const { t } = useTranslation('constructions');
+  const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -65,23 +64,23 @@ export default function ConstructionList({
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={12} md={12}>
-      <StyledPaperGeneral sx={{height:"10px"}}>
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <StyledTypography>{t('query-box')}</StyledTypography>
-        </Box>
+        <StyledPaperGeneral sx={{ height: "150px" }}>
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <StyledTypography>{t("common:query-box")}</StyledTypography>
+          </Box>
         </StyledPaperGeneral>
       </Grid>
       <Grid item xs={3} sm={3} md={3}>
-        <StyledPaperAdd onClick={addMaterial}>
-          <StyledTypography>{t('add-new')}</StyledTypography>
+        <StyledPaperAdd onClick={addMaterial} sx={{ height: "200px" }}>
+          <StyledTypography>{t("common:add-new")}</StyledTypography>
           <Box
             sx={{
               width: 50,
@@ -102,6 +101,7 @@ export default function ConstructionList({
       {constructionDetails.map((cd) => (
         <Grid key={cd.uniqueId} item xs={3} sm={3} md={3}>
           <StyledPaperGeneral
+            sx={{ height: "200px" }}
             onClick={(e) => {
               e.preventDefault();
               viewMaterial(cd.uniqueId);
@@ -165,14 +165,15 @@ export default function ConstructionList({
               )}
               {cd.description && (
                 <StyledTypography variant="caption">
-                  {t("u-value")} {cd.uValue}W/m2K
+                  {t("constructions:u-value")} {cd.uValue}W/m2K
                 </StyledTypography>
               )}
               <Box sx={{ width: 150, marginTop: 1 }}>
                 <MaterialRepresentation
-                  materialHeights={cd.layerStructure.map((l) =>
-                    //parseFloat(l.thickness)
-                    l.thickness
+                  materialHeights={cd.layerStructure.map(
+                    (l) =>
+                      //parseFloat(l.thickness)
+                      l.thickness
                   )}
                   length={200}
                 ></MaterialRepresentation>

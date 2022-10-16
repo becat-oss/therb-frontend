@@ -263,7 +263,7 @@ export default function Construction({
               <TextField
                 fullWidth
                 id="material_name"
-                label={t("name")}
+                label={t("common:name")}
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => handleNameChange(e.target.value)}
@@ -272,12 +272,12 @@ export default function Construction({
                 helperText="Name is required"
               />
               <FormControl error={errorMap.get("category")}>
-                <InputLabel id={category}>{t("category")}</InputLabel>
+                <InputLabel id={category}>{t("common:category")}</InputLabel>
                 <MuiSelect
                   labelId={category}
                   id={category}
                   value={category}
-                  label={t("category")}
+                  label={t("common:category")}
                   onChange={handleCategoryChange}
                 >
                   {categories.map((item, i) => (
@@ -296,7 +296,7 @@ export default function Construction({
               <Autocomplete
                 multiple
                 limitTags={4}
-                id={t("tags")}
+                id={t("common:tags")}
                 defaultValue={tags}
                 options={materialTags}
                 getOptionLabel={(option) => {
@@ -332,7 +332,7 @@ export default function Construction({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={t("tags")}
+                    label={t("common:tags")}
                     placeholder="Material Tags"
                     // error={errorMap.get("tags")}
                     // helperText="At least one tag is required"
@@ -342,7 +342,7 @@ export default function Construction({
               <TextField
                 fullWidth
                 id="material_description"
-                label={t("description")}
+                label={t("common:description")}
                 variant="outlined"
                 defaultValue={description}
                 onChange={(e) => handleDescriptionChange(e.target.value)}
@@ -564,10 +564,10 @@ export default function Construction({
                   onClick={onCancel}
                   sx={{ mr: 1 }}
                 >
-                  {t("cancel")}
+                  {t("common:cancel")}
                 </Button>
                 <Button variant="contained" type="submit" disabled={!!constructionDetail} sx={{ ml: 1 }}>
-                  {t("save")}
+                  {t("common:save")}
                 </Button>
               </Box>
             </Box>

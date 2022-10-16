@@ -17,7 +17,6 @@ import LineChart, { ILineData } from "src/components/chartjs/lineChart";
 import { IDailySchedule } from "src/api/schedule/model";
 
 const StyledPaperGeneral = styled(Paper)({
-  height: 300,
   elevation: 2,
   overflow: "hidden",
 });
@@ -43,7 +42,7 @@ export default function ScheduleList({
   scheduleDetails: IScheduleDetail[];
 }): React.ReactElement {
   const router = useRouter();
-  const { t } = useTranslation("schedules");
+  const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -87,7 +86,7 @@ export default function ScheduleList({
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={12} md={12}>
-        <StyledPaperGeneral sx={{ height: "10px" }}>
+        <StyledPaperGeneral sx={{ height: "150px" }}>
           <Box
             sx={{
               width: "100%",
@@ -97,13 +96,13 @@ export default function ScheduleList({
               alignItems: "center",
             }}
           >
-            <StyledTypography>{t("query-box")}</StyledTypography>
+            <StyledTypography>{t("common:query-box")}</StyledTypography>
           </Box>
         </StyledPaperGeneral>
       </Grid>
       <Grid item xs={3} sm={3} md={3}>
-        <StyledPaperAdd onClick={addSchedule}>
-          <StyledTypography>{t("add-new")}</StyledTypography>
+        <StyledPaperAdd onClick={addSchedule} sx={{ height: "300px" }}>
+          <StyledTypography>{t("common:add-new")}</StyledTypography>
           <Box
             sx={{
               width: 50,
@@ -124,6 +123,7 @@ export default function ScheduleList({
       {scheduleDetails.map((sd) => (
         <Grid key={sd.id} item xs={3} sm={3} md={3}>
           <StyledPaperGeneral
+            sx={{ height: "300px" }}
             onClick={(e) => {
               e.preventDefault();
               viewSchedule(sd.id);

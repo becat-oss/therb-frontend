@@ -19,9 +19,9 @@ import {
   TableRow,
   TableCell,
 } from "@mui/material";
+import useTranslation from "next-translate/useTranslation";
 
 const StyledPaperGeneral = styled(Paper)({
-  height: 250,
   elevation: 2,
   overflow: "hidden",
 });
@@ -47,6 +47,7 @@ export default function Envelopes({
   envelopeDetails: IEnvelope[];
 }): React.ReactElement {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -68,9 +69,24 @@ export default function Envelopes({
 
   return (
     <Grid container spacing={2}>
+      <Grid item xs={12} sm={12} md={12}>
+      <StyledPaperGeneral sx={{height:"150px"}}>
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <StyledTypography>{t('common:query-box')}</StyledTypography>
+        </Box>
+        </StyledPaperGeneral>
+      </Grid>
       <Grid item xs={3} sm={3} md={3}>
-        <StyledPaperAdd onClick={addEnvelope}>
-          <StyledTypography>Add New</StyledTypography>
+        <StyledPaperAdd onClick={addEnvelope} sx={{height:"250px"}}>
+          <StyledTypography>{t('common:add-new')}</StyledTypography>
           <Box
             sx={{
               width: 50,
@@ -91,6 +107,7 @@ export default function Envelopes({
       {envelopeDetails.map((ed) => (
         <Grid key={ed.id} item xs={3} sm={3} md={3}>
           <StyledPaperGeneral
+            sx={{height:"250px"}}
             onClick={(e) => {
               e.preventDefault();
               viewEnvelope(ed.id);

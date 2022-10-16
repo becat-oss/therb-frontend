@@ -5,6 +5,12 @@
     "*": ["common"],
     "/": ["home"], 
     "/constructions": ["constructions"],
-    "/constructions/[id]": ["add-construction"]
+    "/constructions/[id]": ["add-construction"],
+    "/windows": ["constructions"],
+    "/windows/[id]": ["add-window", "add-construction"],
+    "/envelopes": ["envelopes"],
+    "/envelopes/[id]": ["add-envelope"],
+    "/schedules": ["schedules"],
+    "/schedules/[id]": ["add-schedule"]
   }
 }

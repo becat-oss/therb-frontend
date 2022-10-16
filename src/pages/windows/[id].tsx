@@ -20,13 +20,9 @@ import {
   Snackbar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  getConstructionDetails_API,
-  saveConstructionDetail,
-} from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
 import { calcUvalue } from "src/utils/calcLogics";
-import { getCategories, getMaterials_API } from "src/api/material/request";
+import { getMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 import { ITag } from "src/models/tags";
 import { getTags_API } from "src/api/tags/request";
@@ -56,7 +52,7 @@ export default function Construction({
   materialTags: ITagType[];
 }): React.ReactElement {
   const router = useRouter();
-  const { t } = useTranslation("add-construction");
+  const { t } = useTranslation();
 
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(constructionDetail?.name || "");
@@ -255,7 +251,7 @@ export default function Construction({
         </Alert>
       </Snackbar>
       <Typography variant="h5" ml={2}>
-        {t("title")}
+        {t("add-window:title")}
       </Typography>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
@@ -264,7 +260,7 @@ export default function Construction({
               <TextField
                 fullWidth
                 id="material_name"
-                label={t("name")}
+                label={t("common:name")}
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => handleNameChange(e.target.value)}
@@ -273,12 +269,12 @@ export default function Construction({
                 helperText="Name is required"
               />
               <FormControl error={errorMap.get("category")}>
-                <InputLabel id={category}>{t("category")}</InputLabel>
+                <InputLabel id={category}>{t("common:category")}</InputLabel>
                 <MuiSelect
                   labelId={category}
                   id={category}
                   value={category}
-                  label={t("category")}
+                  label={t("common:category")}
                   onChange={handleCategoryChange}
                 >
                   {categories.map((item, i) => (
@@ -297,7 +293,7 @@ export default function Construction({
               <Autocomplete
                 multiple
                 limitTags={4}
-                id={t("tags")}
+                id={t("common:tags")}
                 defaultValue={tags}
                 options={materialTags}
                 getOptionLabel={(option) => {
@@ -333,7 +329,7 @@ export default function Construction({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={t("tags")}
+                    label={t("common:tags")}
                     placeholder="Material Tags"
                     // error={errorMap.get("tags")}
                     // helperText="At least one tag is required"
@@ -343,7 +339,7 @@ export default function Construction({
               <TextField
                 fullWidth
                 id="material_description"
-                label={t("description")}
+                label={t("common:description")}
                 variant="outlined"
                 defaultValue={description}
                 onChange={(e) => handleDescriptionChange(e.target.value)}
@@ -356,7 +352,7 @@ export default function Construction({
           </Grid>
           <Grid container item xs={8}>
             <Typography variant="h6" ml={2}>
-              {t("construction")}
+              {t("add-construction:construction")}
             </Typography>
             <Box
               p={4}
@@ -377,7 +373,7 @@ export default function Construction({
                       display: "flex",
                     }}
                   >
-                    <Typography>{t("outdoor")}</Typography>
+                    <Typography>{t("add-construction:outdoor")}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Box
@@ -403,23 +399,23 @@ export default function Construction({
                       display: "flex",
                     }}
                   >
-                    <Typography>{t("indoor")}</Typography>
+                    <Typography>{t("add-construction:indoor")}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item xs={6}>
                   <Box width={"100%"}>
-                    <Typography>{t("material")}</Typography>
+                    <Typography>{t("add-construction:material")}</Typography>
                     <Stack spacing={2}>
                       {materialLayers.map((l) => (
                         <Grid key={l.id} container>
                           <Grid item xs={7}>
                             <FormControl fullWidth >
-                              <InputLabel>{t("type")}</InputLabel>
+                              <InputLabel>{t("add-construction:type")}</InputLabel>
                               <MuiSelect
                                 labelId={category}
                                 id={category}
                                 value={l.type.name}
-                                label={t("type")}
+                                label={t("add-construction:type")}
                                 onChange={(e: SelectChangeEvent) =>
                                   updateMaterialLayers(
                                     l.id,
@@ -451,7 +447,7 @@ export default function Construction({
                             <TextField
                               fullWidth
                               id="size"
-                              label={t("thickness")}
+                              label={t("add-construction:thickness")}
                               variant="outlined"
                               value={l.thickness}
                               type="number"
@@ -482,7 +478,7 @@ export default function Construction({
                       ))}
                     </Stack>
                     <Button variant="outlined" onClick={onAddLayer}>
-                      {t("add-layer")}
+                      {t("add-construction:add-layer")}
                     </Button>
                   </Box>
                 </Grid>
@@ -503,10 +499,10 @@ export default function Construction({
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography>{t("performance")}</Typography>
+                  <Typography>{t("add-construction:performance")}</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography width={"100%"}>{t("u-value")}</Typography>
+                  <Typography width={"100%"}>{t("add-construction:u-value")}</Typography>
                   <Box sx={{ display: "flex", alignItems: "baseline" }}>
                     <TextField
                       id="first_field"
@@ -534,7 +530,7 @@ export default function Construction({
                   </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography width={"100%"}>{t("cost")}</Typography>
+                  <Typography width={"100%"}>{t("add-construction:cost")}</Typography>
                   <Box sx={{ display: "flex", alignItems: "baseline" }}>
                     <TextField
                       id="first_field"
@@ -565,10 +561,10 @@ export default function Construction({
                   onClick={onCancel}
                   sx={{ mr: 1 }}
                 >
-                  {t("cancel")}
+                  {t("common:cancel")}
                 </Button>
                 <Button variant="contained" disabled={!!constructionDetail} type="submit" sx={{ ml: 1 }}>
-                  {t("save")}
+                  {t("common:save")}
                 </Button>
               </Box>
             </Box>
