@@ -164,7 +164,7 @@ export default function Envelopes({
                           </TableCell>
                           <TableCell align="right" sx={{ border: "none", padding: 0 }}>
                             <Typography variant="caption">
-                              {Math.random().toFixed(2)}W/m2K
+                              {cinfo.construction.uValue}W/m2K
                             </Typography>
                           </TableCell>
                         </TableRow>
@@ -185,7 +185,6 @@ export default function Envelopes({
 export async function getServerSideProps() {
   // Fetch data from external API
   const envelopeDetails = await getEnvelopeDetails_API();
-  console.log(envelopeDetails);
   // Pass data to the page via props
   return { props: { envelopeDetails } };
 }
