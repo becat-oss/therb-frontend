@@ -59,7 +59,6 @@ export default function Construction({
   const [category, setCategory] = useState(constructionDetail?.category || "");
   const [tags, setTags] = useState<ITagType[]>(constructionDetail?.tags || []);
 
-  console.log("tags", tags);
   const [materialLayers, setMaterialLayers] = useState(
     constructionDetail?.layerStructure
       ? constructionDetail.layerStructure.map((l) => {
@@ -594,7 +593,6 @@ export async function getServerSideProps({
   const constructionDetail = constructionDetails.filter(
     (d) => d.uniqueId === params.id
   )[0];
-  console.log("constructionDetail",constructionDetail);
   // Pass data to the page via props
   return { props: { constructionDetail, materialDetails, materialTags } };
 }

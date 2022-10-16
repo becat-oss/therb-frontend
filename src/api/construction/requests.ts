@@ -86,6 +86,7 @@ export function parseConstructionDetail(detail: IConstructionDetail_get): IConst
           conductivity: m.conductivity,
           density: m.density,
           specificHeat: m.specificHeat,
+          classification:m.classification
         },
         //thickness: d.thickness[i].toString(),
         thickness: detail.thickness[i],
@@ -138,6 +139,7 @@ export async function getConstructionDetailById_API(id: string) {
           conductivity: m.conductivity,
           density: m.density,
           specificHeat: m.specificHeat,
+          classification:m.classification
         },
         thickness: detail.thickness[i],
       };

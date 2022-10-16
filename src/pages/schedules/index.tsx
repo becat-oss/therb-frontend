@@ -63,7 +63,6 @@ export default function ScheduleList({
   };
 
   const getDataForChart = (data: IDailySchedule): ILineData => {
-    console.log(data);
     return {
       labels: [...Array<boolean>(24).keys()].map((k) => `${k + 1}`),
       datasets: [
