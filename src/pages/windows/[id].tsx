@@ -20,17 +20,13 @@ import {
   Snackbar,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-  getConstructionDetails_API,
-  saveConstructionDetail,
-} from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
 import { calcUvalue } from "src/utils/calcLogics";
 import { getMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 import { ITag } from "src/models/tags";
 import { getTags_API } from "src/api/tags/request";
-import { ConstructionCategory } from "src/models/category";
+import { getWindowDetails_API, saveWindowDetail } from "src/api/window/requests";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -56,13 +52,14 @@ export default function Construction({
   materialTags: ITagType[];
 }): React.ReactElement {
   const router = useRouter();
-  const { t } = useTranslation("add-construction");
+  const { t } = useTranslation();
 
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(constructionDetail?.name || "");
   const [category, setCategory] = useState(constructionDetail?.category || "");
   const [tags, setTags] = useState<ITagType[]>(constructionDetail?.tags || []);
 
+  console.log("tags", tags);
   const [materialLayers, setMaterialLayers] = useState(
     constructionDetail?.layerStructure
       ? constructionDetail.layerStructure.map((l) => {
@@ -87,7 +84,7 @@ export default function Construction({
   const [lcco2, setLcco2] = useState(constructionDetail?.lcco2 || 0);
   const [cost, setCost] = useState(constructionDetail?.cost || 0);
 
-  const categories = Object.values(ConstructionCategory);//.filter(cat => cat !== "window" )
+  const categories = ["window"];
 
   useEffect(() => {
     //calculate u-value based on layers
@@ -140,14 +137,14 @@ export default function Construction({
 
   const handleTagsChange = (tags: ITagType[]) => {
     setTags(tags);
-    // tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
+    tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
   };
 
   const handleDescriptionChange = (description: string) => {
     setDescription(description);
-    // description === ""
-    //   ? errorMap.set("description", true)
-    //   : errorMap.delete("description");
+    description === ""
+      ? errorMap.set("description", true)
+      : errorMap.delete("description");
   };
 
   const onSubmit = async (e: any) => {
@@ -175,7 +172,7 @@ export default function Construction({
         uValue,
       };
 
-      const response = await saveConstructionDetail(constructionDetailToSave);
+      const response = await saveWindowDetail(constructionDetailToSave);
       if (response.status === "success") {
         setAlert({
           open: true,
@@ -183,7 +180,7 @@ export default function Construction({
           severity: "success",
         });
         setTimeout(() => {
-          router.push("../constructions");
+          router.push("../windows");
         }, 200);
       } else {
         setAlert({
@@ -209,7 +206,7 @@ export default function Construction({
       severity: "error",
     });
     setTimeout(() => {
-      router.push("../constructions");
+      router.push("../windows");
     }, 200);
   };
 
@@ -254,7 +251,7 @@ export default function Construction({
         </Alert>
       </Snackbar>
       <Typography variant="h5" ml={2}>
-        {t("title")}
+        {t("add-window:title")}
       </Typography>
       <form onSubmit={onSubmit}>
         <Grid container spacing={2}>
@@ -355,7 +352,7 @@ export default function Construction({
           </Grid>
           <Grid container item xs={8}>
             <Typography variant="h6" ml={2}>
-              {t("construction")}
+              {t("add-construction:construction")}
             </Typography>
             <Box
               p={4}
@@ -376,7 +373,7 @@ export default function Construction({
                       display: "flex",
                     }}
                   >
-                    <Typography>{t("outdoor")}</Typography>
+                    <Typography>{t("add-construction:outdoor")}</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Box
@@ -402,23 +399,23 @@ export default function Construction({
                       display: "flex",
                     }}
                   >
-                    <Typography>{t("indoor")}</Typography>
+                    <Typography>{t("add-construction:indoor")}</Typography>
                   </Grid>
                 </Grid>
                 <Grid container item xs={6}>
                   <Box width={"100%"}>
-                    <Typography>{t("material")}</Typography>
+                    <Typography>{t("add-construction:material")}</Typography>
                     <Stack spacing={2}>
                       {materialLayers.map((l) => (
                         <Grid key={l.id} container>
                           <Grid item xs={7}>
                             <FormControl fullWidth >
-                              <InputLabel>{t("type")}</InputLabel>
+                              <InputLabel>{t("add-construction:type")}</InputLabel>
                               <MuiSelect
                                 labelId={category}
                                 id={category}
                                 value={l.type.name}
-                                label={t("type")}
+                                label={t("add-construction:type")}
                                 onChange={(e: SelectChangeEvent) =>
                                   updateMaterialLayers(
                                     l.id,
@@ -450,7 +447,7 @@ export default function Construction({
                             <TextField
                               fullWidth
                               id="size"
-                              label={t("thickness")}
+                              label={t("add-construction:thickness")}
                               variant="outlined"
                               value={l.thickness}
                               type="number"
@@ -481,7 +478,7 @@ export default function Construction({
                       ))}
                     </Stack>
                     <Button variant="outlined" onClick={onAddLayer}>
-                      {t("add-layer")}
+                      {t("add-construction:add-layer")}
                     </Button>
                   </Box>
                 </Grid>
@@ -502,10 +499,10 @@ export default function Construction({
             >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <Typography>{t("performance")}</Typography>
+                  <Typography>{t("add-construction:performance")}</Typography>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography width={"100%"}>{t("u-value")}</Typography>
+                  <Typography width={"100%"}>{t("add-construction:u-value")}</Typography>
                   <Box sx={{ display: "flex", alignItems: "baseline" }}>
                     <TextField
                       id="first_field"
@@ -533,7 +530,7 @@ export default function Construction({
                   </Box>
                 </Grid>
                 <Grid item xs={4}>
-                  <Typography width={"100%"}>{t("cost")}</Typography>
+                  <Typography width={"100%"}>{t("add-construction:cost")}</Typography>
                   <Box sx={{ display: "flex", alignItems: "baseline" }}>
                     <TextField
                       id="first_field"
@@ -566,7 +563,7 @@ export default function Construction({
                 >
                   {t("common:cancel")}
                 </Button>
-                <Button variant="contained" type="submit" disabled={!!constructionDetail} sx={{ ml: 1 }}>
+                <Button variant="contained" disabled={!!constructionDetail} type="submit" sx={{ ml: 1 }}>
                   {t("common:save")}
                 </Button>
               </Box>
@@ -591,11 +588,12 @@ export async function getServerSideProps({
       props: { constructionDetail: null, materialDetails, materialTags },
     };
   // Fetch data from external API
-  const constructionDetails = await getConstructionDetails_API();
+  const constructionDetails = await getWindowDetails_API();
 
   const constructionDetail = constructionDetails.filter(
     (d) => d.uniqueId === params.id
   )[0];
+  console.log("constructionDetail",constructionDetail);
   // Pass data to the page via props
   return { props: { constructionDetail, materialDetails, materialTags } };
 }

@@ -32,7 +32,6 @@ import {
 } from "src/api/schedule/request";
 import { IScheduleDetail } from "src/models/schedule";
 import LineChart, { ILineData } from "src/components/chartjs/lineChart";
-import { IDailySchedule, ISchedule_post } from "src/api/schedule/model";
 
 interface ITagType extends ITag {
   inputValue?: string;
@@ -63,12 +62,12 @@ export default function Schedule({
   allTags: ITagType[];
 }): React.ReactElement {
   const router = useRouter();
-  const { t } = useTranslation("add-construction");
+  const { t } = useTranslation("add-schedule");
 
+  console.log(scheduleDetail);
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(scheduleDetail?.name || "");
-  // const [tags, setTags] = useState<ITagType[]>(scheduleDetail?.tag || []);
-  const [tags, setTags] = useState<ITagType[]>([]);
+  const [tags, setTags] = useState<ITagType[]>(scheduleDetail?.tags || []);
   const [description, setDescription] = useState(
     scheduleDetail?.description || ""
   );
@@ -170,14 +169,14 @@ export default function Schedule({
 
   const handleTagsChange = (tags: ITagType[]) => {
     setTags(tags);
-    tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
+    // tags.length === 0 ? errorMap.set("tags", true) : errorMap.delete("tags");
   };
 
   const handleDescriptionChange = (description: string) => {
     setDescription(description);
-    description === ""
-      ? errorMap.set("description", true)
-      : errorMap.delete("description");
+    // description === ""
+    //   ? errorMap.set("description", true)
+    //   : errorMap.delete("description");
   };
 
   const onSubmit = async (e: any) => {
@@ -190,10 +189,13 @@ export default function Schedule({
     // schedule detail to save to backend
     if (newErrorMap.size === 0) {
       //schedule detail to save
-      const scheduleToSave: ISchedule_post = {
+      const scheduleToSave: IScheduleDetail = {
+        id: scheduleDetail?.id || "new",
         name,
         description,
-        tagIds: [],
+        tags: tags.map((t) => {
+          return { id: t.id, label: t.inputValue || t.label };
+        }),
         daily: {
           id: "",
           hvac: dailyScheduleHVAC.map((b) => (b ? 1 : 0)),
@@ -319,7 +321,7 @@ export default function Schedule({
               <TextField
                 fullWidth
                 id="material_name"
-                label={t("name")}
+                label={t("common:name")}
                 variant="outlined"
                 defaultValue={name}
                 onChange={(e) => handleNameChange(e.target.value)}
@@ -330,7 +332,8 @@ export default function Schedule({
               <Autocomplete
                 multiple
                 limitTags={4}
-                id={t("tags")}
+                id={t("common:tags")}
+                defaultValue={tags}
                 options={allTags}
                 getOptionLabel={(option) => {
                   if (option.inputValue) {
@@ -365,7 +368,7 @@ export default function Schedule({
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label={t("tags")}
+                    label={t("common:tags")}
                     placeholder="Material Tags"
                     // error={errorMap.get("tags")}
                     // helperText="At least one tag is required"
@@ -375,14 +378,12 @@ export default function Schedule({
               <TextField
                 fullWidth
                 id="material_description"
-                label={t("description")}
+                label={t("common:description")}
                 variant="outlined"
                 defaultValue={description}
                 onChange={(e) => handleDescriptionChange(e.target.value)}
                 multiline
                 rows={7}
-                // error={errorMap.get("description")}
-                // helperText="Description is required"
               />
             </Stack>
           </Grid>
@@ -392,7 +393,6 @@ export default function Schedule({
               sx={{
                 width: "100%",
                 borderStyle: "solid",
-                color: errorMap.get("materialLayers") ? "#F00" : "#000",
               }}
             >
               <Grid container>
@@ -680,10 +680,10 @@ export default function Schedule({
                   onClick={onCancel}
                   sx={{ mr: 1 }}
                 >
-                  {t("cancel")}
+                  {t("common:cancel")}
                 </Button>
-                <Button variant="contained" type="submit" sx={{ ml: 1 }}>
-                  {t("save")}
+                <Button variant="contained" disabled={!!scheduleDetail} type="submit" sx={{ ml: 1 }}>
+                  {t("common:save")}
                 </Button>
               </Box>
             </Box>

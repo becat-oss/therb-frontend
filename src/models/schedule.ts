@@ -3,6 +3,7 @@ import {
   IWeeklySchedule,
   IMonthlySchedule,
 } from "src/api/schedule/model";
+import { ITag } from "./tags";
 
 export interface IScheduleDetail {
   daily: IDailySchedule;
@@ -11,5 +12,5 @@ export interface IScheduleDetail {
   id: string;
   name: string;
   description: string;
-  tagIds: string[];
+  tags?: ITag[];
 }

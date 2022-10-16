@@ -14,6 +14,7 @@ import MaterialRepresentation from "src/components/MaterialRepresentation";
 import { useRouter } from "next/router";
 import { getConstructionDetails_API } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
+import { getWindowDetails_API } from "src/api/window/requests";
 
 const StyledPaperGeneral = styled(Paper)({
   elevation: 2,
@@ -54,11 +55,11 @@ export default function ConstructionList({
 
   const addMaterial = (e: any) => {
     e.preventDefault();
-    router.push("../constructions/new");
+    router.push("../windows/new");
   };
 
   const viewMaterial = (id: string) => {
-    router.push(`../constructions/${id}`);
+    router.push(`../windows/${id}`);
   };
 
   return (
@@ -189,8 +190,7 @@ export default function ConstructionList({
 // This gets called on every request
 export async function getServerSideProps() {
   // Fetch data from external API
-  const constructionDetails = await getConstructionDetails_API();
-  console.log("construction Details", constructionDetails);
+  const constructionDetails = await getWindowDetails_API();
 
   // Pass data to the page via props
   return { props: { constructionDetails } };
