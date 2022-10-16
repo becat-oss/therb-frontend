@@ -24,7 +24,7 @@ type KeyRequest<K extends keyof KeyRequests> = [
 ];
 
 //const isProd = process.env.NODE_ENV === "production";
-const isProd = false;
+const isProd=true;
 
 //FIXME: 一つの関数にまとめることはできないか？
 export async function getTimeseriesData(projectId: string | string[]) {

@@ -9,7 +9,7 @@ import {
 } from "./models";
 
 //const isProd = process.env.NODE_ENV === "production";
-const isProd = false;
+const isProd=true;
 
 export async function saveConstructionDetail(material: IConstructionDetail): Promise<IAPIResponse> {
   //save tags first

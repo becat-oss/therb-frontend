@@ -3,7 +3,7 @@ import { IAPIResponse } from "../ApiResponse";
 import { ITag_get } from "./model";
 
 //const isProd = process.env.NODE_ENV === "production";
-const isProd = false;
+const isProd=true;
 
 export async function getTags_API() {
   //const url = `https://stingray-app-vgak2.ondigitalocean.app/tags`;

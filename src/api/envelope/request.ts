@@ -5,7 +5,7 @@ import { parseConstructionDetail } from "../construction/requests";
 import { IEnvelope_get, IEnvelope_post } from "./model";
 
 //const isProd = process.env.NODE_ENV === "production";
-const isProd = false;
+const isProd=true;
 
 export async function getEnvelopeDetails_API() {
   //const url = `https://stingray-app-vgak2.ondigitalocean.app/envelopes`;

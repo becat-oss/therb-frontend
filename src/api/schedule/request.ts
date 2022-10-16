@@ -3,7 +3,7 @@ import { IAPIResponse } from "../ApiResponse";
 import { ISchedule_get, ISchedule_post } from "./model";
 
 //const isProd = process.env.NODE_ENV === "production";
-const isProd = false;
+const isProd=true;
 
 export async function getSchedules_API() {
   //const url = `https://stingray-app-vgak2.ondigitalocean.app/schedules`;

@@ -3,7 +3,7 @@ import { IMaterialDetail } from "src/models/material";
 import { IMaterialDetail_get } from "./models";
 
 //const isProd = process.env.NODE_ENV === "production";
-const isProd = false;
+const isProd=true;
 
 export async function getMaterials_API() {
   //const url = `https://stingray-app-vgak2.ondigitalocean.app/materials`;
