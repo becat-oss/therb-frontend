@@ -64,7 +64,6 @@ export default function Schedule({
   const router = useRouter();
   const { t } = useTranslation("add-schedule");
 
-  console.log(scheduleDetail);
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(scheduleDetail?.name || "");
   const [tags, setTags] = useState<ITagType[]>(scheduleDetail?.tags || []);
@@ -273,7 +272,6 @@ export default function Schedule({
       <MuiSelect
         value={params.val ? "ON" : "OFF"}
         onChange={(e: SelectChangeEvent) => {
-          console.log(e.target.value);
           params.callback(e.target.value === "ON" ? true : false);
         }}
         sx={{ borderRadius: 0 }}

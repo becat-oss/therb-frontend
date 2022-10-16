@@ -78,8 +78,6 @@ export default function Envelope({
     );
   }
 
-  console.log("windowDetails", windowDetails, categoryConstructionDetailsMap);
-
   const initialConfig = envelope
     ? envelope.config
     : [
@@ -148,7 +146,6 @@ export default function Envelope({
             : null,
         },
       ];
-  console.log("initialConfig", initialConfig);
 
   const [constructionConfigs, setConstructionConfigs] = useState(initialConfig);
 
@@ -192,7 +189,6 @@ export default function Envelope({
       config: constructionConfigs,
     };
 
-    console.log(envelopeToSave);
 
     const response = await saveEnvelope(envelopeToSave);
     if (response.status === "success") {
