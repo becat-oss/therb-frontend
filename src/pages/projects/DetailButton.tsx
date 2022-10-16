@@ -16,7 +16,6 @@ export default function DetailButton({params}:Props):React.ReactElement{
       const response = await getDownload("png",params.id);
       replace(response.url);
     }
-    console.log('click');
     const redirectUrl = download();
   }
 

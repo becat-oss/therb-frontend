@@ -8,7 +8,6 @@ import DeleteButton from "./DeleteButton";
 
 export default function ProjectList(){
   const { projectData } = useProjectListContext();
-  console.log("projectData",projectData);
   //TODO: allProjectsのエンドポイントがうまくいってない
   // const { loading,error,data } = useQuery(GET_PROJECTS);
 

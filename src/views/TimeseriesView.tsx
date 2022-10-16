@@ -51,7 +51,6 @@ interface DataProps{
 }
 
 export default function TimeseriesView(props:DataProps):React.ReactElement{
-  console.log('props',props);
   return(
     <Line width={1200} height={500} data={props} options={options}></Line>
   ) 

@@ -11,7 +11,6 @@ export default function DeleteButton({params}:Props):React.ReactElement{
   const handleClick = () =>{
     async function deleteProject(){
       const response1 = await deleteProjectData(params.id);
-      console.log('response["data"]',response1["data"]);
       const response2 = await deleteTherbData(params.id);
     }
     deleteProject();

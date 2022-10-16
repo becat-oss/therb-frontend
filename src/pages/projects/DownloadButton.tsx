@@ -15,7 +15,6 @@ export default function DownloadButton({params}:Props):React.ReactElement{
       const response = await getDownload("excel",params.id);
       replace(response.url);
     }
-    console.log('click');
     const redirectUrl = download();
   }
 
