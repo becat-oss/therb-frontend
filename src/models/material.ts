@@ -4,4 +4,5 @@ export interface IMaterialDetail {
   conductivity: number;
   density: number;
   specificHeat: number;
+  classification: number;
 }

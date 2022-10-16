@@ -22,6 +22,7 @@ export async function getMaterials_API() {
       conductivity: d.conductivity || null,
       density: d.density || null,
       specificHeat: d.specificHeat || null,
+      classification: d.classification || null
     };
   });
   return formattedData;
@@ -46,6 +47,7 @@ export async function getMaterialById(id: number) {
     conductivity: material.conductivity,
     density: material.density,
     specificHeat: material.specificHeat,
+    classification: material.classification
   };
   return formattedData;
 }

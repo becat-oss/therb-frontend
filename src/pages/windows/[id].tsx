@@ -581,7 +581,8 @@ export async function getServerSideProps({
 }: {
   params: { id: string };
 }) {
-  const materialDetails = await getMaterials_API();
+  let materialDetails = await getMaterials_API();
+  materialDetails = materialDetails.filter((m) => m.classification !== 1);
   const materialTags = await getTags_API();
   if (params.id === "new")
     return {
