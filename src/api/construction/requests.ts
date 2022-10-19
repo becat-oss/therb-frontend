@@ -24,13 +24,14 @@ export async function saveConstructionDetail(material: IConstructionDetail): Pro
   }
 
   const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+  const materialIds = material.layerStructure?.map((l) => parseInt(l.material.id, 10)) || [];
+  materialIds.reverse();
 
   const constructionDetail_Post: IConstructionDetail_post = {
     name: material.name || "",
     category: material.category || "",
     description: material.description || "",
-    materialIds:
-      material.layerStructure?.map((l) => parseInt(l.material.id, 10)) || [],
+    materialIds,
     tagIds: material.tags?.map((t) => t.id) || [],
     //thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
     thickness: material.layerStructure?.map((l) => l.thickness).join(",") || "",
