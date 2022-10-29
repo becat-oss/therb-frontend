@@ -11,10 +11,10 @@ export default function Layout(props: LayoutProps): React.ReactElement {
   return (
     <AppProvider>
       <div style={{ 
-        display: "grid", 
-        width: "100%", 
+        // display: "grid", 
+        width: "99vw", 
         height: "97vh",
-        gridTemplateRows: "4em 1fr"
+        // gridTemplateRows: "4em 1fr"
         }}>
         <Header />
         {children}

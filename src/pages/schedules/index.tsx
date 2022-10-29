@@ -99,8 +99,8 @@ export default function ScheduleList({
           </Box>
         </StyledPaperGeneral>
       </Grid>
-      <Grid item xs={3} sm={3} md={3}>
-        <StyledPaperAdd onClick={addSchedule} sx={{ height: "300px" }}>
+      <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
+        <StyledPaperAdd onClick={addSchedule} sx={{ height: "250px" }}>
           <StyledTypography>{t("common:add-new")}</StyledTypography>
           <Box
             sx={{
@@ -120,54 +120,51 @@ export default function ScheduleList({
         </StyledPaperAdd>
       </Grid>
       {scheduleDetails.map((sd) => (
-        <Grid key={sd.id} item xs={3} sm={3} md={3}>
+        <Grid key={sd.id} item xs={6} sm={4} md={4} lg={3} xl={3}>
           <StyledPaperGeneral
-            sx={{ height: "300px" }}
+            sx={{ height: "250px", position: "relative" }}
             onClick={(e) => {
               e.preventDefault();
               viewSchedule(sd.id);
             }}
           >
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Box></Box>
-              <Box>
-                <IconButton
-                  aria-label="more"
-                  id="long-button"
-                  aria-controls={open ? "long-menu" : undefined}
-                  aria-expanded={open ? "true" : undefined}
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                  sx={{ right: 0 }}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="long-menu"
-                  MenuListProps={{
-                    "aria-labelledby": "long-button",
-                  }}
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  PaperProps={{
-                    style: {
-                      maxHeight: ITEM_HEIGHT * 4.5,
-                      width: "20ch",
-                    },
-                  }}
-                >
-                  {options.map((option) => (
-                    <MenuItem
-                      key={option}
-                      selected={option === "Pyxis"}
-                      onClick={handleClose}
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
+            <Box sx={{ position: "absolute", right: "10px" }}>
+              <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={open ? "long-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+                sx={{ right: 0 }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="long-menu"
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: "20ch",
+                  },
+                }}
+              >
+                {options.map((option) => (
+                  <MenuItem
+                    key={option}
+                    selected={option === "Pyxis"}
+                    onClick={handleClose}
+                  >
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
             </Box>
 
             <Box
@@ -196,7 +193,7 @@ export default function ScheduleList({
 }
 
 // This gets called on every request
-export async function getServerSideProps() {
+export async function getStaticProps() {
   // Fetch data from external API
   const scheduleDetails = await getSchedules_API();
   // Pass data to the page via props
