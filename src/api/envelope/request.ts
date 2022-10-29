@@ -31,7 +31,6 @@ export async function getEnvelopeDetails_API() {
         };
       }
     );
-    console.log("formattedData",formattedData)
     return formattedData;
   } catch (e) {
     console.error("Error when getting Envelope Details", e);

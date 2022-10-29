@@ -70,23 +70,23 @@ export default function Envelopes({
   return (
     <Grid container spacing={2}>
       <Grid item xs={12} sm={12} md={12}>
-      <StyledPaperGeneral sx={{height:"150px"}}>
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <StyledTypography>{t('common:query-box')}</StyledTypography>
-        </Box>
+        <StyledPaperGeneral sx={{ height: "150px" }}>
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <StyledTypography>{t("common:query-box")}</StyledTypography>
+          </Box>
         </StyledPaperGeneral>
       </Grid>
-      <Grid item xs={3} sm={3} md={3}>
-        <StyledPaperAdd onClick={addEnvelope} sx={{height:"250px"}}>
-          <StyledTypography>{t('common:add-new')}</StyledTypography>
+      <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
+        <StyledPaperAdd onClick={addEnvelope} sx={{ height: "200px" }}>
+          <StyledTypography>{t("common:add-new")}</StyledTypography>
           <Box
             sx={{
               width: 50,
@@ -105,17 +105,15 @@ export default function Envelopes({
         </StyledPaperAdd>
       </Grid>
       {envelopeDetails.map((ed) => (
-        <Grid key={ed.id} item xs={3} sm={3} md={3}>
+        <Grid key={ed.id} item xs={6} sm={4} md={4} lg={3} xl={3}>
           <StyledPaperGeneral
-            sx={{height:"250px"}}
+            sx={{ height: "200px", position: "relative" }}
             onClick={(e) => {
               e.preventDefault();
               viewEnvelope(ed.id);
             }}
           >
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Box></Box>
-              <Box>
+              <Box sx={{position:"absolute", right: "10px"}}>
                 <IconButton
                   aria-label="more"
                   id="long-button"
@@ -153,7 +151,6 @@ export default function Envelopes({
                   ))}
                 </Menu>
               </Box>
-            </Box>
 
             <Box
               sx={{
@@ -179,7 +176,10 @@ export default function Envelopes({
                               {cinfo.label}
                             </Typography>
                           </TableCell>
-                          <TableCell align="right" sx={{ border: "none", padding: 0 }}>
+                          <TableCell
+                            align="right"
+                            sx={{ border: "none", padding: 0 }}
+                          >
                             <Typography variant="caption">
                               {cinfo.construction.uValue}W/m2K
                             </Typography>
@@ -199,9 +199,9 @@ export default function Envelopes({
 }
 
 // This gets called on every request
-export async function getServerSideProps() {
+export async function getStaticProps() {
   // Fetch data from external API
   const envelopeDetails = await getEnvelopeDetails_API();
   // Pass data to the page via props
-  return { props: { envelopeDetails } };
+  return { props: { envelopeDetails }, revalidate: 10 };
 }
