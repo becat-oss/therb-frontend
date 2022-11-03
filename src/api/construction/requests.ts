@@ -24,6 +24,9 @@ export async function saveConstructionDetail(
     material.layerStructure?.map((l) => parseInt(l.material.id, 10)) || [];
   materialIds.reverse();
 
+  const thickness = material.layerStructure?.map((l) => l.thickness) || [];
+  thickness.reverse();
+
   const constructionDetail_Post: IConstructionDetail_post = {
     name: material.name || "",
     category: material.category || "",
@@ -31,7 +34,7 @@ export async function saveConstructionDetail(
     materialIds,
     tagIds: material.tags?.map((t) => t.id) || [],
     //thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
-    thickness: material.layerStructure?.map((l) => l.thickness).join(",") || "",
+    thickness: thickness.join(",") || "",
     uvalue: material.uValue || 0,
   };
 
@@ -71,6 +74,7 @@ export function parseConstructionDetail(
   reverseMaterials = false
 ): IConstructionDetail {
   reverseMaterials && detail.materials.reverse();
+  reverseMaterials && detail.thickness.reverse();
   return {
     uniqueId: detail.id.toString(),
     name: detail.name,
