@@ -549,7 +549,7 @@ export default function Schedule({
           <Grid container item xs={12}>
             <TableContainer component={Paper}>
               <Table
-                sx={{ minWidth: 650 }}
+                sx={{ minWidth: 100 }}
                 size="small"
                 aria-label="a dense table"
               >
@@ -574,6 +574,7 @@ export default function Schedule({
                     </TableCell>
                     {dailyScheduleHVAC.map((hour, id) => (
                       <TableCell
+                        key={id}
                         align="right"
                         sx={{ padding: 0, border: "solid" }}
                       >
@@ -680,7 +681,12 @@ export default function Schedule({
                 >
                   {t("common:cancel")}
                 </Button>
-                <Button variant="contained" disabled={!!scheduleDetail} type="submit" sx={{ ml: 1 }}>
+                <Button
+                  variant="contained"
+                  disabled={!!scheduleDetail}
+                  type="submit"
+                  sx={{ ml: 1 }}
+                >
                   {t("common:save")}
                 </Button>
               </Box>
@@ -692,12 +698,15 @@ export default function Schedule({
   );
 }
 
+export async function getStaticPaths() {
+  return {
+    paths: [] as any[],
+    fallback: "blocking", // can also be true or 'blocking'
+  };
+}
+
 // This gets called on every request
-export async function getServerSideProps({
-  params,
-}: {
-  params: { id: string };
-}) {
+export async function getStaticProps({ params }: { params: { id: string } }) {
   const tags = await getTags_API();
   if (params.id === "new")
     return {

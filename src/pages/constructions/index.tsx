@@ -46,10 +46,15 @@ export default function ConstructionList({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
+  const handleClose = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
     setAnchorEl(null);
+
   };
 
   const addMaterial = (e: any) => {
@@ -59,6 +64,7 @@ export default function ConstructionList({
 
   const viewMaterial = (id: string) => {
     router.push(`../constructions/${id}`);
+
   };
 
   return (
@@ -78,7 +84,7 @@ export default function ConstructionList({
           </Box>
         </StyledPaperGeneral>
       </Grid>
-      <Grid item xs={3} sm={3} md={3}>
+      <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
         <StyledPaperAdd onClick={addMaterial} sx={{ height: "200px" }}>
           <StyledTypography>{t("common:add-new")}</StyledTypography>
           <Box
@@ -99,17 +105,15 @@ export default function ConstructionList({
         </StyledPaperAdd>
       </Grid>
       {constructionDetails.map((cd) => (
-        <Grid key={cd.uniqueId} item xs={3} sm={3} md={3}>
+        <Grid key={cd.uniqueId} item xs={6} sm={4} md={4} lg={3} xl={3}>
           <StyledPaperGeneral
-            sx={{ height: "200px" }}
+            sx={{ height: "200px", position: "relative" }}
             onClick={(e) => {
               e.preventDefault();
               viewMaterial(cd.uniqueId);
             }}
           >
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Box></Box>
-              <Box>
+              <Box sx={{position:"absolute", right: "10px"}}>
                 <IconButton
                   aria-label="more"
                   id="long-button"
@@ -147,7 +151,6 @@ export default function ConstructionList({
                   ))}
                 </Menu>
               </Box>
-            </Box>
 
             <Box
               sx={{
@@ -187,9 +190,17 @@ export default function ConstructionList({
 }
 
 // This gets called on every request
-export async function getServerSideProps() {
-  // Fetch data from external API
+// export async function getServerSideProps() {
+//   // Fetch data from external API
+//   const constructionDetails = await getConstructionDetails_API();
+//   // Pass data to the page via props
+//   return { props: { constructionDetails } };
+// }
+
+export async function getStaticProps() {
   const constructionDetails = await getConstructionDetails_API();
-  // Pass data to the page via props
-  return { props: { constructionDetails } };
+  return {
+    props: { constructionDetails },
+    revalidate: 10, // In seconds
+  };
 }

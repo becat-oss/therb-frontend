@@ -188,10 +188,10 @@ export default function ConstructionList({
 }
 
 // This gets called on every request
-export async function getServerSideProps() {
+export async function getStaticProps() {
   // Fetch data from external API
   const constructionDetails = await getWindowDetails_API();
 
   // Pass data to the page via props
-  return { props: { constructionDetails } };
+  return { props: { constructionDetails }, revalidate: 10 };
 }
