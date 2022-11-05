@@ -41,7 +41,6 @@ export async function getProjectData() {
   const url = "https://oyster-app-8jboe.ondigitalocean.app/projects";
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
-  console.log(data);
   return data;    
 }
 

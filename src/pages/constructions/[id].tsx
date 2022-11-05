@@ -585,8 +585,16 @@ export default function Construction({
   );
 }
 
+
+export async function getStaticPaths() {
+  return {
+    paths: [] as any[],
+    fallback: 'blocking', // can also be true or 'blocking'
+  }
+}
+
 // This gets called on every request
-export async function getServerSideProps({
+export async function getStaticProps({
   params,
 }: {
   params: { id: string };
