@@ -53,30 +53,30 @@ export default function Envelope({
   const [tags, setTags] = useState<ITagType[]>(envelope?.tags || []);
   const [description, setDescription] = useState(envelope?.description || "");
 
-  const categoryConstructionDetailsMap = new Map<
-    string,
-    IConstructionDetail[]
-  >();
-  constructionDetails.forEach((c) => {
-    const contructions = categoryConstructionDetailsMap.get(c.category);
-    if (contructions) {
-      contructions.push(c);
-    } else {
-      categoryConstructionDetailsMap.set(c.category, [c]);
-    }
-  });
+  // const categoryConstructionDetailsMap = new Map<
+  //   string,
+  //   IConstructionDetail[]
+  // >();
+  // constructionDetails.forEach((c) => {
+  //   const contructions = categoryConstructionDetailsMap.get(c.category);
+  //   if (contructions) {
+  //     contructions.push(c);
+  //   } else {
+  //     categoryConstructionDetailsMap.set(c.category, [c]);
+  //   }
+  // });
 
-  const windowsConstruction = categoryConstructionDetailsMap.get(
-    ConstructionCategory.WINDOW
-  );
-  if (windowsConstruction) {
-    windowsConstruction.push(...windowDetails);
-  } else {
-    categoryConstructionDetailsMap.set(
-      ConstructionCategory.WINDOW,
-      windowDetails
-    );
-  }
+  // const windowsConstruction = categoryConstructionDetailsMap.get(
+  //   ConstructionCategory.WINDOW
+  // );
+  // if (windowsConstruction) {
+  //   windowsConstruction.push(...windowDetails);
+  // } else {
+  //   categoryConstructionDetailsMap.set(
+  //     ConstructionCategory.WINDOW,
+  //     windowDetails
+  //   );
+  // }
 
   const initialConfig = envelope
     ? envelope.config
@@ -84,66 +84,32 @@ export default function Envelope({
         {
           category: ConstructionCategory.EXTERIOR_WALL,
           label: "Exterior Wall",
-          construction: categoryConstructionDetailsMap.has(
-            ConstructionCategory.EXTERIOR_WALL
-          )
-            ? categoryConstructionDetailsMap.get(
-                ConstructionCategory.EXTERIOR_WALL
-              )[0]
-            : null,
+          construction: constructionDetails[0],
         },
         {
           category: ConstructionCategory.INTERIOR_WALL,
           label: "Interior Wall",
-          construction: categoryConstructionDetailsMap.has(
-            ConstructionCategory.INTERIOR_WALL
-          )
-            ? categoryConstructionDetailsMap.get(
-                ConstructionCategory.INTERIOR_WALL
-              )[0]
-            : null,
+          construction: constructionDetails[0],
         },
         {
           category: ConstructionCategory.INTERIOR_FLOOR,
           label: "Floor & Ceiling",
-          construction: categoryConstructionDetailsMap.has(
-            ConstructionCategory.INTERIOR_FLOOR
-          )
-            ? categoryConstructionDetailsMap.get(
-                ConstructionCategory.INTERIOR_FLOOR
-              )[0]
-            : null,
+          construction: constructionDetails[0],
         },
         {
           category: ConstructionCategory.EXTERIOR_ROOF,
           label: "Roof",
-          construction: categoryConstructionDetailsMap.has(
-            ConstructionCategory.EXTERIOR_ROOF
-          )
-            ? categoryConstructionDetailsMap.get(
-                ConstructionCategory.EXTERIOR_ROOF
-              )[0]
-            : null,
+          construction: constructionDetails[0],
         },
         {
           category: ConstructionCategory.GROUND_FLOOR,
           label: "Ground Floor",
-          construction: categoryConstructionDetailsMap.has(
-            ConstructionCategory.GROUND_FLOOR
-          )
-            ? categoryConstructionDetailsMap.get(
-                ConstructionCategory.GROUND_FLOOR
-              )[0]
-            : null,
+          construction: constructionDetails[0],
         },
         {
           category: ConstructionCategory.WINDOW,
           label: "Window",
-          construction: categoryConstructionDetailsMap.has(
-            ConstructionCategory.WINDOW
-          )
-            ? categoryConstructionDetailsMap.get(ConstructionCategory.WINDOW)[0]
-            : null,
+          construction: windowDetails[0],
         },
       ];
 
@@ -158,10 +124,17 @@ export default function Envelope({
     const index = tempConfig.findIndex((c) => c.category === category);
     let constructionVal = tempConfig[index].construction;
     if (constructionName) {
-      const newConstructionDetail = categoryConstructionDetailsMap
-        .get(constructionVal.category)
-        .find((o) => o.name === constructionName);
-      constructionVal = newConstructionDetail;
+      if (category !== ConstructionCategory.WINDOW) {
+        const newConstructionDetail = constructionDetails.find(
+          (o) => o.name === constructionName
+        );
+        constructionVal = newConstructionDetail;
+      } else {
+        const newConstructionDetail = windowDetails.find(
+          (o) => o.name === constructionName
+        );
+        constructionVal = newConstructionDetail;
+      }
     }
 
     let uVal = uValue || constructionVal.uValue;
@@ -188,7 +161,6 @@ export default function Envelope({
       tags,
       config: constructionConfigs,
     };
-
 
     const response = await saveEnvelope(envelopeToSave);
     if (response.status === "success") {
@@ -371,9 +343,12 @@ export default function Envelope({
                                   updateConfigVal(l.category, e.target.value);
                                 }}
                               >
-                                {categoryConstructionDetailsMap
-                                  .get(l.category)
-                                  ?.map((item, i) => (
+                                {l.category === ConstructionCategory.WINDOW ? windowDetails.map((item, i) => (
+                                    <MenuItem key={i} value={item.name}>
+                                      {item.name}
+                                    </MenuItem>
+                                  )):
+                                  constructionDetails.map((item, i) => (
                                     <MenuItem key={i} value={item.name}>
                                       {item.name}
                                     </MenuItem>
@@ -430,16 +405,12 @@ export default function Envelope({
 export async function getStaticPaths() {
   return {
     paths: [] as any[],
-    fallback: 'blocking', // can also be true or 'blocking'
-  }
+    fallback: "blocking", // can also be true or 'blocking'
+  };
 }
 
 // This gets called on every request
-export async function getStaticProps({
-  params,
-}: {
-  params: { id: string };
-}) {
+export async function getStaticProps({ params }: { params: { id: string } }) {
   const materialTags = await getTags_API();
   const constructionDetails = await getConstructionDetails_API();
   const windowDetails = await getWindowDetails_API();
