@@ -2,8 +2,15 @@ import { ITag } from "src/models/tags";
 import { IAPIResponse } from "../ApiResponse";
 import { ITag_get } from "./model";
 
+//const isProd = process.env.NODE_ENV === "production";
+const isProd=true;
+
 export async function getTags_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/tags`;
+  //const url = `https://stingray-app-vgak2.ondigitalocean.app/tags`;
+
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/tags`
+    : `http://localhost:5000/tags`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
   const formattedData: ITag[] = (data.data as ITag_get[]).map((d) => {
@@ -18,7 +25,11 @@ export async function getTags_API() {
 }
 
 export async function postMaterialTags_API(newtags: string[]): Promise<IAPIResponse> {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/tags`;
+  //const url = `https://stingray-app-vgak2.ondigitalocean.app/tags`;
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/tags`
+    : `http://localhost:5000/tags`;
+
   const tagsToPost = newtags.map((t) => {
     return { name: t, description: "" };
   });

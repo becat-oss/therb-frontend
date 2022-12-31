@@ -23,7 +23,8 @@ type KeyRequest<K extends keyof KeyRequests> = [
   boolean
 ];
 
-const isProd = process.env.NODE_ENV === "production";
+//const isProd = process.env.NODE_ENV === "production";
+const isProd=true;
 
 //FIXME: 一つの関数にまとめることはできないか？
 export async function getTimeseriesData(projectId: string | string[]) {
@@ -40,7 +41,6 @@ export async function getProjectData() {
   const url = "https://oyster-app-8jboe.ondigitalocean.app/projects";
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
-  console.log(data);
   return data;    
 }
 

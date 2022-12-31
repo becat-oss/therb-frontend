@@ -3,12 +3,15 @@ import { IAPIResponse } from "../ApiResponse";
 import { postMaterialTags_API } from "../tags/request";
 import { ISchedule_get, ISchedule_post } from "./model";
 
-export async function getSchedules_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/schedules`;
+//const isProd = process.env.NODE_ENV === "production";
+const isProd=true;
 
-  // const url = isProd
-  //   ? `https://stingray-app-vgak2.ondigitalocean.app/constructions`
-  //   : `http://localhost:5000/constructions`;
+export async function getSchedules_API() {
+  //const url = `https://stingray-app-vgak2.ondigitalocean.app/schedules`;
+
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/schedules`
+    : `http://localhost:5000/schedules`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
   const formattedData: IScheduleDetail[] = (data.data as ISchedule_get[]).map(

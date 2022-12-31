@@ -2,8 +2,15 @@ import { ConstructionCategory } from "src/models/category";
 import { IMaterialDetail } from "src/models/material";
 import { IMaterialDetail_get } from "./models";
 
+//const isProd = process.env.NODE_ENV === "production";
+const isProd=true;
+
 export async function getMaterials_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/materials`;
+  //const url = `https://stingray-app-vgak2.ondigitalocean.app/materials`;
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/materials`
+    : `http://localhost:5000/materials`;
+
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
   const formattedData: IMaterialDetail[] = (
@@ -22,7 +29,11 @@ export async function getMaterials_API() {
 }
 
 export async function getMaterialById(id: number) {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/materials`;
+  //const url = `https://stingray-app-vgak2.ondigitalocean.app/materials`;
+  const url = isProd
+    ? `https://stingray-app-vgak2.ondigitalocean.app/materials`
+    : `http://localhost:5000/materials`;
+
   const response = await fetch(url, {
     mode: "cors",
     method: "GET",
