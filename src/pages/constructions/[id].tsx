@@ -15,9 +15,18 @@ import MenuItem from "@mui/material/MenuItem";
 import {
   Alert,
   Button,
+  Fade,
   IconButton,
+  Paper,
+  Popper,
+  PopperPlacementType,
   SelectChangeEvent,
   Snackbar,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -231,6 +240,27 @@ export default function Construction({
     setAlert({ open: false, message: "", severity: "success" });
   };
 
+  const [openPopper, setopenPopper] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [placement, setPlacement] = React.useState<PopperPlacementType>();
+  const [popperContent, setPopperContent] = React.useState<IMaterialDetail>(null);
+
+  const handlePopperOpen =
+    (newPlacement: PopperPlacementType, content: IMaterialDetail) =>
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      console.log("popper opened", newPlacement, event);
+      setAnchorEl(event.currentTarget);
+      setopenPopper(true);
+      setPlacement(newPlacement);
+      setPopperContent(content);
+    };
+
+  const handlePopperClose = () => {
+    setopenPopper(false);
+  };
+  const canBeOpen = openPopper && Boolean(anchorEl);
+  const popperId = canBeOpen ? "transition-popper" : undefined;
+
   return (
     <Box
       sx={{
@@ -414,6 +444,41 @@ export default function Construction({
                       {materialLayers.map((l) => (
                         <Grid key={l.id} container>
                           <Grid item xs={7}>
+                            <Popper
+                              open={openPopper}
+                              anchorEl={anchorEl}
+                              placement={placement}
+                              transition
+                            >
+                              {({ TransitionProps }) => (
+                                <Fade {...TransitionProps} timeout={350}>
+                                  <TableContainer component={Paper}>
+                                    <Table
+                                      sx={{ minWidth: 50 }}
+                                      aria-label="material-detail"
+                                    >                                      
+                                      <TableBody>
+                                        {Object.keys(popperContent).map((key) => (
+                                          <TableRow
+                                            key={key}
+                                          >
+                                            <TableCell
+                                              component="th"
+                                              scope="row"
+                                            >
+                                              {key}
+                                            </TableCell>
+                                            <TableCell align="right">
+                                              {popperContent[key]}
+                                            </TableCell>                                            
+                                          </TableRow>
+                                        ))}
+                                      </TableBody>
+                                    </Table>
+                                  </TableContainer>
+                                </Fade>
+                              )}
+                            </Popper>
                             <FormControl fullWidth>
                               <InputLabel>{t("type")}</InputLabel>
                               <MuiSelect
@@ -432,7 +497,17 @@ export default function Construction({
                                 }
                               >
                                 {materialDetails.map((item, i) => (
-                                  <MenuItem key={i} value={item.name}>
+                                  <MenuItem
+                                    key={i}
+                                    value={item.name}
+                                    onMouseEnter={(e) =>
+                                      handlePopperOpen(
+                                        "right",
+                                        item
+                                      )(e)
+                                    }
+                                    onMouseLeave={handlePopperClose}
+                                  >
                                     {t(item.name)}
                                   </MenuItem>
                                 ))}

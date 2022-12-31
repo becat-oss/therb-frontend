@@ -12,10 +12,13 @@ export async function getMaterials_API() {
     return {
       id: d.id.toString(),
       name: d.name || null,
-      conductivity: d.conductivity || null,
-      density: d.density || null,
-      specificHeat: d.specificHeat || null,
-      classification: d.classification || null
+      description: d.description || "",
+      conductivity: d.conductivity ?? null,
+      density: d.density ?? null,
+      specificHeat: d.specificHeat ?? null,
+      classification: d.classification ?? null,
+      moistureCapacity: d.moistureCapacity ?? null,
+      moistureConductivity: d.moistureConductivity ?? null,
     };
   });
   return formattedData;
@@ -36,12 +39,14 @@ export async function getMaterialById(id: number) {
     conductivity: material.conductivity,
     density: material.density,
     specificHeat: material.specificHeat,
-    classification: material.classification
+    classification: material.classification,
+    description: material.description,
+    moistureCapacity: material.moistureCapacity,
+    moistureConductivity: material.moistureConductivity
   };
   return formattedData;
 }
 
-
-export function getCategories():string[]{
-  return Object.values(ConstructionCategory)
+export function getCategories(): string[] {
+  return Object.values(ConstructionCategory);
 }
