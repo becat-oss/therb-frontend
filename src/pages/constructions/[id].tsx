@@ -287,12 +287,13 @@ export default function Construction({
       <Popper
         open={openPopper}
         anchorEl={anchorEl}
-        placement={placement}       
+        placement={placement}
+        style={{zIndex: 2}}
         transition
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <Paper elevation={3} sx={{ zIndex: 2000 }}>
+            <Paper elevation={3} >
               <List dense={true}>
                 {Object.keys(popperContent).map((key) => (
                   <ListItem sx={{pt: 0, pb:0}}>
