@@ -69,10 +69,7 @@ export async function saveConstructionDetail(
   return responseData;
 }
 
-export function parseConstructionDetail(
-  detail: IConstructionDetail_get,
-  reverseMaterials = false
-): IConstructionDetail {
+export function parseConstructionDetail(detail: IConstructionDetail_get, reverseMaterials = false): IConstructionDetail{
   reverseMaterials && detail.materials.reverse();
   reverseMaterials && detail.thickness.reverse();
   return {
@@ -92,6 +89,9 @@ export function parseConstructionDetail(
           density: m.density,
           specificHeat: m.specificHeat,
           classification: m.classification,
+          description: m.description,
+          moistureCapacity: m.moistureCapacity,
+          moistureConductivity: m.moistureConductivity,
         },
         //thickness: d.thickness[i].toString(),
         thickness: detail.thickness[i],
@@ -113,4 +113,48 @@ export async function getConstructionDetails_API() {
     data.data as IConstructionDetail_get[]
   ).map((d) => parseConstructionDetail(d, true));
   return formattedData;
+}
+
+export async function getConstructionDetailById_API(id: string) {
+  const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+
+  // const url = isProd
+  //   ? `https://stingray-app-vgak2.ondigitalocean.app/materials`
+  //   : `http://localhost:5000/materials`;
+  const response = await fetch(url, {
+    mode: "cors",
+    method: "GET",
+    body: JSON.stringify({ id }),
+  });
+  const data = await response.json();
+  const detail = data.data as IConstructionDetail_get;
+  const formattedData: IConstructionDetail = {
+    uniqueId: detail.id.toString(),
+    name: detail.name,
+    category: detail.category,
+    tags: detail.tags.map((t) => {
+      return { label: t.name, id: t.id.toString() };
+    }),
+    description: detail.description,
+    layerStructure: detail.materials.map((m, i) => {
+      return {
+        material: {
+          id: m.id.toString(),
+          name: m.name,
+          conductivity: m.conductivity,
+          density: m.density,
+          specificHeat: m.specificHeat,
+          classification: m.classification,
+          description: m.description,
+          moistureCapacity: m.moistureCapacity,
+          moistureConductivity: m.moistureConductivity,
+        },
+        thickness: detail.thickness[i],
+      };
+    }),
+  };
+  return formattedData;
+  // } catch (e) {
+  //   console.error("Error: ", e);
+  // }
 }

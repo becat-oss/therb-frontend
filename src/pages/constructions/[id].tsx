@@ -15,7 +15,14 @@ import MenuItem from "@mui/material/MenuItem";
 import {
   Alert,
   Button,
+  Fade,
   IconButton,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Popper,
+  PopperPlacementType,
   SelectChangeEvent,
   Snackbar,
 } from "@mui/material";
@@ -231,6 +238,28 @@ export default function Construction({
     setAlert({ open: false, message: "", severity: "success" });
   };
 
+  const [openPopper, setopenPopper] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [placement, setPlacement] = React.useState<PopperPlacementType>();
+  const [popperContent, setPopperContent] =
+    React.useState<IMaterialDetail>(null);
+
+  const handlePopperOpen =
+    (newPlacement: PopperPlacementType, content: IMaterialDetail) =>
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      setAnchorEl(event.currentTarget);
+      console.log(anchorEl);
+      setopenPopper(true);
+      setPlacement(newPlacement);
+      setPopperContent(content);
+    };
+
+  const handlePopperClose = () => {
+    setopenPopper(false);
+  };
+  const canBeOpen = openPopper && Boolean(anchorEl);
+  const popperId = canBeOpen ? "transition-popper" : undefined;
+
   return (
     <Box
       sx={{
@@ -255,6 +284,26 @@ export default function Construction({
           {alert.message}
         </Alert>
       </Snackbar>
+      <Popper
+        open={openPopper}
+        anchorEl={anchorEl}
+        placement={placement}       
+        transition
+      >
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
+            <Paper elevation={3} sx={{ zIndex: 2000 }}>
+              <List dense={true}>
+                {Object.keys(popperContent).map((key) => (
+                  <ListItem sx={{pt: 0, pb:0}}>
+                    <ListItemText sx={{m:0}} primary={`${key} : ${popperContent[key]}`} />
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+          </Fade>
+        )}
+      </Popper>
       <Typography variant="h5" ml={2}>
         {t("title")}
       </Typography>
@@ -432,7 +481,14 @@ export default function Construction({
                                 }
                               >
                                 {materialDetails.map((item, i) => (
-                                  <MenuItem key={i} value={item.name}>
+                                  <MenuItem
+                                    key={i}
+                                    value={item.name}
+                                    onMouseEnter={(e) =>
+                                      handlePopperOpen("right", item)(e)
+                                    }
+                                    onMouseLeave={handlePopperClose}
+                                  >
                                     {t(item.name)}
                                   </MenuItem>
                                 ))}
@@ -585,20 +641,15 @@ export default function Construction({
   );
 }
 
-
 export async function getStaticPaths() {
   return {
     paths: [] as any[],
-    fallback: 'blocking', // can also be true or 'blocking'
-  }
+    fallback: "blocking", // can also be true or 'blocking'
+  };
 }
 
 // This gets called on every request
-export async function getStaticProps({
-  params,
-}: {
-  params: { id: string };
-}) {
+export async function getStaticProps({ params }: { params: { id: string } }) {
   let materialDetails = await getMaterials_API();
   materialDetails = materialDetails.filter((m) => m.classification === 1);
   const materialTags = await getTags_API();
