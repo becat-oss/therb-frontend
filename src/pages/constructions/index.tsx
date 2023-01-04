@@ -54,7 +54,6 @@ export default function ConstructionList({
     event.preventDefault();
     event.stopPropagation();
     setAnchorEl(null);
-
   };
 
   const addMaterial = (e: any) => {
@@ -64,7 +63,6 @@ export default function ConstructionList({
 
   const viewMaterial = (id: string) => {
     router.push(`../constructions/${id}`);
-
   };
 
   return (
@@ -113,44 +111,44 @@ export default function ConstructionList({
               viewMaterial(cd.uniqueId);
             }}
           >
-              <Box sx={{position:"absolute", right: "10px"}}>
-                <IconButton
-                  aria-label="more"
-                  id="long-button"
-                  aria-controls={open ? "long-menu" : undefined}
-                  aria-expanded={open ? "true" : undefined}
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                  sx={{ right: 0 }}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="long-menu"
-                  MenuListProps={{
-                    "aria-labelledby": "long-button",
-                  }}
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  PaperProps={{
-                    style: {
-                      maxHeight: ITEM_HEIGHT * 4.5,
-                      width: "20ch",
-                    },
-                  }}
-                >
-                  {options.map((option) => (
-                    <MenuItem
-                      key={option}
-                      selected={option === "Pyxis"}
-                      onClick={handleClose}
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
+            <Box sx={{ position: "absolute", right: "10px" }}>
+              <IconButton
+                aria-label="more"
+                id="long-button"
+                aria-controls={open ? "long-menu" : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+                sx={{ right: 0 }}
+              >
+                <MoreVertIcon />
+              </IconButton>
+              <Menu
+                id="long-menu"
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: "20ch",
+                  },
+                }}
+              >
+                {options.map((option) => (
+                  <MenuItem
+                    key={option}
+                    selected={option === "Pyxis"}
+                    onClick={handleClose}
+                  >
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
 
             <Box
               sx={{
@@ -189,6 +187,16 @@ export default function ConstructionList({
   );
 }
 
+
+
+export async function getServerSideProps() {
+  const constructionDetails = await getConstructionDetails_API();
+  return {
+    props: { constructionDetails },
+    // revalidate: 10, // In seconds
+  };
+}
+
 // This gets called on every request
 // export async function getServerSideProps() {
 //   // Fetch data from external API
@@ -196,11 +204,3 @@ export default function ConstructionList({
 //   // Pass data to the page via props
 //   return { props: { constructionDetails } };
 // }
-
-export async function getStaticProps() {
-  const constructionDetails = await getConstructionDetails_API();
-  return {
-    props: { constructionDetails },
-    revalidate: 10, // In seconds
-  };
-}

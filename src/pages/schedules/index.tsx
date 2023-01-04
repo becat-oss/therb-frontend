@@ -193,7 +193,7 @@ export default function ScheduleList({
 }
 
 // This gets called on every request
-export async function getStaticProps() {
+export async function getServerSideProps() {
   // Fetch data from external API
   const scheduleDetails = await getSchedules_API();
   console.log(scheduleDetails);

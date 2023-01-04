@@ -158,10 +158,17 @@ export default function Envelope({
     const index = tempConfig.findIndex((c) => c.category === category);
     let constructionVal = tempConfig[index].construction;
     if (constructionName) {
-      const newConstructionDetail = categoryConstructionDetailsMap
-        .get(constructionVal.category)
-        .find((o) => o.name === constructionName);
-      constructionVal = newConstructionDetail;
+      if (category !== ConstructionCategory.WINDOW) {
+        const newConstructionDetail = categoryConstructionDetailsMap
+          .get(constructionVal.category)
+          .find((o) => o.name === constructionName);
+        constructionVal = newConstructionDetail;
+      } else {
+        const newConstructionDetail = windowDetails.find(
+          (o) => o.name === constructionName
+        );
+        constructionVal = newConstructionDetail;
+      }
     }
 
     let uVal = uValue || constructionVal.uValue;
@@ -188,7 +195,6 @@ export default function Envelope({
       tags,
       config: constructionConfigs,
     };
-
 
     const response = await saveEnvelope(envelopeToSave);
     if (response.status === "success") {
@@ -427,19 +433,15 @@ export default function Envelope({
   );
 }
 
-export async function getStaticPaths() {
-  return {
-    paths: [] as any[],
-    fallback: 'blocking', // can also be true or 'blocking'
-  }
-}
+// export async function getStaticPaths() {
+//   return {
+//     paths: [] as any[],
+//     fallback: "blocking", // can also be true or 'blocking'
+//   };
+// }
 
 // This gets called on every request
-export async function getStaticProps({
-  params,
-}: {
-  params: { id: string };
-}) {
+export async function getServerSideProps({ params }: { params: { id: string } }) {
   const materialTags = await getTags_API();
   const constructionDetails = await getConstructionDetails_API();
   const windowDetails = await getWindowDetails_API();

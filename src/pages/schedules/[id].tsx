@@ -698,15 +698,15 @@ export default function Schedule({
   );
 }
 
-export async function getStaticPaths() {
-  return {
-    paths: [] as any[],
-    fallback: "blocking", // can also be true or 'blocking'
-  };
-}
+// export async function getStaticPaths() {
+//   return {
+//     paths: [] as any[],
+//     fallback: "blocking", // can also be true or 'blocking'
+//   };
+// }
 
 // This gets called on every request
-export async function getStaticProps({ params }: { params: { id: string } }) {
+export async function getServerSideProps({ params }: { params: { id: string } }) {
   const tags = await getTags_API();
   if (params.id === "new")
     return {
