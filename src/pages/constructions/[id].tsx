@@ -43,6 +43,8 @@ interface ITagType extends ITag {
   inputValue?: string;
 }
 
+type TPopperContent = Omit<IMaterialDetail, "id" | "description" | "classification" > 
+
 const filter = createFilterOptions<ITagType>();
 function* layerIDGenerator() {
   let count = 0;
@@ -242,16 +244,22 @@ export default function Construction({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [placement, setPlacement] = React.useState<PopperPlacementType>();
   const [popperContent, setPopperContent] =
-    React.useState<IMaterialDetail>(null);
+    React.useState<TPopperContent>(null);
 
   const handlePopperOpen =
     (newPlacement: PopperPlacementType, content: IMaterialDetail) =>
     (event: React.MouseEvent<HTMLButtonElement>) => {
       setAnchorEl(event.currentTarget);
-      console.log(anchorEl);
       setopenPopper(true);
       setPlacement(newPlacement);
-      setPopperContent(content);
+      setPopperContent({
+        name: content.name,
+        specificHeat: content.specificHeat,
+        density: content.density,
+        conductivity: content.conductivity,
+        moistureCapacity: content.moistureCapacity,
+        moistureConductivity: content.moistureConductivity,
+      });
     };
 
   const handlePopperClose = () => {
@@ -288,16 +296,19 @@ export default function Construction({
         open={openPopper}
         anchorEl={anchorEl}
         placement={placement}
-        style={{zIndex: 2}}
+        style={{ zIndex: 2 }}
         transition
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
-            <Paper elevation={3} >
+            <Paper elevation={3}>
               <List dense={true}>
                 {Object.keys(popperContent).map((key) => (
-                  <ListItem sx={{pt: 0, pb:0}}>
-                    <ListItemText sx={{m:0}} primary={`${key} : ${popperContent[key]}`} />
+                  <ListItem key={key} sx={{ pt: 0, pb: 0 }}>
+                    <ListItemText
+                      sx={{ m: 0 }}
+                      primary={`${key} : ${popperContent[key]}`}
+                    />
                   </ListItem>
                 ))}
               </List>
@@ -471,15 +482,16 @@ export default function Construction({
                                 id={category}
                                 value={l.type.name}
                                 label={t("type")}
-                                onChange={(e: SelectChangeEvent) =>
+                                onChange={(e: SelectChangeEvent) => {
+                                  handlePopperClose();
                                   updateMaterialLayers(
                                     l.id,
                                     materialDetails.find(
                                       (m: any) => m.name === e.target.value
                                     ),
                                     l.thickness
-                                  )
-                                }
+                                  );
+                                }}
                               >
                                 {materialDetails.map((item, i) => (
                                   <MenuItem
@@ -642,15 +654,19 @@ export default function Construction({
   );
 }
 
-export async function getStaticPaths() {
-  return {
-    paths: [] as any[],
-    fallback: "blocking", // can also be true or 'blocking'
-  };
-}
+// export async function getStaticPaths() {
+//   return {
+//     paths: [] as any[],
+//     fallback: "blocking", // can also be true or 'blocking'
+//   };
+// }
 
 // This gets called on every request
-export async function getStaticProps({ params }: { params: { id: string } }) {
+export async function getServerSideProps({
+  params,
+}: {
+  params: { id: string };
+}) {
   let materialDetails = await getMaterials_API();
   materialDetails = materialDetails.filter((m) => m.classification === 1);
   const materialTags = await getTags_API();

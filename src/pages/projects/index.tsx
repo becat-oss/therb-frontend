@@ -115,12 +115,12 @@ export default function ProjectList({
   );
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const res = await getProjectData();
   return {
     props: {
       projectData: res.data || [],
     },
-    revalidate: 10, // In seconds
+    // revalidate: 10, // In seconds
   };
 }
