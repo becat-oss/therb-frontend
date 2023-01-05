@@ -198,5 +198,5 @@ export async function getServerSideProps() {
   const scheduleDetails = await getSchedules_API();
   console.log(scheduleDetails);
   // Pass data to the page via props
-  return { props: { scheduleDetails } };
+  return { props: { scheduleDetails }, revalidate: 10 };
 }
