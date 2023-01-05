@@ -248,8 +248,8 @@ export default function Construction({
 
   const handlePopperOpen =
     (newPlacement: PopperPlacementType, content: IMaterialDetail) =>
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      setAnchorEl(event.currentTarget);
+    (currentTarget: HTMLElement) => {
+      setAnchorEl(currentTarget);
       setopenPopper(true);
       setPlacement(newPlacement);
       setPopperContent({
@@ -307,7 +307,7 @@ export default function Construction({
                   <ListItem key={key} sx={{ pt: 0, pb: 0 }}>
                     <ListItemText
                       sx={{ m: 0 }}
-                      primary={`${key} : ${popperContent[key]}`}
+                      primary={`${key} : ${(popperContent as any)[key]}`}
                     />
                   </ListItem>
                 ))}
@@ -498,7 +498,7 @@ export default function Construction({
                                     key={i}
                                     value={item.name}
                                     onMouseEnter={(e) =>
-                                      handlePopperOpen("right", item)(e)
+                                      handlePopperOpen("right", item)(e.currentTarget)
                                     }
                                     onMouseLeave={handlePopperClose}
                                   >
