@@ -51,12 +51,12 @@ export async function saveEnvelope(envelope: IEnvelope):Promise<IAPIResponse>{
     name: envelope.name,
     description: envelope.description || "",
     //TODO:APIのidをstringに変更する
-    exteriorWallId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.EXTERIOR_WALL)?.construction.uniqueId),
-    interiorWallId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.INTERIOR_WALL)?.construction.uniqueId),
-    floorCeilingId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.INTERIOR_FLOOR)?.construction.uniqueId),
-    roofId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.EXTERIOR_ROOF)?.construction.uniqueId),
-    groundFloorId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.GROUND_FLOOR)?.construction.uniqueId),
-    windowId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.WINDOW)?.construction.uniqueId),
+    exteriorWallId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.EXTERIOR_WALL)?.construction.id),
+    interiorWallId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.INTERIOR_WALL)?.construction.id),
+    floorCeilingId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.INTERIOR_FLOOR)?.construction.id),
+    roofId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.EXTERIOR_ROOF)?.construction.id),
+    groundFloorId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.GROUND_FLOOR)?.construction.id),
+    windowId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.WINDOW)?.construction.id),
   };
 
   const response = await fetch(url, {

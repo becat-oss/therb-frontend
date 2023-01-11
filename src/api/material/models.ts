@@ -1,11 +1,15 @@
-export interface IMaterialDetail_get {
+export interface IMaterialSchema {
   id: string;
   name: string;
-  description: string;
-  classification: number;
+  description?: string;
+  roughness?: string;
   conductivity: number;
   density: number;
   specificHeat: number;
-  moistureCapacity: number;
-  moistureConductivity: number;
+  ownerId?: string;
+  thickness?: number;
+  thicknessOptions?: number[];
+  moistureConductivity?: number;
+  moistureCapacity?: number;
+  classification?: number;  
 }

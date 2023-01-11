@@ -2,13 +2,13 @@ import {
   IConstructionDetail,
 } from "src/models/construction";
 import { IAPIResponse } from "../ApiResponse";
-import { IConstructionDetail_post, IConstructionDetail_get } from "../construction/models";
+import { IConstructionSchema } from "../construction/models";
 import { postMaterialTags_API } from "../tags/request";
 
 
-export async function saveWindowDetail(material: IConstructionDetail): Promise<IAPIResponse> {
+export async function saveWindowDetail(constructionDetail: IConstructionDetail): Promise<IAPIResponse> {
   //save tags first
-  const tagsWithoutId = material.tags.filter((t) => t.id === null);
+  const tagsWithoutId = constructionDetail.tags.filter((t) => t.id === null);
   if (tagsWithoutId.length > 0) {
     const tagsLabels = tagsWithoutId.map((t) => t.label);
     const newTags = await postMaterialTags_API(tagsLabels);
@@ -16,22 +16,20 @@ export async function saveWindowDetail(material: IConstructionDetail): Promise<I
       return {status: "failed", message:"Failed while posting Tags"};
     }
     console.log(newTags);
-    const tagsWithId = material.tags.filter((t) => t.id !== null);
-    material.tags = tagsWithId.concat(newTags.data);
+    const tagsWithId = constructionDetail.tags.filter((t) => t.id !== null);
+    constructionDetail.tags = tagsWithId.concat(newTags.data);
   }
 
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
+  // const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
+  const url = `https://0h9crfmcs3.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
-  const constructionDetail_Post: IConstructionDetail_post = {
-    name: material.name || "",
-    category: material.category || "",
-    description: material.description || "",
-    materialIds:
-      material.layerStructure?.map((l) => parseInt(l.material.id, 10)) || [],
-    tagIds: material.tags?.map((t) => t.id) || [],
-    //thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
-    thickness: material.layerStructure?.map((l) => l.thickness).join(",") || "",
-    uvalue: material.uValue || 0,
+  const constructionDetail_Post: Omit<IConstructionSchema, "id"> = {
+    name: constructionDetail.name || "",
+    category: constructionDetail.category || "",
+    description: constructionDetail.description || "",
+    materials: constructionDetail.materials,
+    tags: constructionDetail.tags.map((t) => ({ id: t.id, name: t.label })),
+    uvalue: constructionDetail.uValue || 0,
   };
 
   const responseData: IAPIResponse = {
@@ -66,38 +64,38 @@ export async function saveWindowDetail(material: IConstructionDetail): Promise<I
   return responseData;
 }
 
-export function parseConstructionDetail(detail: IConstructionDetail_get): IConstructionDetail{
+export function parseConstructionDetail(detail: IConstructionSchema): IConstructionDetail{
   return {
-    uniqueId: detail.id.toString(),
+    id: detail.id.toString(),
     name: detail.name,
     category: "window",
-    tags: detail.tags.map((t) => {
-      return { label: t.name, id: t.id.toString() };
-    }),
+    tags: detail.tags?.map(t => ({ label: t.name, id: t.id})) || [],
     description: detail.description || null,
-    layerStructure: detail.materials.map((m, i) => {
+    materials: detail.materials?.map((m, i) => {
       return {
-        material: {
-          id: m.id.toString(),
-          name: m.name,
-          conductivity: m.conductivity,
-          density: m.density,
-          specificHeat: m.specificHeat,
-          classification:m.classification,
-          description:m.description,
-          moistureCapacity:m.moistureCapacity,
-          moistureConductivity:m.moistureConductivity
-        },
-        //thickness: d.thickness[i].toString(),
-        thickness: detail.thickness[i],
+        id: m.id.toString(),
+        name: m.name,
+        description: m.description || "",
+        roughness: m.roughness || "",
+        conductivity: m.conductivity,
+        density: m.density,
+        specificHeat: m.specificHeat,
+        ownerId: m.ownerId || "",
+        thickness: m.thickness ?? 10,
+        thicknessOptions: m.thicknessOptions || [],
+        moistureCapacity: m.moistureCapacity ?? 1,
+        moistureConductivity: m.moistureConductivity ?? 1,
+        classification: m.classification,
       };
-    }),
-    uValue: detail.uvalue
+    }) || [],
+    uValue: detail.uvalue || null
   };
 }
 
 export async function getWindowDetails_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
+  // const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
+  const url = `https://0h9crfmcs3.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+
 
   // const url = isProd
   //   ? `https://stingray-app-vgak2.ondigitalocean.app/constructions`
@@ -105,7 +103,7 @@ export async function getWindowDetails_API() {
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
   const formattedData: IConstructionDetail[] = (
-    data.data as IConstructionDetail_get[]
+    data.data as IConstructionSchema[]
   ).map((d) => parseConstructionDetail(d));
   return formattedData;
 }
@@ -122,31 +120,32 @@ export async function getConstructionDetailById_API(id: string) {
     body: JSON.stringify({ id }),
   });
   const data = await response.json();
-  const detail = data.data as IConstructionDetail_get;
+  const detail = data.data as IConstructionSchema;
   const formattedData: IConstructionDetail = {
-    uniqueId: detail.id.toString(),
+    id: detail.id.toString(),
     name: detail.name,
     category: detail.category,
     tags: detail.tags.map((t) => {
       return { label: t.name, id: t.id.toString() };
     }),
     description: detail.description,
-    layerStructure: detail.materials.map((m, i) => {
+    materials: detail.materials.map((m, i) => {
       return {
-        material: {
-          id: m.id.toString(),
-          name: m.name,
-          conductivity: m.conductivity,
-          density: m.density,
-          specificHeat: m.specificHeat,
-          classification:m.classification,
-          description: m.description,
-          moistureCapacity:m.moistureCapacity,
-          moistureConductivity:m.moistureConductivity
-        },
-        thickness: detail.thickness[i],
-      };
-    }),
+        id: m.id.toString(),
+        name: m.name,
+        description: m.description,
+        roughness: m.roughness,
+        conductivity: m.conductivity,
+        density: m.density,
+        specificHeat: m.specificHeat,
+        ownerId: m.ownerId,
+        thickness: m.thickness,
+        thicknessOptions: m.thicknessOptions,
+        moistureCapacity: m.moistureCapacity,
+        moistureConductivity: m.moistureConductivity,
+        classification: m.classification,
+    };
+  }),
   };
   return formattedData;
   // } catch (e) {

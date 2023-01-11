@@ -371,7 +371,7 @@ export default function Envelope({
                           <Grid item xs={4}>
                             <FormControl fullWidth>
                               <MuiSelect
-                                id={l.construction?.uniqueId || null}
+                                id={l.construction?.id || null}
                                 value={l.construction?.name}
                                 onChange={(e: SelectChangeEvent) => {
                                   updateConfigVal(l.category, e.target.value);

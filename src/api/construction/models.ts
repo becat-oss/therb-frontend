@@ -1,23 +1,23 @@
-import { IMaterialDetail_get } from "../material/models";
+import { IMaterialSchema } from "../material/models";
 import { ITag_get } from "../tags/model";
 
-export interface IConstructionDetail_get {
+export interface IConstructionSchema {
   category: string;
   description: string;
   id: string;
-  materials: IMaterialDetail_get[];
+  materials: IMaterialSchema[];
   name: string;
   tags: ITag_get[]
-  thickness: number[];
+  // thickness: number[];
   uvalue: number;
 }
 
-export interface IConstructionDetail_post {
-  name: string;
-  description: string;
-  materialIds: number[];
-  tagIds?: string[];
-  category?: string;
-  thickness?: string;
-  uvalue?: number;
-}
+// export interface IConstructionPayload {
+//   name: string;
+//   description: string;
+//   materialIds: number[];
+//   tagIds?: string[];
+//   category?: string;
+//   thickness?: string;
+//   uvalue?: number;
+// }

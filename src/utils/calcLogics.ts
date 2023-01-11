@@ -1,11 +1,11 @@
 import { IMaterialDetail } from "src/models/material";
 
-export function calcUvalue(construction:{ id: number; type: IMaterialDetail; thickness: number }[]):number{
+export function calcUvalue(materials:IMaterialDetail[]):number{
   
-  const heatResistance = construction.map(material=>{
+  const heatResistance = materials.map(material=>{
     //FIXME: material.thickess should be used here
     console.log(material.thickness)
-    return material.thickness/1000/material.type.conductivity;
+    return material.thickness/1000/material.conductivity;
   }).reduce((accumulator, current) => {
     return accumulator + current;
   }, 0)+(1/9)+(1/23);

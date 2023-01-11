@@ -1,13 +1,13 @@
 import { IConstructionDetail } from "src/models/construction";
 import { IAPIResponse } from "../ApiResponse";
 import { postMaterialTags_API } from "../tags/request";
-import { IConstructionDetail_get, IConstructionDetail_post } from "./models";
+import { IConstructionSchema } from "./models";
 
 export async function saveConstructionDetail(
-  material: IConstructionDetail
+  constructionDetail: IConstructionDetail
 ): Promise<IAPIResponse> {
   //save tags first
-  const tagsWithoutId = material.tags.filter((t) => t.id === null);
+  const tagsWithoutId = constructionDetail.tags.filter((t) => t.id === null);
   if (tagsWithoutId.length > 0) {
     const tagsLabels = tagsWithoutId.map((t) => t.label);
     const newTags = await postMaterialTags_API(tagsLabels);
@@ -15,27 +15,37 @@ export async function saveConstructionDetail(
       return { status: "failed", message: "Failed while posting Tags" };
     }
     console.log(newTags);
-    const tagsWithId = material.tags.filter((t) => t.id !== null);
-    material.tags = tagsWithId.concat(newTags.data);
+    const tagsWithId = constructionDetail.tags.filter((t) => t.id !== null);
+    constructionDetail.tags = tagsWithId.concat(newTags.data);
   }
 
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+  // const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+  const url = `https://n4lws74mn3.execute-api.ap-northeast-1.amazonaws.com/dev/`;
   const materialIds =
-    material.layerStructure?.map((l) => parseInt(l.material.id, 10)) || [];
+    constructionDetail.materials?.map((m) => parseInt(m.id, 10)) || [];
   materialIds.reverse();
 
-  const thickness = material.layerStructure?.map((l) => l.thickness) || [];
+  const thickness = constructionDetail.materials?.map((l) => l.thickness) || [];
   thickness.reverse();
 
-  const constructionDetail_Post: IConstructionDetail_post = {
-    name: material.name || "",
-    category: material.category || "",
-    description: material.description || "",
-    materialIds,
-    tagIds: material.tags?.map((t) => t.id) || [],
-    //thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
-    thickness: thickness.join(",") || "",
-    uvalue: material.uValue || 0,
+  // const constructionDetail_Post: IConstructionPayload = {
+  //   name: material.name || "",
+  //   category: material.category || "",
+  //   description: material.description || "",
+  //   materialIds,
+  //   tagIds: material.tags?.map((t) => t.id) || [],
+  //   //thickness: material.layerStructure?.map((l) => l.thickness.replace('mm','')).join(",") || "",
+  //   thickness: thickness.join(",") || "",
+  //   uvalue: material.uValue || 0,
+  // };
+
+  const constructionDetail_Post: Omit<IConstructionSchema, "id"> = {
+    name: constructionDetail.name || "",
+    category: constructionDetail.category || "",
+    description: constructionDetail.description || "",
+    materials: constructionDetail.materials,
+    tags: constructionDetail.tags.map((t) => ({ id: t.id, name: t.label })),
+    uvalue: constructionDetail.uValue || 0,
   };
 
   const responseData: IAPIResponse = {
@@ -69,40 +79,46 @@ export async function saveConstructionDetail(
   return responseData;
 }
 
-export function parseConstructionDetail(detail: IConstructionDetail_get, reverseMaterials = false): IConstructionDetail{
-  reverseMaterials && detail.materials.reverse();
-  reverseMaterials && detail.thickness.reverse();
+export function parseConstructionDetail(
+  detail: IConstructionSchema
+): IConstructionDetail {
+  // reverseMaterials && detail.materials.reverse();
+  // reverseMaterials && detail.thickness.reverse();
+  console.log(detail);
   return {
-    uniqueId: detail.id.toString(),
+    id: detail.id.toString(),
     name: detail.name,
     category: detail.category || null,
-    tags: detail.tags.map((t) => {
-      return { label: t.name, id: t.id.toString() };
-    }),
+    tags:
+      detail.tags?.map((t) => {
+        return { label: t.name, id: t.id.toString() };
+      }) || [],
     description: detail.description || null,
-    layerStructure: detail.materials.map((m, i) => {
-      return {
-        material: {
+    materials:
+      detail.materials?.map((m, i) => {
+        return {
           id: m.id.toString(),
           name: m.name,
+          description: m.description || "",
+          roughness: m.roughness || "",
           conductivity: m.conductivity,
           density: m.density,
           specificHeat: m.specificHeat,
+          ownerId: m.ownerId || "",
+          thickness: m.thickness ?? 10,
+          thicknessOptions: m.thicknessOptions || [],
+          moistureCapacity: m.moistureCapacity ?? 1,
+          moistureConductivity: m.moistureConductivity ?? 1,
           classification: m.classification,
-          description: m.description,
-          moistureCapacity: m.moistureCapacity,
-          moistureConductivity: m.moistureConductivity,
-        },
-        //thickness: d.thickness[i].toString(),
-        thickness: detail.thickness[i],
-      };
-    }),
+        };
+      }) || [],
     uValue: detail.uvalue,
   };
 }
 
 export async function getConstructionDetails_API() {
-  const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+  // const url = `https://stingray-app-vgak2.ondigitalocean.app/constructions`;
+  const url = `https://n4lws74mn3.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
   // const url = isProd
   //   ? `https://stingray-app-vgak2.ondigitalocean.app/constructions`
@@ -110,8 +126,8 @@ export async function getConstructionDetails_API() {
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
   const formattedData: IConstructionDetail[] = (
-    data.data as IConstructionDetail_get[]
-  ).map((d) => parseConstructionDetail(d, true));
+    data.data as IConstructionSchema[]
+  ).map((d) => parseConstructionDetail(d));
   return formattedData;
 }
 
@@ -127,29 +143,30 @@ export async function getConstructionDetailById_API(id: string) {
     body: JSON.stringify({ id }),
   });
   const data = await response.json();
-  const detail = data.data as IConstructionDetail_get;
+  const detail = data.data as IConstructionSchema;
   const formattedData: IConstructionDetail = {
-    uniqueId: detail.id.toString(),
+    id: detail.id.toString(),
     name: detail.name,
     category: detail.category,
     tags: detail.tags.map((t) => {
       return { label: t.name, id: t.id.toString() };
     }),
     description: detail.description,
-    layerStructure: detail.materials.map((m, i) => {
+    materials: detail.materials.map((m, i) => {
       return {
-        material: {
-          id: m.id.toString(),
-          name: m.name,
-          conductivity: m.conductivity,
-          density: m.density,
-          specificHeat: m.specificHeat,
-          classification: m.classification,
-          description: m.description,
-          moistureCapacity: m.moistureCapacity,
-          moistureConductivity: m.moistureConductivity,
-        },
-        thickness: detail.thickness[i],
+        id: m.id.toString(),
+        name: m.name,
+        description: m.description,
+        roughness: m.roughness,
+        conductivity: m.conductivity,
+        density: m.density,
+        specificHeat: m.specificHeat,
+        ownerId: m.ownerId,
+        thickness: m.thickness,
+        thicknessOptions: m.thicknessOptions,
+        moistureCapacity: m.moistureCapacity,
+        moistureConductivity: m.moistureConductivity,
+        classification: m.classification,
       };
     }),
   };

@@ -15,6 +15,7 @@ import { useRouter } from "next/router";
 import { getConstructionDetails_API } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
 import { getWindowDetails_API } from "src/api/window/requests";
+import ConstructionListComponent from "src/components/construction-list";
 
 const StyledPaperGeneral = styled(Paper)({
   elevation: 2,
@@ -63,127 +64,13 @@ export default function ConstructionList({
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} sm={12} md={12}>
-        <StyledPaperGeneral sx={{ height: "150px" }}>
-          <Box
-            sx={{
-              width: "100%",
-              height: "100%",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <StyledTypography>{t("common:query-box")}</StyledTypography>
-          </Box>
-        </StyledPaperGeneral>
-      </Grid>
-      <Grid item xs={3} sm={3} md={3}>
-        <StyledPaperAdd onClick={addMaterial} sx={{ height: "200px" }}>
-          <StyledTypography>{t("common:add-new")}</StyledTypography>
-          <Box
-            sx={{
-              width: 50,
-              height: 50,
-              borderStyle: "solid",
-              borderRadius: "50%",
-              borderWidth: "1.5px",
-              borderColor: "#707070",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <AddIcon sx={{ color: "#707070", fontSize: 30 }}></AddIcon>
-          </Box>
-        </StyledPaperAdd>
-      </Grid>
-      {constructionDetails.map((cd) => (
-        <Grid key={cd.uniqueId} item xs={3} sm={3} md={3}>
-          <StyledPaperGeneral
-            sx={{ height: "200px" }}
-            onClick={(e) => {
-              e.preventDefault();
-              viewMaterial(cd.uniqueId);
-            }}
-          >
-            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-              <Box></Box>
-              <Box>
-                <IconButton
-                  aria-label="more"
-                  id="long-button"
-                  aria-controls={open ? "long-menu" : undefined}
-                  aria-expanded={open ? "true" : undefined}
-                  aria-haspopup="true"
-                  onClick={handleClick}
-                  sx={{ right: 0 }}
-                >
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu
-                  id="long-menu"
-                  MenuListProps={{
-                    "aria-labelledby": "long-button",
-                  }}
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleClose}
-                  PaperProps={{
-                    style: {
-                      maxHeight: ITEM_HEIGHT * 4.5,
-                      width: "20ch",
-                    },
-                  }}
-                >
-                  {options.map((option) => (
-                    <MenuItem
-                      key={option}
-                      selected={option === "Pyxis"}
-                      onClick={handleClose}
-                    >
-                      {option}
-                    </MenuItem>
-                  ))}
-                </Menu>
-              </Box>
-            </Box>
-
-            <Box
-              sx={{
-                marginLeft: 1,
-                justifyContent: "right",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <StyledTypography>{cd.name}</StyledTypography>
-              {cd.description && (
-                <StyledTypography variant="caption">
-                  {cd.description}{" "}
-                </StyledTypography>
-              )}
-              {cd.description && (
-                <StyledTypography variant="caption">
-                  {t("constructions:u-value")} {cd.uValue}W/m2K
-                </StyledTypography>
-              )}
-              <Box sx={{ width: 150, marginTop: 1 }}>
-                <MaterialRepresentation
-                  materialHeights={cd.layerStructure.map(
-                    (l) =>
-                      //parseFloat(l.thickness)
-                      l.thickness
-                  )}
-                  length={200}
-                ></MaterialRepresentation>
-              </Box>
-            </Box>
-          </StyledPaperGeneral>
-        </Grid>
-      ))}
-    </Grid>
+    <Box>
+      <ConstructionListComponent
+        constructionDetails={constructionDetails}
+        addNew={addMaterial}
+        viewDetail={viewMaterial}
+      ></ConstructionListComponent>      
+    </Box>
   );
 }
 

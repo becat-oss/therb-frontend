@@ -2,10 +2,14 @@ export interface IMaterialDetail {
   id: string;
   name: string;
   description: string;
+  roughness: string;
   conductivity: number;
   density: number;
   specificHeat: number;
-  classification: number;
-  moistureCapacity: number;
+  ownerId: string;
+  thickness: number;
+  thicknessOptions: number[];
   moistureConductivity: number;
+  moistureCapacity: number;
+  classification: number;
 }

@@ -2,15 +2,12 @@ import { IMaterialDetail } from "./material";
 import { ITag } from "./tags";
 
 export interface IConstructionDetail {
-  uniqueId: string;
+  id: string;
   name?: string;
   category?: string;
-  tags?: ITag[];
+  tags: ITag[];
   description?: string;
-  layerStructure?: {
-    material: IMaterialDetail;
-    thickness: number;
-  }[];
+  materials: IMaterialDetail[];
   uValue?: number;
   lcco2?: number;
   cost?: number;
