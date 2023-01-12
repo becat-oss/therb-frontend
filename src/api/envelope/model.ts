@@ -1,3 +1,4 @@
+import { IConstructionDetail } from "src/models/construction";
 import { IConstructionSchema } from "../construction/models";
 
 export interface IEnvelope_get {
@@ -15,10 +16,10 @@ export interface IEnvelope_get {
 export interface IEnvelope_post {
   name: string;
   description: string;
-  exteriorWallId: number;
-  interiorWallId: number;
-  roofId: number;
-  groundFloorId: number;
-  floorCeilingId: number;
-  windowId: number;
+  exteriorWall: IConstructionDetail;
+  floorCeiling: IConstructionDetail;
+  groundFloor: IConstructionDetail;
+  interiorWall: IConstructionDetail;
+  roof: IConstructionDetail;
+  window: IConstructionDetail;
 }

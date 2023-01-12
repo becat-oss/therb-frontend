@@ -200,6 +200,7 @@ export default function Envelopes({
 
 // This gets called on every request
 export async function getServerSideProps() {
+  console.log('fetch')
   // Fetch data from external API
   const envelopeDetails = await getEnvelopeDetails_API();
   // Pass data to the page via props

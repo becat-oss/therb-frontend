@@ -86,13 +86,13 @@ export function parseConstructionDetail(
   // reverseMaterials && detail.thickness.reverse();
   console.log(detail);
   return {
-    id: detail.id.toString(),
+    id: detail.id,
     name: detail.name,
     category: detail.category || null,
-    tags:
-      detail.tags?.map((t) => {
-        return { label: t.name, id: t.id.toString() };
-      }) || [],
+    tags:[],
+      // detail.tags?.map((t) => {
+      //   return { label: t.name, id: t.id.toString() };
+      // }) || [],
     description: detail.description || null,
     materials:
       detail.materials?.map((m, i) => {
@@ -112,7 +112,7 @@ export function parseConstructionDetail(
           classification: m.classification,
         };
       }) || [],
-    uValue: detail.uvalue,
+    uValue: detail.uvalue||null,
   };
 }
 

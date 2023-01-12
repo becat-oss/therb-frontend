@@ -10,12 +10,11 @@ const isProd=true;
 export async function getEnvelopeDetails_API() {
   //const url = `https://stingray-app-vgak2.ondigitalocean.app/envelopes`;
 
-  const url = isProd
-    ? `https://stingray-app-vgak2.ondigitalocean.app/envelopes`
-    : `http://localhost:5000/envelopes`;
+  const url = "https://inxoptpsxe.execute-api.ap-northeast-1.amazonaws.com/dev/";
   try {
     const response = await fetch(url, { mode: "cors" });
     const data = await response.json();
+    console.log('data',data)
     const formattedData: IEnvelope[] = (data.data as IEnvelope_get[]).map(
       (d) => {
         return {
@@ -43,20 +42,18 @@ export async function getEnvelopeDetails_API() {
 
 export async function saveEnvelope(envelope: IEnvelope):Promise<IAPIResponse>{
 
-  const url = isProd
-    ? `https://stingray-app-vgak2.ondigitalocean.app/envelopes`
-    : `http://localhost:5000/envelopes`;
+  const url = "https://inxoptpsxe.execute-api.ap-northeast-1.amazonaws.com/dev/"
 
   const envelopePost: IEnvelope_post = {
     name: envelope.name,
     description: envelope.description || "",
     //TODO:APIのidをstringに変更する
-    exteriorWallId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.EXTERIOR_WALL)?.construction.id),
-    interiorWallId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.INTERIOR_WALL)?.construction.id),
-    floorCeilingId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.INTERIOR_FLOOR)?.construction.id),
-    roofId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.EXTERIOR_ROOF)?.construction.id),
-    groundFloorId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.GROUND_FLOOR)?.construction.id),
-    windowId: parseInt(envelope.config.find(c => c.category === ConstructionCategory.WINDOW)?.construction.id),
+    exteriorWall: envelope.config.find(c => c.category === ConstructionCategory.EXTERIOR_WALL)?.construction,
+    interiorWall: envelope.config.find(c => c.category === ConstructionCategory.INTERIOR_WALL)?.construction,
+    floorCeiling: envelope.config.find(c => c.category === ConstructionCategory.INTERIOR_FLOOR)?.construction,
+    roof: envelope.config.find(c => c.category === ConstructionCategory.EXTERIOR_ROOF)?.construction,
+    groundFloor: envelope.config.find(c => c.category === ConstructionCategory.GROUND_FLOOR)?.construction,
+    window: envelope.config.find(c => c.category === ConstructionCategory.WINDOW)?.construction,
   };
 
   const response = await fetch(url, {
