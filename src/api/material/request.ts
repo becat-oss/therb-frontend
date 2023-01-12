@@ -1,6 +1,6 @@
 import { ConstructionCategory } from "src/models/category";
-import { IMaterialDetail } from "src/models/material";
-import { IMaterialSchema } from "./models";
+import { IMaterialDetail, ITransparentMaterialDetail } from "src/models/material";
+import { IMaterialSchema, ITransparentMaterialSchema } from "./models";
 
 //const isProd = process.env.NODE_ENV === "production";
 const isProd = true;
@@ -32,6 +32,34 @@ export async function getMaterials_API() {
       moistureCapacity: d.moistureCapacity ?? null,
       moistureConductivity: d.moistureConductivity ?? null,
       classification: d.classification ?? null,
+    };
+  });
+  return formattedData;
+}
+
+export async function getTransparentMaterials_API() {
+
+  const url = `https://0h9crfmcs3.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+
+  const response = await fetch(url, { mode: "cors" });
+  const data = await response.json();
+  const formattedData: ITransparentMaterialDetail[] = (
+    data.data as ITransparentMaterialSchema[]
+  ).map((d) => {
+    return {
+      id: d.id.toString(),
+      name: d.name,
+      description: d.description || "",
+      conductivity: d.conductivity ?? null,
+      density: d.density ?? null,
+      specificHeat: d.specificHeat ?? null,
+      ownerId: d.ownerId || "",
+      thickness: d.thickness ?? 10,
+      thicknessOptions: d.thicknessOptions || [],
+      moistureCapacity: d.moistureCapacity ?? null,
+      moistureConductivity: d.moistureConductivity ?? null,
+      classification: d.classification ?? null,
+      solarTransmittance: d.solarTransmittance ?? null,
     };
   });
   return formattedData;

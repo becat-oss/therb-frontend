@@ -94,7 +94,7 @@ export function parseConstructionDetail(detail: IConstructionSchema): IConstruct
 
 export async function getWindowDetails_API() {
   // const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
-  const url = `https://0h9crfmcs3.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+  const url = `https://n4lws74mn3.execute-api.ap-northeast-1.amazonaws.com/dev/?category=window`;
 
 
   // const url = isProd
@@ -102,6 +102,7 @@ export async function getWindowDetails_API() {
   //   : `http://localhost:5000/constructions`;
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
+  console.log('data',data)
   const formattedData: IConstructionDetail[] = (
     data.data as IConstructionSchema[]
   ).map((d) => parseConstructionDetail(d));

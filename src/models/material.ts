@@ -13,3 +13,19 @@ export interface IMaterialDetail {
   moistureCapacity: number;
   classification: number;
 }
+
+export interface ITransparentMaterialDetail {
+  id: string;
+  name: string;
+  description: string;
+  conductivity: number;
+  density: number;
+  specificHeat: number;
+  ownerId: string;
+  solarTransmittance: number;
+  thickness: number;
+  thicknessOptions: number[];
+  moistureConductivity: number;
+  moistureCapacity: number;
+  classification: number;
+}

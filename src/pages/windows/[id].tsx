@@ -3,7 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import Box from "@mui/material/Box";
 import { IConstructionDetail } from "src/models/construction";
-import { getMaterials_API } from "src/api/material/request";
+import { getMaterials_API, getTransparentMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 import { getTags_API } from "src/api/tags/request";
 import {
@@ -54,7 +54,7 @@ export async function getServerSideProps({
 }: {
   params: { id: string };
 }) {
-  let materialDetails = await getMaterials_API();
+  let materialDetails = await getTransparentMaterials_API();
   materialDetails = materialDetails.filter((m) => m.classification !== 1);
   const materialTags = await getTags_API();
   if (params.id === "new")

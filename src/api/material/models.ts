@@ -13,3 +13,20 @@ export interface IMaterialSchema {
   moistureCapacity?: number;
   classification?: number;  
 }
+
+export interface ITransparentMaterialSchema{
+  ownerId: string;
+  id: string;
+  name: string;
+  description?: string;
+  conductivity: number;
+  density?: number;
+  specificHeat?: number;
+  thickness?: number;
+  thicknessOptions?: number[];
+  solarTransmittance?: number;//Therbは未対応
+  //以後はtherb用のattribute
+  classification?: number;
+  moistureCapacity?: number;
+  moistureConductivity?: number;
+}
