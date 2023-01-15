@@ -174,7 +174,7 @@ export default function ConstructionListComponent({
               )}
               {cd.description && (
                 <StyledTypography variant="caption">
-                  {t("constructions:u-value")} {cd.uValue}W/m2K
+                  {t("constructions:u-value")} {cd.uvalue}W/m2K
                 </StyledTypography>
               )}
               <Box sx={{ width: 150, marginTop: 1 }}>

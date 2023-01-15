@@ -77,14 +77,14 @@ export default function ConstructionDetailComponent({
   const [description, setDescription] = useState(
     constructionDetail?.description || ""
   );
-  const [uValue, setUValue] = useState(constructionDetail?.uValue || 0);
+  const [uvalue, setUvalue] = useState(constructionDetail?.uvalue || 0);
   const [lcco2, setLcco2] = useState(constructionDetail?.lcco2 || 0);
   const [cost, setCost] = useState(constructionDetail?.cost || 0);
 
   useEffect(() => {
     //calculate u-value based on layers
     const uvalue = calcUvalue(materialLayers);
-    setUValue(uvalue);
+    setUvalue(uvalue);
   }, [materialLayers]);
 
   const onAddLayer = () => {
@@ -161,7 +161,7 @@ export default function ConstructionDetailComponent({
           return { id: t.id, label: t.inputValue || t.label };
         }),
         materials: materialLayers,
-        uValue,
+        uvalue,
       };
 
       const response = await onSubmit(constructionDetailToSave);
@@ -565,7 +565,7 @@ export default function ConstructionDetailComponent({
                         InputProps={{
                           readOnly: true,
                         }}
-                        value={uValue}
+                        value={uvalue}
                       />
                       <Typography>W/m2K</Typography>
                     </Box>
