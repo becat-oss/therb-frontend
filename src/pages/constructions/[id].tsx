@@ -7,7 +7,7 @@ import {
   saveConstructionDetail,
 } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
-import { getMaterials_API } from "src/api/material/request";
+import { getOpaqueMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 import { getTags_API } from "src/api/tags/request";
 import { ConstructionCategory } from "src/models/category";
@@ -55,7 +55,7 @@ export async function getServerSideProps({
 }: {
   params: { id: string };
 }) {
-  let materialDetails = await getMaterials_API();
+  let materialDetails = await getOpaqueMaterials_API();
   materialDetails = materialDetails.filter((m) => m.classification === 1);
   const materialTags = await getTags_API();
   if (params.id === "new")

@@ -3,7 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import Box from "@mui/material/Box";
 import { IConstructionDetail } from "src/models/construction";
-import { getMaterials_API, getTransparentMaterials_API } from "src/api/material/request";
+import { getTransparentMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 import { getTags_API } from "src/api/tags/request";
 import {
