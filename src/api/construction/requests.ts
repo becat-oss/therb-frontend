@@ -1,7 +1,7 @@
 import { IConstructionDetail } from "src/models/construction";
 import { IAPIResponse } from "../ApiResponse";
 import { postMaterialTags_API } from "../tags/request";
-import { IConstructionSchema } from "./models";
+import { IConstructionSchema, TConstructionPayload } from "./models";
 
 export async function saveConstructionDetail(
   constructionDetail: IConstructionDetail
@@ -39,13 +39,13 @@ export async function saveConstructionDetail(
   //   uvalue: material.uValue || 0,
   // };
 
-  const constructionDetail_Post: Omit<IConstructionSchema, "id"> = {
+  const constructionDetail_Post: TConstructionPayload = {
     name: constructionDetail.name || "",
     category: constructionDetail.category || "",
     description: constructionDetail.description || "",
     materials: constructionDetail.materials,
     tags: constructionDetail.tags.map((t) => ({ id: t.id, name: t.label })),
-    uvalue: constructionDetail.uValue || 0,
+    uvalue: constructionDetail.uvalue || 0,
   };
 
   const responseData: IAPIResponse = {
@@ -79,7 +79,7 @@ export async function saveConstructionDetail(
   return responseData;
 }
 
-export function parseConstructionDetail(
+export function parseConstructionSchemaToDetail(
   detail: IConstructionSchema
 ): IConstructionDetail {
   // reverseMaterials && detail.materials.reverse();
@@ -112,7 +112,38 @@ export function parseConstructionDetail(
           classification: m.classification,
         };
       }) || [],
-    uValue: detail.uvalue||null,
+    uvalue: detail.uvalue||null,
+  };
+}
+
+export function parseConstructionDetailToSchema(
+  detail: IConstructionDetail
+): IConstructionSchema {
+  return {
+    id: detail.id,
+    name: detail.name,
+    category: detail.category || null,
+    tags:[],
+    description: detail.description || null,
+    materials:
+      detail.materials?.map((m, i) => {
+        return {
+          id: m.id.toString(),
+          name: m.name,
+          description: m.description || "",
+          roughness: m.roughness || "",
+          conductivity: m.conductivity,
+          density: m.density,
+          specificHeat: m.specificHeat,
+          ownerId: m.ownerId || "",
+          thickness: m.thickness ?? 10,
+          thicknessOptions: m.thicknessOptions || [],
+          moistureCapacity: m.moistureCapacity ?? 1,
+          moistureConductivity: m.moistureConductivity ?? 1,
+          classification: m.classification,
+        };
+      }) || [],
+    uvalue: detail.uvalue,
   };
 }
 
@@ -127,7 +158,7 @@ export async function getConstructionDetails_API() {
   const data = await response.json();
   const formattedData: IConstructionDetail[] = (
     data.data as IConstructionSchema[]
-  ).map((d) => parseConstructionDetail(d));
+  ).map((d) => parseConstructionSchemaToDetail(d));
   return formattedData;
 }
 

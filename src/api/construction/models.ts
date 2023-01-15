@@ -12,6 +12,8 @@ export interface IConstructionSchema {
   uvalue: number;
 }
 
+
+export type TConstructionPayload = Omit<IConstructionSchema, "id">;
 // export interface IConstructionPayload {
 //   name: string;
 //   description: string;

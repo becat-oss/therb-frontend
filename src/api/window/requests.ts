@@ -29,7 +29,7 @@ export async function saveWindowDetail(constructionDetail: IConstructionDetail):
     description: constructionDetail.description || "",
     materials: constructionDetail.materials,
     tags: constructionDetail.tags.map((t) => ({ id: t.id, name: t.label })),
-    uvalue: constructionDetail.uValue || 0,
+    uvalue: constructionDetail.uvalue || 0,
   };
 
   const responseData: IAPIResponse = {
@@ -88,7 +88,7 @@ export function parseConstructionDetail(detail: IConstructionSchema): IConstruct
         classification: m.classification,
       };
     }) || [],
-    uValue: detail.uvalue || null
+    uvalue: detail.uvalue || null
   };
 }
 

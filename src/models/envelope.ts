@@ -10,3 +10,4 @@ export interface IEnvelope {
   config: {category: ConstructionCategory, label: string, construction: IConstructionDetail}[];  
 }
 
+

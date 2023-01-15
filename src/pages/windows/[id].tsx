@@ -12,7 +12,7 @@ import {
 } from "src/api/window/requests";
 import ConstructionDetailComponent, {
   ITagType,
-} from "src/components/construction-detail";
+} from "src/components/construction/construction-detail";
 
 export default function Construction({
   constructionDetail,
@@ -30,6 +30,10 @@ export default function Construction({
     return await saveWindowDetail(constructionDetailToSave);
   };
 
+  const onAfterSubmit = () =>{
+    router.push("../windows");
+  }
+
   const onCancel = () => {
     router.push("../windows");
   };
@@ -43,6 +47,7 @@ export default function Construction({
         t={t}
         onCancel={onCancel}
         onSubmit={onSubmit}
+        onAfterSubmit={onAfterSubmit}
       ></ConstructionDetailComponent>
     </Box>
   );
