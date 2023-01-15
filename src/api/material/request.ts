@@ -5,12 +5,7 @@ import { IMaterialSchema, ITransparentMaterialSchema } from "./models";
 //const isProd = process.env.NODE_ENV === "production";
 const isProd = true;
 
-export async function getMaterials_API() {
-  //const url = `https://stingray-app-vgak2.ondigitalocean.app/materials`;
-  // const url = isProd
-  //   ? `https://stingray-app-vgak2.ondigitalocean.app/materials`
-  //   : `http://localhost:5000/materials`;
-
+export async function getOpaqueMaterials_API() {
   const url = `https://1glw2368ke.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
   const response = await fetch(url, { mode: "cors" });

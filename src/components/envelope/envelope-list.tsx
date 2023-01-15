@@ -1,20 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import useTranslation from "next-translate/useTranslation";
-import MaterialRepresentation from "./MaterialRepresentation";
-import {
-  Box,
-  Grid,
-  IconButton,
-  Menu,
-  MenuItem,
-  Paper,
-  styled,
-  Typography,
-} from "@mui/material";
-import { IConstructionDetail } from "src/models/construction";
+import React from "react";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import styled from "@emotion/styled";
 import AddIcon from "@mui/icons-material/Add";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Box from "@mui/material/Box";
+import { IEnvelope } from "src/models/envelope";
+import {
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
+import useTranslation from "next-translate/useTranslation";
 
 const StyledPaperGeneral = styled(Paper)({
   elevation: 2,
@@ -36,39 +39,25 @@ const StyledTypography = styled(Typography)({
 const options = ["Delete"];
 const ITEM_HEIGHT = 48;
 
-export default function ConstructionListComponent({
-  constructionDetails,
+export default function EnvelopeListComponent({
+  envelopeDetails,
   addNew,
   viewDetail,
 }: {
-  constructionDetails: IConstructionDetail[];
+  envelopeDetails: IEnvelope[];
   addNew: (e:any) => void;
   viewDetail: (id: string) => void;
 }): React.ReactElement {
-  const router = useRouter();
   const { t } = useTranslation();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (event: React.MouseEvent<HTMLElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleClose = () => {
     setAnchorEl(null);
   };
-
-  // const addMaterial = (e: any) => {
-  //   e.preventDefault();
-  //   router.push("../constructions/new");
-  // };
-
-  // const viewMaterial = (id: string) => {
-  //   router.push(`../constructions/${id}`);
-  // };
 
   return (
     <Grid container spacing={2}>
@@ -88,10 +77,7 @@ export default function ConstructionListComponent({
         </StyledPaperGeneral>
       </Grid>
       <Grid item xs={6} sm={4} md={4} lg={3} xl={3}>
-        <StyledPaperAdd
-          onClick={addNew}
-          sx={{ height: "200px", maxHeight: "200px" }}
-        >
+        <StyledPaperAdd onClick={addNew} sx={{ height: "200px" }}>
           <StyledTypography>{t("common:add-new")}</StyledTypography>
           <Box
             sx={{
@@ -110,13 +96,13 @@ export default function ConstructionListComponent({
           </Box>
         </StyledPaperAdd>
       </Grid>
-      {constructionDetails.map((cd) => (
-        <Grid key={cd.id} item xs={6} sm={4} md={4} lg={3} xl={3}>
+      {envelopeDetails.map((ed) => (
+        <Grid key={ed.id} item xs={6} sm={4} md={4} lg={3} xl={3}>
           <StyledPaperGeneral
             sx={{ height: "200px", position: "relative" }}
             onClick={(e) => {
               e.preventDefault();
-              viewDetail(cd.id);
+              viewDetail(ed.id);
             }}
           >
             <Box sx={{ position: "absolute", right: "10px" }}>
@@ -166,26 +152,35 @@ export default function ConstructionListComponent({
                 flexDirection: "column",
               }}
             >
-              <StyledTypography>{cd.name}</StyledTypography>
-              {cd.description && (
-                <StyledTypography variant="caption">
-                  {cd.description}{" "}
-                </StyledTypography>
-              )}
-              {cd.description && (
-                <StyledTypography variant="caption">
-                  {t("constructions:u-value")} {cd.uvalue}W/m2K
-                </StyledTypography>
-              )}
+              <StyledTypography>{ed.name}</StyledTypography>
               <Box sx={{ width: 150, marginTop: 1 }}>
-                <MaterialRepresentation
-                  materialHeights={cd.materials.map(
-                    (l) =>
-                      //parseFloat(l.thickness)
-                      l.thickness
-                  )}
-                  length={200}
-                ></MaterialRepresentation>
+                <TableContainer>
+                  <Table size="small" aria-label="construction table">
+                    <TableBody>
+                      {ed.config.map((cinfo) => (
+                        <TableRow key={cinfo.category}>
+                          <TableCell
+                            component="th"
+                            scope="row"
+                            sx={{ border: "none", padding: 0 }}
+                          >
+                            <Typography variant="caption">
+                              {cinfo.label}
+                            </Typography>
+                          </TableCell>
+                          <TableCell
+                            align="right"
+                            sx={{ border: "none", padding: 0 }}
+                          >
+                            <Typography variant="caption">
+                              {cinfo.construction.uvalue}W/m2K
+                            </Typography>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Box>
             </Box>
           </StyledPaperGeneral>

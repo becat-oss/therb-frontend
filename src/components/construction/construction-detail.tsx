@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
@@ -52,6 +51,7 @@ export default function ConstructionDetailComponent({
   t,
   onCancel,
   onSubmit,
+  onAfterSubmit,
 }: {
   constructionDetail: IConstructionDetail;
   materialDetails: IMaterialDetail[];
@@ -60,9 +60,8 @@ export default function ConstructionDetailComponent({
   t: Translate;
   onCancel: () => void;
   onSubmit: (detail: IConstructionDetail) => Promise<IAPIResponse>;
+  onAfterSubmit: () => void;
 }): React.ReactElement {
-  const router = useRouter();
-  // const { t } = useTranslation("add-construction");
 
   const [errorMap, setErrorMap] = useState(new Map<string, boolean>());
   const [name, setName] = useState(constructionDetail?.name || "");
@@ -89,7 +88,7 @@ export default function ConstructionDetailComponent({
 
   const onAddLayer = () => {
     const tempMaterialLayers = materialLayers.slice();
-    tempMaterialLayers.push({...materialDetails[0]});
+    tempMaterialLayers.push({ ...materialDetails[0] });
     setMaterialLayers(tempMaterialLayers);
     errorMap.delete("materialLayers");
   };
@@ -107,7 +106,7 @@ export default function ConstructionDetailComponent({
     const tempMaterialLayers = materialLayers.slice();
     const found = materialDetails.findIndex((l) => l.name === name);
     if (found !== -1) {
-      tempMaterialLayers.splice(index, 1, {...materialDetails[found]});
+      tempMaterialLayers.splice(index, 1, { ...materialDetails[found] });
       setMaterialLayers(tempMaterialLayers);
     }
   };
@@ -115,7 +114,6 @@ export default function ConstructionDetailComponent({
   const updateMaterialLayerValue = (index: number, value: number) => {
     const tempMaterialLayers = materialLayers.slice();
     tempMaterialLayers[index].thickness = value;
-    console.log(tempMaterialLayers);
     setMaterialLayers(tempMaterialLayers);
   };
 
@@ -172,7 +170,7 @@ export default function ConstructionDetailComponent({
           severity: "success",
         });
         setTimeout(() => {
-          router.push("../constructions");
+          onAfterSubmit();
         }, 200);
       } else {
         setAlert({
@@ -243,7 +241,6 @@ export default function ConstructionDetailComponent({
     };
 
   const handlePopperClose = () => {
-    console.log("closed popper", false)
     setopenPopper(false);
   };
   const canBeOpen = openPopper && Boolean(anchorEl);
@@ -470,9 +467,9 @@ export default function ConstructionDetailComponent({
                                     updateMaterialLayerName(i, e.target.value);
                                   }}
                                 >
-                                  {materialDetails.map((item) => (
+                                  {materialDetails.map((item, j) => (
                                     <MenuItem
-                                      key={i}
+                                      key={j}
                                       value={item.name}
                                       onMouseEnter={(e) =>
                                         handlePopperOpen(
@@ -486,6 +483,9 @@ export default function ConstructionDetailComponent({
                                       {t(item.name)}
                                     </MenuItem>
                                   ))}
+                                  <MenuItem value={l.name}>
+                                    {l.name}
+                                  </MenuItem>
                                 </MuiSelect>
                               </FormControl>
                             </Grid>

@@ -7,11 +7,11 @@ import {
   saveConstructionDetail,
 } from "src/api/construction/requests";
 import { IConstructionDetail } from "src/models/construction";
-import { getMaterials_API } from "src/api/material/request";
+import { getOpaqueMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 import { getTags_API } from "src/api/tags/request";
 import { ConstructionCategory } from "src/models/category";
-import ConstructionDetailComponent, { ITagType } from "src/components/construction-detail";
+import ConstructionDetailComponent, { ITagType } from "src/components/construction/construction-detail";
 
 
 export default function Construction({
@@ -34,13 +34,17 @@ export default function Construction({
       return await saveConstructionDetail(constructionDetailToSave);
   };
 
+  const onAfterSubmit = () =>{
+    router.push("../constructions");
+  }
+
   const onCancel = () => {    
       router.push("../constructions");
   };
 
   return (
     <Box>
-      <ConstructionDetailComponent constructionDetail={constructionDetail} materialDetails={materialDetails} materialTags={materialTags} categories={categories} t={t} onCancel={onCancel} onSubmit={onSubmit}></ConstructionDetailComponent>
+      <ConstructionDetailComponent constructionDetail={constructionDetail} materialDetails={materialDetails} materialTags={materialTags} categories={categories} t={t} onCancel={onCancel} onSubmit={onSubmit} onAfterSubmit={onAfterSubmit}></ConstructionDetailComponent>
     </Box> 
   );
 }
@@ -51,19 +55,17 @@ export async function getServerSideProps({
 }: {
   params: { id: string };
 }) {
-  let materialDetails = await getMaterials_API();
+  let materialDetails = await getOpaqueMaterials_API();
   materialDetails = materialDetails.filter((m) => m.classification === 1);
   const materialTags = await getTags_API();
   if (params.id === "new")
     return {
       props: { constructionDetail: null, materialDetails, materialTags },
     };
-  // Fetch data from external API
   const constructionDetails = await getConstructionDetails_API();
 
   const constructionDetail = constructionDetails.filter(
     (d) => d.id === params.id
   )[0];
-  // Pass data to the page via props
   return { props: { constructionDetail, materialDetails, materialTags } };
 }

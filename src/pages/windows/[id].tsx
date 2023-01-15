@@ -3,7 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import Box from "@mui/material/Box";
 import { IConstructionDetail } from "src/models/construction";
-import { getMaterials_API, getTransparentMaterials_API } from "src/api/material/request";
+import { getTransparentMaterials_API } from "src/api/material/request";
 import { IMaterialDetail } from "src/models/material";
 import { getTags_API } from "src/api/tags/request";
 import {
@@ -12,7 +12,7 @@ import {
 } from "src/api/window/requests";
 import ConstructionDetailComponent, {
   ITagType,
-} from "src/components/construction-detail";
+} from "src/components/construction/construction-detail";
 
 export default function Construction({
   constructionDetail,
@@ -30,6 +30,10 @@ export default function Construction({
     return await saveWindowDetail(constructionDetailToSave);
   };
 
+  const onAfterSubmit = () =>{
+    router.push("../windows");
+  }
+
   const onCancel = () => {
     router.push("../windows");
   };
@@ -43,6 +47,7 @@ export default function Construction({
         t={t}
         onCancel={onCancel}
         onSubmit={onSubmit}
+        onAfterSubmit={onAfterSubmit}
       ></ConstructionDetailComponent>
     </Box>
   );
