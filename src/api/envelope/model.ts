@@ -1,8 +1,8 @@
 import { IConstructionDetail } from "src/models/construction";
 import { IConstructionSchema } from "../construction/models";
 
-export interface IEnvelope_get {
-  id: number;
+export interface IEnvelopeSchema {
+  id: string;
   name: string;
   description: string;
   exteriorWall: IConstructionSchema;

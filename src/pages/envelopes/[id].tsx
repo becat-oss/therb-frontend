@@ -242,193 +242,199 @@ export default function Envelope({
   };
 
   return (
-    <Box
-      sx={{
-        m: 6,
-        p: 4,
-        borderStyle: "solid",
-        color: "#707070",
-        borderRadius: 1,
-      }}
-    >
-      <Snackbar
-        open={alert.open}
-        autoHideDuration={6000}
-        onClose={handleAlertClose}
+    <Box>
+      <Box
+        sx={{
+          m: 6,
+          p: 4,
+          borderStyle: "solid",
+          color: "#707070",
+          borderRadius: 1,
+        }}
       >
-        <Alert
+        <Snackbar
+          open={alert.open}
+          autoHideDuration={6000}
           onClose={handleAlertClose}
-          variant="outlined"
-          severity={alert.severity}
-          sx={{ width: "100%" }}
         >
-          {alert.message}
-        </Alert>
-      </Snackbar>
-      <Typography variant="h5" ml={2}>
-        {t("title")}
-      </Typography>
-      <form onSubmit={onSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={4}>
-            <Stack m={4} spacing={2}>
-              <TextField
-                fullWidth
-                id="envelope_name"
-                label={t("common:name")}
-                variant="outlined"
-                defaultValue={name}
-                onChange={(e) => handleNameChange(e.target.value)}
-              />
-              <Autocomplete
-                multiple
-                limitTags={4}
-                id={t("common:tags")}
-                defaultValue={tags}
-                options={materialTags}
-                getOptionLabel={(option) => {
-                  if (option.inputValue) {
-                    return option.inputValue;
-                  }
-                  return option.label;
-                }}
-                renderOption={(props, option) => (
-                  <li {...props}>{option.label}</li>
-                )}
-                onChange={(e, v) => setTags(v as unknown as ITagType[])}
-                filterOptions={(options, params) => {
-                  const filtered = filter(options, params);
+          <Alert
+            onClose={handleAlertClose}
+            variant="outlined"
+            severity={alert.severity}
+            sx={{ width: "100%" }}
+          >
+            {alert.message}
+          </Alert>
+        </Snackbar>
+        <Typography variant="h5" ml={2}>
+          {t("title")}
+        </Typography>
+        <form onSubmit={onSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={4}>
+              <Stack m={4} spacing={2}>
+                <TextField
+                  fullWidth
+                  id="envelope_name"
+                  label={t("common:name")}
+                  variant="outlined"
+                  defaultValue={name}
+                  onChange={(e) => handleNameChange(e.target.value)}
+                />
+                <Autocomplete
+                  multiple
+                  limitTags={4}
+                  id={t("common:tags")}
+                  defaultValue={tags}
+                  options={materialTags}
+                  getOptionLabel={(option) => {
+                    if (option.inputValue) {
+                      return option.inputValue;
+                    }
+                    return option.label;
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props}>{option.label}</li>
+                  )}
+                  onChange={(e, v) => setTags(v as unknown as ITagType[])}
+                  filterOptions={(options, params) => {
+                    const filtered = filter(options, params);
 
-                  const { inputValue } = params;
-                  // Suggest the creation of a new value
-                  const isExisting = options.some(
-                    (option) => inputValue === option.label
-                  );
-                  if (inputValue !== "" && !isExisting) {
-                    filtered.push({
-                      inputValue,
-                      label: `Add "${inputValue}"`,
-                      id: null,
-                    });
-                  }
-                  return filtered;
+                    const { inputValue } = params;
+                    // Suggest the creation of a new value
+                    const isExisting = options.some(
+                      (option) => inputValue === option.label
+                    );
+                    if (inputValue !== "" && !isExisting) {
+                      filtered.push({
+                        inputValue,
+                        label: `Add "${inputValue}"`,
+                        id: null,
+                      });
+                    }
+                    return filtered;
+                  }}
+                  freeSolo
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label={t("common:tags")}
+                      placeholder="Material Tags"
+                    />
+                  )}
+                />
+                <TextField
+                  fullWidth
+                  id="material_description"
+                  label={t("common:description")}
+                  variant="outlined"
+                  defaultValue={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  multiline
+                  rows={7}
+                />
+              </Stack>
+            </Grid>
+            <Grid container item xs={8}>
+              <Typography variant="h6" ml={2}>
+                Configuration
+              </Typography>
+              <Box
+                p={4}
+                sx={{
+                  width: "100%",
+                  borderStyle: "solid",
+                  color: "#000",
                 }}
-                freeSolo
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label={t("common:tags")}
-                    placeholder="Material Tags"
-                  />
-                )}
-              />
-              <TextField
-                fullWidth
-                id="material_description"
-                label={t("common:description")}
-                variant="outlined"
-                defaultValue={description}
-                onChange={(e) => setDescription(e.target.value)}
-                multiline
-                rows={7}
-              />
-            </Stack>
-          </Grid>
-          <Grid container item xs={8}>
-            <Typography variant="h6" ml={2}>
-              Configuration
-            </Typography>
-            <Box
-              p={4}
-              sx={{
-                width: "100%",
-                borderStyle: "solid",
-                color: "#000",
-              }}
-            >
-              <Grid container>
-                <Grid container item xs={8}>
-                  <Box width={"100%"}>
-                    <Stack spacing={2}>
-                      <Grid key="header" container>
-                        <Grid item xs={4}></Grid>
-                        <Grid item xs={4}>
-                          <Typography sx={{ textAlign: "center" }}>
-                            Construction
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={4}>
-                          <Typography sx={{ textAlign: "center" }}>
-                            UValue
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                      {constructionConfigs.map((l, i) => (
-                        <Grid key={l.category} container>
+              >
+                <Grid container>
+                  <Grid container item xs={8}>
+                    <Box width={"100%"}>
+                      <Stack spacing={2}>
+                        <Grid key="header" container>
+                          <Grid item xs={4}></Grid>
                           <Grid item xs={4}>
-                            <Typography>{l.label}</Typography>
+                            <Typography sx={{ textAlign: "center" }}>
+                              Construction
+                            </Typography>
                           </Grid>
                           <Grid item xs={4}>
-                            <FormControl fullWidth>
-                              <MuiSelect
-                                id={l.construction?.id || null}
-                                value={l.construction?.name}
-                                onChange={(e: SelectChangeEvent) => {
-                                  updateConfigVal(l.category, e.target.value);
+                            <Typography sx={{ textAlign: "center" }}>
+                              UValue
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        {constructionConfigs.map((l, i) => (
+                          <Grid key={l.category} container>
+                            <Grid item xs={4}>
+                              <Typography>{l.label}</Typography>
+                            </Grid>
+                            <Grid item xs={4}>
+                              <FormControl fullWidth>
+                                <MuiSelect
+                                  id={l.construction?.id || null}
+                                  value={l.construction?.name}
+                                  onChange={(e: SelectChangeEvent) => {
+                                    updateConfigVal(l.category, e.target.value);
+                                  }}
+                                >
+                                  {categoryConstructionDetailsMap
+                                    .get(l.category)
+                                    ?.map((item, i) => (
+                                      <MenuItem key={i} value={item.name}>
+                                        {item.name}
+                                      </MenuItem>
+                                    ))}
+                                </MuiSelect>
+                              </FormControl>
+                            </Grid>
+                            <Grid item xs={4}>
+                              <TextField
+                                id="outlined-name"
+                                value={l.construction?.uValue}
+                                InputProps={{
+                                  readOnly: true,
                                 }}
-                              >
-                                {categoryConstructionDetailsMap
-                                  .get(l.category)
-                                  ?.map((item, i) => (
-                                    <MenuItem key={i} value={item.name}>
-                                      {item.name}
-                                    </MenuItem>
-                                  ))}
-                              </MuiSelect>
-                            </FormControl>
+                              />
+                            </Grid>
                           </Grid>
-                          <Grid item xs={4}>
-                            <TextField
-                              id="outlined-name"
-                              value={l.construction?.uValue}
-                              InputProps={{
-                                readOnly: true,
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      ))}
-                    </Stack>
-                  </Box>
+                        ))}
+                      </Stack>
+                    </Box>
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Box>
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "space-between",
-                mt: 2,
-              }}
-            >
-              <Box></Box>
-              <Box>
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={onCancel}
-                  sx={{ mr: 1 }}
-                >
-                  {t("common:cancel")}
-                </Button>
-                <Button variant="contained" disabled={!!envelope} type="submit">
-                  {t("common:save")}
-                </Button>
               </Box>
-            </Box>
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mt: 2,
+                }}
+              >
+                <Box></Box>
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={onCancel}
+                    sx={{ mr: 1 }}
+                  >
+                    {t("common:cancel")}
+                  </Button>
+                  <Button
+                    variant="contained"
+                    disabled={!!envelope}
+                    type="submit"
+                  >
+                    {t("common:save")}
+                  </Button>
+                </Box>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </form>
+        </form>
+      </Box>
     </Box>
   );
 }
@@ -441,7 +447,11 @@ export default function Envelope({
 // }
 
 // This gets called on every request
-export async function getServerSideProps({ params }: { params: { id: string } }) {
+export async function getServerSideProps({
+  params,
+}: {
+  params: { id: string };
+}) {
   const materialTags = await getTags_API();
   const constructionDetails = await getConstructionDetails_API();
   const windowDetails = await getWindowDetails_API();

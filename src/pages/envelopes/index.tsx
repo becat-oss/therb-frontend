@@ -63,7 +63,7 @@ export default function Envelopes({
     router.push("../envelopes/new");
   };
 
-  const viewEnvelope = (id: number) => {
+  const viewEnvelope = (id: string) => {
     router.push(`../envelopes/${id}`);
   };
 
