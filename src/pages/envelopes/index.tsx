@@ -181,7 +181,7 @@ export default function Envelopes({
                             sx={{ border: "none", padding: 0 }}
                           >
                             <Typography variant="caption">
-                              {cinfo.construction.uValue}W/m2K
+                              {cinfo.construction.uvalue}W/m2K
                             </Typography>
                           </TableCell>
                         </TableRow>

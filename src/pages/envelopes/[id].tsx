@@ -171,7 +171,7 @@ export default function Envelope({
       }
     }
 
-    let uVal = uValue || constructionVal.uValue;
+    let uVal = uValue || constructionVal.uvalue;
 
     const changedVal = {
       category,
@@ -390,7 +390,7 @@ export default function Envelope({
                           <Grid item xs={4}>
                             <TextField
                               id="outlined-name"
-                              value={l.construction?.uValue}
+                              value={l.construction?.uvalue}
                               InputProps={{
                                 readOnly: true,
                               }}

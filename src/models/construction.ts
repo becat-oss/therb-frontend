@@ -8,7 +8,7 @@ export interface IConstructionDetail {
   tags: ITag[];
   description?: string;
   materials: IMaterialDetail[];
-  uValue?: number;
+  uvalue?: number;
   lcco2?: number;
   cost?: number;
 }
