@@ -114,7 +114,6 @@ export default function ConstructionDetailComponent({
   const updateMaterialLayerValue = (index: number, value: number) => {
     const tempMaterialLayers = materialLayers.slice();
     tempMaterialLayers[index].thickness = value;
-    console.log(tempMaterialLayers);
     setMaterialLayers(tempMaterialLayers);
   };
 
@@ -242,7 +241,6 @@ export default function ConstructionDetailComponent({
     };
 
   const handlePopperClose = () => {
-    console.log("closed popper", false);
     setopenPopper(false);
   };
   const canBeOpen = openPopper && Boolean(anchorEl);
