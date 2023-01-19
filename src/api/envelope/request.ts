@@ -6,7 +6,7 @@ import { IEnvelopeSchema, TEnvelopePayload } from "./model";
 
 export async function getEnvelopeDetails_API() {
   
-  const url = `https://inxoptpsxe.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+  const url = `https://z3ekk9rish.execute-api.ap-northeast-1.amazonaws.com/dev/`;
   //const url = `https://stingray-app-vgak2.ondigitalocean.app/envelopes`;
   
   try {
@@ -40,7 +40,7 @@ export async function getEnvelopeDetails_API() {
 
 export async function saveEnvelope(envelope: Omit<IEnvelope, "id">):Promise<IAPIResponse>{
 
-  const url = "https://inxoptpsxe.execute-api.ap-northeast-1.amazonaws.com/dev/"
+  const url = "https://z3ekk9rish.execute-api.ap-northeast-1.amazonaws.com/dev/"
 
   const envelopePost: TEnvelopePayload = {
     name: envelope.name,

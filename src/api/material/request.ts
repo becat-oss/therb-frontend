@@ -6,7 +6,7 @@ import { IMaterialSchema, ITransparentMaterialSchema } from "./models";
 const isProd = true;
 
 export async function getOpaqueMaterials_API() {
-  const url = `https://1glw2368ke.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+  const url = `https://57mq690b08.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
@@ -34,7 +34,7 @@ export async function getOpaqueMaterials_API() {
 
 export async function getTransparentMaterials_API() {
 
-  const url = `https://0h9crfmcs3.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+  const url = `https://57mq690b08.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
@@ -64,7 +64,7 @@ export async function getMaterialById(id: number) {
   // const url = isProd
   //   ? `https://stingray-app-vgak2.ondigitalocean.app/materials`
   //   : `http://localhost:5000/materials`;
-  const url = `https://1glw2368ke.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+  const url = `https://57mq690b08.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
   const response = await fetch(url, {
     mode: "cors",

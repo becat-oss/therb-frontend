@@ -21,7 +21,7 @@ export async function saveWindowDetail(constructionDetail: IConstructionDetail):
   }
 
   // const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
-  const url = `https://n4lws74mn3.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+  const url = `https://0ka93qfvi7.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
   const constructionDetail_Post: Omit<IConstructionSchema, "id"> = {
     name: constructionDetail.name || "",
@@ -94,7 +94,7 @@ export function parseConstructionDetail(detail: IConstructionSchema): IConstruct
 
 export async function getWindowDetails_API() {
   // const url = `https://stingray-app-vgak2.ondigitalocean.app/windows`;
-  const url = `https://n4lws74mn3.execute-api.ap-northeast-1.amazonaws.com/dev/?category=window`;
+  const url = `https://0ka93qfvi7.execute-api.ap-northeast-1.amazonaws.com/dev/?category=window`;
 
 
   // const url = isProd
