@@ -4,9 +4,10 @@ import { IMaterialSchema, ITransparentMaterialSchema } from "./models";
 
 //const isProd = process.env.NODE_ENV === "production";
 const isProd = true;
+const url = `https://f5dk53b667.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
 export async function getOpaqueMaterials_API() {
-  const url = `https://57mq690b08.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+  
 
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
@@ -34,7 +35,7 @@ export async function getOpaqueMaterials_API() {
 
 export async function getTransparentMaterials_API() {
 
-  const url = `https://57mq690b08.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+  const url = `https://m32ugdp0xc.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
   const response = await fetch(url, { mode: "cors" });
   const data = await response.json();
@@ -61,10 +62,8 @@ export async function getTransparentMaterials_API() {
 }
 
 export async function getMaterialById(id: number) {
-  // const url = isProd
-  //   ? `https://stingray-app-vgak2.ondigitalocean.app/materials`
-  //   : `http://localhost:5000/materials`;
-  const url = `https://57mq690b08.execute-api.ap-northeast-1.amazonaws.com/dev/`;
+
+  //const url = `https://57mq690b08.execute-api.ap-northeast-1.amazonaws.com/dev/`;
 
   const response = await fetch(url, {
     mode: "cors",
